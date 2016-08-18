@@ -1,12 +1,22 @@
+#ifndef __TASKSET__
+#define __TASKSET__
+
+#include <iostream>
+#include <fstream>
+#include <vector>
+#include "Task.h"
+
 class TaskSet
 {
 private:
 	int id;
-	int threadCount;
-	int priority;
-	double offset;
-	List<Task> taskList;
-	generator gen;
+	int count;
+	std::vector<Task> ts;
+	//generator gen;
 public:
-
+	TaskSet();
+	int readTaskSet(std::ifstream &file);
+	int printTaskSet(void);
 };
+
+#endif

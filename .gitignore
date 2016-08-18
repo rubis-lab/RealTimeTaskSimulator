@@ -1,12 +1,15 @@
-# compiled source 
+# compiled source and leftovers
 *.o
 *.d
 *rtts
+/bin
+/obj
 
 # raw data 
 *.in
 *.txt
 *.out
+/data
 
 # OS generated
 .DS_Store

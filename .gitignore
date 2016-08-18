@@ -1,0 +1,13 @@
+# compiled source 
+*.o
+*.d
+*rtts
+
+# raw data 
+*.in
+*.txt
+*.out
+
+# OS generated
+.DS_Store
+Thumbs.db

@@ -9,7 +9,6 @@
 *.in
 *.txt
 *.out
-/data
 
 # OS generated
 .DS_Store

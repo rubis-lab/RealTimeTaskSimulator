@@ -59,7 +59,7 @@ int bar::Simulate(){
 
       rhs = Getcore()*(A + _model.getTask(k).getDeadline() - _model.getTask(k).getExecutionTime());
 
-      if (temp + Calculate_Iepsilon(k, A) >= rhs){
+      if (temp + Calculate_Iepsilon(k, A) > rhs){
           return 0;
       }
 //      std::cout <<temp<< " "<<Calculate_Iepsilon(k,A) <<" < "<<Getcore()<<"* ("<<A<<" + " << _model[k]->deadline<<" - "<<_model[k]->compute<<")"<<std::endl;

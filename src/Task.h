@@ -2,6 +2,7 @@
 #define __TASK__
 
 #include <iostream>
+#include <cmath>
 
 class Task
 {

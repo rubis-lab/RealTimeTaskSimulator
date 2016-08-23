@@ -9,6 +9,7 @@ int TaskSet::readTaskSet(std::ifstream &file)
 {
 	int e, d, p;
 	file >> count;
+	ts.clear();
 	for(int i = 0; i < count; i++) {
 		file >> e;
 		file >> d;
@@ -30,4 +31,20 @@ int TaskSet::printTaskSet(void)
 		std::cout << ts[i].getPeriod() << std::endl;
 	}
 	return 1;
+}
+
+int TaskSet::length(){
+  return ts.size();
+}
+
+Task TaskSet::getTask(int i){
+  return ts[i];
+}
+
+void TaskSet::putTask(Task t){
+  ts.push_back(t);
+}
+
+void TaskSet::clear(){
+  ts.clear();
 }

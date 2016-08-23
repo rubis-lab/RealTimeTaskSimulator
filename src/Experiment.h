@@ -5,6 +5,8 @@
 #include <fstream>
 
 #include "TaskSet.h"
+#include "rta.h"
+#include "bar.h"
 
 class Experiment
 {

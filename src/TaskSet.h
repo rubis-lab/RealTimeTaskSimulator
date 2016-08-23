@@ -17,6 +17,11 @@ public:
 	TaskSet();
 	int readTaskSet(std::ifstream &file);
 	int printTaskSet(void);
+	int length();
+	Task getTask(int);
+	void putTask(Task t);
+	void clear();
+
 };
 
 #endif

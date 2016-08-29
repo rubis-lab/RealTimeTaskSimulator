@@ -13,8 +13,8 @@ int Experiment::run(void)
 
         rta r = rta();
         bar b = bar();
-        r.Setcore(8);
-        b.Setcore(8);
+        r.Setcore(4);
+        b.Setcore(4);
 
 	if(file.is_open()) {
 		ts.readTaskSet(file);

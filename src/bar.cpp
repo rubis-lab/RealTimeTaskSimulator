@@ -85,7 +85,7 @@ void bar::Calculate_Utot(){
   _Uk = (double *)malloc(sizeof(double)*_size);
 
   for (int i = 0; i<_size; i++){
-    _Uk[i] = _model.getTask(i).getExecutionTime()/_model.getTask(i).getPeriod();
+    _Uk[i] = _model.getTask(i).getExecutionTime()/(double)_model.getTask(i).getPeriod();
     _Utot += _Uk[i];
   }
 }
@@ -117,12 +117,12 @@ void bar::Calculate_Csum(){
     for (int i=0;i<Getcore()-1;i++){
       min = 0;
       for (int j=0;j<_size;j++){
-        if (temp[min] > temp[j])
+        if (temp[min] < temp[j])
           min = j;
       }
 
       _Csum += temp[min];
-      temp[min] = max;
+      temp[min] = -max;
     }
   }
   free(temp);
@@ -241,16 +241,16 @@ double bar::Calculate_Iepsilon(int k, int A){
     for (int i=0;i<_size;i++)
       max += temp[i];
 
-    // find i-th smallest 
+    // find i-th largest 
     for (int i=0;i<Getcore()-1;i++){
       min = 0;
       for (int j=0;j<_size;j++){
-        if (temp[min] > temp[j])
+        if (temp[min] < temp[j])
           min = j;
       }
 
       result += temp[min];
-      temp[min] = max;
+      temp[min] = -max;
     }
   }
 

@@ -8,7 +8,9 @@ SOURCE = \
 	../src/Task.cpp	\
 	../src/TaskSet.cpp	\
 	../src/Experiment.cpp	\
-	../src/Test.cpp
+	../src/Test.cpp	\
+	../src/bar.cpp	\
+	../src/rta.cpp
 
 #more includes
 INCLUDE = -I.

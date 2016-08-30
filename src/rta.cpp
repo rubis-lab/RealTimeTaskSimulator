@@ -77,6 +77,12 @@ int rta::Simulate(){
 
     Calculate();
 
+    std::cout<<std::endl;
+    for (int i=0;i<_size;i++){
+      std::cout<<_R[i]<<" ";
+    }
+    std::cout<<std::endl;
+
     for (int i=0;i<_size;i++){
       if (_R[i] > _model.getTask(i).getDeadline())
         break;
@@ -129,7 +135,7 @@ void rta::Calculate_R(){
 
       temp[k] += Min(Calculate_W(i, _R[k]), Calculate_I(k, i), _R[k]-_model.getTask(k).getExecutionTime()+1);
     }
-    temp[k] /= Getcore();
+    temp[k] /= (double)Getcore();
 
     temp[k] = _model.getTask(k).getExecutionTime() + floor(temp[k]);
   }
@@ -155,7 +161,7 @@ double rta::Calculate_W(int i, double l){
   result = floor(temp/_model.getTask(i).getPeriod());
   temp = temp - result*_model.getTask(i).getPeriod();
   temp = (_model.getTask(i).getExecutionTime() < temp) ? _model.getTask(i).getExecutionTime() : temp;
-
+//  std::cout<<"W"<<i<<", "<<l<<": "<<result * _model.getTask(i).getExecutionTime()+temp<<std::endl;
   return result * _model.getTask(i).getExecutionTime() + temp;
 
 }
@@ -189,8 +195,8 @@ double rta::Calculate_I(int k, int i){
     temp = _model.getTask(k).getDeadline() - temp * _model.getTask(i).getPeriod() - _S[i]; // Dk mod Ti - Si
     if (temp < 0)
       temp = 0; // (Dk mod Ti - Si)0
-
-    return temp2 + (_model.getTask(i).getExecutionTime() < temp) ? _model.getTask(i).getExecutionTime() : temp; // [Dk/Ti]*Ci + min(Ci, (Dk mod Ti - Si)0)
+    double result =  temp2 + ((_model.getTask(i).getExecutionTime() < temp) ? _model.getTask(i).getExecutionTime() : temp); // [Dk/Ti]*Ci + min(Ci, (Dk mod Ti - Si)0)
+    return result;
 }
 
 /*

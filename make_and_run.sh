@@ -1,5 +1,6 @@
 #!/bin/sh
 cd build;
+mkdir -p bin;
 make clean;
 make;
 cd ..;

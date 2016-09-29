@@ -11,7 +11,7 @@ build/bin
 *.out
 
 # config / environment
-.cfg
+*.cfg
 
 # exception
 # !foo.keep

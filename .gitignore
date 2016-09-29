@@ -11,7 +11,7 @@ build/bin
 *.out
 
 # exception
-# ! foo.in
+!*.keep
 
 # OS generated
 .DS_Store

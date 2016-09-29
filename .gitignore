@@ -2,13 +2,16 @@
 *.o
 *.d
 *rtts
-/bin
+build/bin
 /obj
 
 # raw data 
 *.in
 *.txt
 *.out
+
+# exception
+# ! foo.in
 
 # OS generated
 .DS_Store

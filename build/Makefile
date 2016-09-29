@@ -5,19 +5,20 @@ LIBS =
 
 #sources
 SOURCE = \
-	../src/Task.cpp	\
-	../src/TaskSet.cpp	\
-	../src/Experiment.cpp	\
-	../src/Test.cpp	\
-	../src/bar.cpp	\
-	../src/rta.cpp
+	../src/container/Task.cpp	\
+	../src/container/TaskSet.cpp	\
+	../src/container/Experiment.cpp	\
+	../src/test/rta.cpp \
+	../src/test/bar.cpp \
+	../src/test.cpp	
+
 
 #more includes
 INCLUDE = -I.
 LIB_OPTION = -lpthread
 
 #dependency dest
-VPATH=../src
+VPATH=../src:../src/container:../src/test
 
 #objects
 OBJ=$(join $(addsuffix ../obj/, $(dir $(SOURCE))), $(notdir $(SOURCE:.cpp=.o))) 
@@ -34,6 +35,16 @@ $(TARGET): $(OBJ)
 	@$(CC) $(CFLAGS) -o $@ $^ $(LIBS)
 
 ../src/../obj/%.o: %.cpp
+	@mkdir -p $(dir $@)
+	@echo "Compiling $<" 
+	@$(CC) $(CFLAGS) -c $< -o $@ $(LIBS)
+
+../src/container/../obj/%.o: %.cpp
+	@mkdir -p $(dir $@)
+	@echo "Compiling $<" 
+	@$(CC) $(CFLAGS) -c $< -o $@ $(LIBS)	
+
+../src/test/../obj/%.o: %.cpp
 	@mkdir -p $(dir $@)
 	@echo "Compiling $<" 
 	@$(CC) $(CFLAGS) -c $< -o $@ $(LIBS)

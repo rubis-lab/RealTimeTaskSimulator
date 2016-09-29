@@ -10,7 +10,7 @@ SOURCE = \
 	../src/container/Experiment.cpp	\
 	../src/test/rta.cpp \
 	../src/test/bar.cpp \
-	../src/test.cpp	
+	../src/Test.cpp	
 
 
 #more includes
@@ -29,9 +29,14 @@ all: $(TARGET)
 clean:
 	@-rm -f $(TARGET) $(OBJ)
 	@rm -rf ../obj
+	@rm -rf ../src/obj
+	@rm -rf bin
+
 
 $(TARGET): $(OBJ)
 	@echo "Linking the target $@"
+	@mkdir -p bin
+	@cd bin
 	@$(CC) $(CFLAGS) -o $@ $^ $(LIBS)
 
 ../src/../obj/%.o: %.cpp

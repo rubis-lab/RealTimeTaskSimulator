@@ -4,7 +4,7 @@ Experiment::Experiment(void)
 {
 	ts = TaskSet();
 }
-
+/*
 Experiment::setParameter(void)
 {
 
@@ -14,14 +14,14 @@ Experiment::generateTaskSet(void)
 {
 
 }
-
+*/
 int Experiment::run(void)
 {
 	// generate task
 	// apply tests
 	// output
 
-	/*
+	
 	std::cout << "running #" << "1" << std::endl;
 	std::ifstream file;
 	file.open("data/sample_task.in");
@@ -42,7 +42,7 @@ int Experiment::run(void)
 	} else {
 		std::cout << "no input file" << std::endl;
 	}
-	*/
+	
 	return 1;
 }
 

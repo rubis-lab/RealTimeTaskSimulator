@@ -10,9 +10,11 @@ build/bin
 *.txt
 *.out
 
-# exception
-!*.keep
+# config / environment
+.cfg
 
+# exception
+# !foo.keep
 # OS generated
 .DS_Store
 Thumbs.db

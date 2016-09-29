@@ -10,10 +10,11 @@
 class Generator
 {
 	private:
-		double period;
+		//double maxperiod;
 	public:
 		Generator();
-		int setParam();
+		int loadConfig(std::ifstream &file);
+		int saveConfig(void);
 		Task nextTask();
 		TaskSet nextTaskSet();
 };

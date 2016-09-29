@@ -9,14 +9,14 @@
 
 class Generator
 {
-	private:
-		//double maxperiod;
-	public:
-		Generator();
-		int loadConfig(std::ifstream &file);
-		int saveConfig(void);
-		Task nextTask();
-		TaskSet nextTaskSet();
+private:
+	//double maxperiod;
+public:
+	Generator();
+	int loadConfig(std::ifstream &file);
+	int saveConfig(void);
+	Task nextTask();
+	TaskSet nextTaskSet();
 };
 
 #endif

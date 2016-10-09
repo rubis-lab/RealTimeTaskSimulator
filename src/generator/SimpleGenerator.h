@@ -1,19 +1,16 @@
 #ifndef __SIMPLE_GEN__
 #define __SIMPLE_GEN__
 
-#include "../../tools/FileIO.h"
-
 class SimpleGenerator: public Generator
 {
 private:
-	double numTask;
-	double maxPeriod;
-	double maxDeadline;
-	double maxExecutionTime;
-
+	
 public:
-	SimpleGenerator();
+	SimpleGenerator() : Generator() { };
+	SimpleGenerator(int seed) : Generator(seed) { };
 	int loadConfig(std::ifstream &file);
+	Task nextTask(int id);
+	TaskSet nextTaskSet(int id);
 	//int saveConfig(void);
-}
+};
 #endif

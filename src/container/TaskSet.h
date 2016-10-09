@@ -10,7 +10,6 @@ class TaskSet
 {
 private:
 	int id;
-	int count;
 	std::vector<Task> ts;
 	//generator gen;
 public:

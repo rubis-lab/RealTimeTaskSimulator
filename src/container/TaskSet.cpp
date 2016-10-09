@@ -26,7 +26,7 @@ int TaskSet::printTaskSet(void)
 	std::cout << count << std::endl;
 
 	for(int i = 0; i < count; i++) {
-		std::cout << ts[i].getExecutionTime() << " ";
+		std::cout << ts[i].getExecTime() << " ";
 		std::cout << ts[i].getDeadline() << " ";
 		std::cout << ts[i].getPeriod() << std::endl;
 	}

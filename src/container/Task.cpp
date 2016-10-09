@@ -5,14 +5,14 @@ Task::Task(void)
 }
 Task::Task(int e, int d, int p)
 {
-	executionTime = e;
+	execTime = e;
 	deadline = d;
 	period = p;
 }
 
-int Task::getExecutionTime(void)
+int Task::getExecTime(void)
 {
-	return executionTime;
+	return execTime;
 }
 
 int Task::getDeadline(void)

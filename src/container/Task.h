@@ -9,7 +9,7 @@ class Task
 private:
 	int id;
 	double period;
-	double executionTime;
+	double execTime;
 	double deadline;
 	//double responseTime;
 	int priority;
@@ -20,7 +20,7 @@ private:
 public:	
 	Task();
 	Task(int e, int d, int p);
-	int getExecutionTime();
+	int getExecTime();
 	int getDeadline();
 	int getPeriod();
 };

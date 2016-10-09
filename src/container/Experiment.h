@@ -10,15 +10,15 @@
 
 class Experiment
 {
-	private:
-		int repeat;
-		//Generator gen;
-		TaskSet ts;
+private:
+	int repeat;
+	//Generator gen;
+	TaskSet ts;
 
-	public:
-		Experiment();
-		int run();
-		int output();
+public:
+	Experiment();
+	int run();
+	int output();
 };
 
 #endif

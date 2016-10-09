@@ -3,20 +3,33 @@
 
 #include <iostream>
 #include <fstream>
+#include <stdlib.h>
 
 #include "../container/Task.h"
 #include "../container/TaskSet.h"
+#include "../../tools/FileIO.h"
+#include "../../tools/CRand.h"
 
 class Generator
 {
 private:
-	//double maxperiod;
+	double numTask;
+	double minPeriod;
+	double maxPeriod;
+	double minDeadline;
+	double maxDeadline;
+	double minExecTime;
+	double maxExecTime;
+	CRand cr;
+
 public:
 	Generator();
+	Generator(int seed);
+	int init();
 	int loadConfig(std::ifstream &file);
 	int saveConfig(void);
-	Task nextTask();
-	TaskSet nextTaskSet();
+	Task nextTask(int id);
+	TaskSet nextTaskSet(int id);
 };
 
 #endif

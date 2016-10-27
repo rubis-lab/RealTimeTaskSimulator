@@ -1,46 +1,35 @@
 #include "Experiment.h"
 
-Experiment::Experiment(void)
+Experiment::Experiment()
 {
-	ts = TaskSet();
-}
-/*
-Experiment::setParameter(void)
-{
-
+	pr = Param();
+	init();
 }
 
-Experiment::generateTaskSet(void)
+Experiment::Experiment(std::ifstream &file)
 {
-
+	pr = Param(file);
+	init();
 }
-*/
-int Experiment::run(void)
+
+int Experiment::init()
+{
+	return 1;
+}
+
+int Experiment::run()
 {
 	// generate task
+	SimpleGenerator sg = SimpleGenerator(1000);
+	TaskSet ts = sg.nextTaskSet();
 	// apply tests
+	GFB gfb = GFB(pr);
+	bool ret = gfb.isSchedulable(ts);
 	// output
-
-	
-	std::cout << "running #" << "1" << std::endl;
-	std::ifstream file;
-	file.open("data/sample_task.in");
-
-        rta r = rta();
-        bar b = bar();
-        r.Setcore(4);
-        b.Setcore(4);
-
-	if(file.is_open()) {
-		ts.readTaskSet(file);
-		ts.printTaskSet();
-
-                r.Setmodel(ts);
-                b.Setmodel(ts);
-                std::cout<<"Result: bar "<<b.Simulate()<<" rta "<<r.Simulate()<<std::endl;
-		file.close();
+	if(ret) {
+		std::cout << "Schedulable" << std::endl;
 	} else {
-		std::cout << "no input file" << std::endl;
+		std::cout << "not Schedulable" << std::endl;
 	}
 	
 	return 1;

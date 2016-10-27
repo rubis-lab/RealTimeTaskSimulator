@@ -1,13 +1,28 @@
 #include "SimpleGenerator.h"
 
-int SimpleGenerator::init()
+SimpleGenerator::SimpleGenerator(int seed) : Generator(seed)
 {
+	// Default configuration
+	std::ifstream file;
+	file.open("../config/sgen.cfg");
+	init(file);
+	file.close();
+}
+
+SimpleGenerator::SimpleGenerator(int seed, std::ifstream &file) : Generator(seed)
+{
+	init(file);
+}
+
+int SimpleGenerator::init(std::ifstream &file)
+{
+	loadConfig(file);
 	return 1;
 }
 
 int SimpleGenerator::loadConfig(std::ifstream &file)
 {
-	file = FileIO::goToLine(file, 4);
+	FileIO::goToLine(file, 4);
 
 	std::string buf;
 	file >> buf;
@@ -22,24 +37,21 @@ int SimpleGenerator::loadConfig(std::ifstream &file)
 	return 1;
 }
 
-Task SimpleGenerator::nextTask(int id)
+Task SimpleGenerator::nextTask()
 {
 	Task t = Task();
-	t.id = id;
-	t.period = cr.uniform(minPeriod, maxPeriod);
-	t.execTime = cr.uniform(minExecTime, maxExecTime);
-	t.deadline = cr.uniform(minDeadline, maxDeadline);
+	t.setExecTime(cr.uniform(minExecTime, maxExecTime));
+	t.setDeadline(cr.uniform(minDeadline, maxDeadline));
+	t.setPeriod(cr.uniform(minPeriod, maxPeriod));
 	return t;
 }
 
-TaskSet SimpleGenerator::nextTaskSet(int id);
+TaskSet SimpleGenerator::nextTaskSet()
 {
-	TaskSet tset;
-	tset.id = id;
+	TaskSet tset = TaskSet();
 	for(int i = 0; i < numTask; i++) {
-		Task t = nextTask(i);
-		// need revision
-		tset.putTask(t);
+		Task t = nextTask();
+		tset.pushBack(t);
 	}
 	return tset;
 }

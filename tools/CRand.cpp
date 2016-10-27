@@ -1,4 +1,4 @@
-#include <CRand.h>
+#include "CRand.h"
 
 CRand::CRand()
 {

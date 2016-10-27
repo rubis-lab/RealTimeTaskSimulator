@@ -38,9 +38,9 @@ public:
 	CRand(int seed);
 	int changeSeed(int seed);
 	double uniform(double a, double b);
-	double normal(double a, double b);
-	double binomial(double a, double b);
-	double exponential(double a, double b);
+	double normal(double mu, double sigma);
+	double binomial(int n, double p);
+	double exponential(double lmbd);
 };
 
 #endif

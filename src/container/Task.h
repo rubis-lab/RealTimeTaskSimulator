@@ -2,7 +2,6 @@
 #define __TASK__
 
 #include <iostream>
-#include <cmath>
 
 class Task
 {
@@ -11,18 +10,22 @@ private:
 	double period;
 	double execTime;
 	double deadline;
-	//double responseTime;
-	int priority;
+	//int priority;
 	double offset;
-	//taskSet# 
-	//int seed;
-	//string tag;
 public:	
 	Task();
-	Task(int e, int d, int p);
-	int getExecTime();
-	int getDeadline();
-	int getPeriod();
+	Task(double e, double d, double p);
+	int print();
+
+	double getExecTime();
+	double getDeadline();
+	double getPeriod();
+	double getDensity();
+	double getUtilization();
+
+	int setExecTime(double e);
+	int setDeadline(double d);
+	int setPeriod(double p);
 };
 
 #endif

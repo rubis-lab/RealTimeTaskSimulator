@@ -12,7 +12,7 @@
 
 class Generator
 {
-private:
+protected:
 	double numTask;
 	double minPeriod;
 	double maxPeriod;
@@ -21,15 +21,14 @@ private:
 	double minExecTime;
 	double maxExecTime;
 	CRand cr;
-
 public:
 	Generator();
 	Generator(int seed);
 	int init();
 	int loadConfig(std::ifstream &file);
-	int saveConfig(void);
-	Task nextTask(int id);
-	TaskSet nextTaskSet(int id);
+	int saveConfig();
+	Task nextTask();
+	TaskSet nextTaskSet();
 };
 
 #endif

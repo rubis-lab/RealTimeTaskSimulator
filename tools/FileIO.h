@@ -8,8 +8,8 @@
 
 namespace FileIO 
 {
-	std::ifstream& goToLine(std::ifstream&, unsigned int);
-	std::ifstream& jumpLine(std::ifstream&, unsigned int);
+	void goToLine(std::ifstream& file, int num);
+	void jumpLine(std::ifstream& file, int num);
 }
 
 #endif

@@ -2,12 +2,14 @@
 
 Generator::Generator()
 {
-
+	cr = CRand();
+	init();
 }
 
 Generator::Generator(int seed)
 {
-
+	cr = CRand(seed);
+	init();
 }
 
 int Generator::init()
@@ -20,21 +22,19 @@ int Generator::loadConfig(std::ifstream &file)
 	return 1;
 }
 
-int Generator::saveConfig(void)
+int Generator::saveConfig()
 {
 	return 1;
 }
 
-Task Generator::nextTask(int id)
+Task Generator::nextTask()
 {
 	Task t = Task();
-	t.id = id;
 	return t;
 }
 
-TaskSet nextTaskSet(int id)
+TaskSet nextTaskSet()
 {
 	TaskSet tset = TaskSet();
-	tset.id = id;
 	return tset;
 }

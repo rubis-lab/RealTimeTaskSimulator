@@ -4,23 +4,36 @@
 #include <iostream>
 #include <fstream>
 #include <vector>
+#include <algorithm>
 #include "Task.h"
 
 class TaskSet
 {
 private:
-	int id;
 	std::vector<Task> ts;
-	//generator gen;
 public:
 	TaskSet();
-	int readTaskSet(std::ifstream &file);
-	int printTaskSet(void);
-	int length();
-	Task getTask(int);
-	void putTask(Task t);
-	void clear();
 
+	// Config
+	int readTaskSet(std::ifstream &file);
+	int printTaskSet();
+
+	// Vector operators
+	int count();
+	Task getTask(int idx);
+	int pushBack(Task t);
+	int clear();
+
+	// Sums
+	double sumDensity();
+	double sumUtilization();
+
+	// Min/Max
+	double maxDensity();
+	double maxUtilization();
+
+	// Sorter
+	int sortByDensity();
 };
 
 #endif

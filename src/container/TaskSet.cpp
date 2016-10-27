@@ -1,6 +1,6 @@
 #include "TaskSet.h"
 
-TaskSet::TaskSet(void)
+TaskSet::TaskSet()
 {
 
 }
@@ -8,9 +8,10 @@ TaskSet::TaskSet(void)
 int TaskSet::readTaskSet(std::ifstream &file)
 {
 	int e, d, p;
-	file >> count;
+	int cnt;
+	file >> cnt;
 	ts.clear();
-	for(int i = 0; i < count; i++) {
+	for(int i = 0; i < cnt; i++) {
 		file >> e;
 		file >> d;
 		file >> p;
@@ -21,11 +22,11 @@ int TaskSet::readTaskSet(std::ifstream &file)
 	return 1;
 }
 
-int TaskSet::printTaskSet(void)
+int TaskSet::printTaskSet()
 {
-	std::cout << count << std::endl;
+	std::cout << count() << std::endl;
 
-	for(int i = 0; i < count; i++) {
+	for(int i = 0; i < count(); i++) {
 		std::cout << ts[i].getExecTime() << " ";
 		std::cout << ts[i].getDeadline() << " ";
 		std::cout << ts[i].getPeriod() << std::endl;
@@ -33,18 +34,64 @@ int TaskSet::printTaskSet(void)
 	return 1;
 }
 
-int TaskSet::length(){
-  return ts.size();
+int TaskSet::count() 
+{
+	return ts.size();
 }
 
-Task TaskSet::getTask(int i){
-  return ts[i];
+Task TaskSet::getTask(int idx)
+{
+	return ts[idx];
 }
 
-void TaskSet::putTask(Task t){
-  ts.push_back(t);
+int TaskSet::pushBack(Task t)
+{
+	ts.push_back(t);
+	return 1;
 }
 
-void TaskSet::clear(){
-  ts.clear();
+int TaskSet::clear()
+{
+	ts.clear();
+	return 1;
 }
+
+double TaskSet::sumDensity()
+{
+	double sum = 0.0;
+	for(int i = 0; i < count(); i++) 
+		sum += ts[i].getDensity();
+	return sum;
+}
+
+double TaskSet::sumUtilization()
+{
+	double sum = 0.0;
+	for(int i = 0; i < count(); i++) 
+		sum += ts[i].getUtilization();
+	return sum;
+}
+
+double TaskSet::maxDensity()
+{
+	auto maxDensityTask = std::minmax_element(ts.begin(), ts.end(), \
+		[] (Task & t1, Task & t2) {return t1.getDensity() > t2.getDensity();});
+	//[] (Task t1, Task t2) {return t1.getDensity() > t2.getDensity();});
+	return maxDensityTask.first->getDensity();
+}
+
+double TaskSet::maxUtilization()
+{
+	auto maxUtilizationTask = std::minmax_element(ts.begin(), ts.end(), \
+		[] (Task & t1, Task & t2) {return t1.getUtilization() > t2.getUtilization();});
+	//[] (Task t1, Task t2) {return t1.getUtilization() > t2.getUtilization();});
+	return maxUtilizationTask.first->getUtilization();
+}
+
+int TaskSet::sortByDensity()
+{
+	std::sort(ts.begin(), ts.end(), \
+		[] (Task t1, Task t2) {return t1.getDensity() < t2.getDensity();});
+	return 1;
+}
+

@@ -1,35 +1,26 @@
-#include "SimpleGenerator.h"
+#include "MarcoGenerator.h"
 
-SimpleGenerator::SimpleGenerator() : Generator()
+MarcoGenerator::MarcoGenerator(int seed) : Generator(seed)
 {
 	// Default configuration
 	std::ifstream file;
-	file.open("../config/sgen.cfg");
+	file.open("../config/marcogen.cfg");
 	init(file);
 	file.close();
 }
 
-SimpleGenerator::SimpleGenerator(int seed) : Generator(seed)
-{
-	// Default configuration
-	std::ifstream file;
-	file.open("../config/sgen.cfg");
-	init(file);
-	file.close();
-}
-
-SimpleGenerator::SimpleGenerator(int seed, std::ifstream &file) : Generator(seed)
+MarcoGenerator::MarcoGenerator(int seed, std::ifstream &file) : Generator(seed)
 {
 	init(file);
 }
 
-int SimpleGenerator::init(std::ifstream &file)
+int MarcoGenerator::init(std::ifstream &file)
 {
 	loadConfig(file);
 	return 1;
 }
 
-int SimpleGenerator::loadConfig(std::ifstream &file)
+int MarcoGenerator::loadConfig(std::ifstream &file)
 {
 	FileIO::goToLine(file, 4);
 
@@ -46,7 +37,7 @@ int SimpleGenerator::loadConfig(std::ifstream &file)
 	return 1;
 }
 
-Task SimpleGenerator::nextTask()
+Task MarcoGenerator::nextTask()
 {
 	Task t = Task();
 	t.setExecTime(cr.uniform(minExecTime, maxExecTime));
@@ -55,7 +46,7 @@ Task SimpleGenerator::nextTask()
 	return t;
 }
 
-TaskSet SimpleGenerator::nextTaskSet()
+TaskSet MarcoGenerator::nextTaskSet()
 {
 	TaskSet tset = TaskSet();
 	for(int i = 0; i < numTask; i++) {

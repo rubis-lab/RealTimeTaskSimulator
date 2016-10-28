@@ -1,12 +1,14 @@
 #ifndef __P_MATH__
 #define __P_MATH__
 
-#include <cstdlib>
-#include <cmath>
+#include <vector>
 
-namespace PM 
+namespace PMath 
 {
-	int foo();
+	int GCD(int a, int b);
+	int GCD(std::vector<int> arr);
+	int LCM(int a, int b);
+	int LCM(std::vector<int> arr);
 }
 
 #endif

@@ -15,13 +15,10 @@ private:
 public:	
 	Task();
 	Task(double e, double d, double p);
-	int print();
 
 	double getExecTime();
 	double getDeadline();
 	double getPeriod();
-	double getDensity();
-	double getUtilization();
 
 	int setExecTime(double e);
 	int setDeadline(double d);

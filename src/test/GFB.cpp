@@ -9,8 +9,8 @@ bool GFB::isSchedulable(TaskSet ts)
 {
 	bool ret = false;
 
-	double lmdTot = ts.sumUtilization();
-	double lmdMax = ts.maxUtilization();
+	double lmdTot = TaskSetUtil::sumUtilization(ts);
+	double lmdMax = TaskSetUtil::getMaxUtilization(ts);
 
 	ret = (lmdTot <= nProc * (1.0 - lmdMax) + lmdMax);
 	return ret;

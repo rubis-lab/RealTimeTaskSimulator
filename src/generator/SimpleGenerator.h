@@ -8,6 +8,7 @@ class SimpleGenerator : public Generator
 private:
 	int init(std::ifstream &file);
 public:
+	SimpleGenerator();
 	SimpleGenerator(int seed);
 	SimpleGenerator(int seed, std::ifstream &file);
 	

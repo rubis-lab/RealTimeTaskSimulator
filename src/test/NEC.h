@@ -1,17 +1,18 @@
-#ifndef __GFB__
-#define __GFB__
+#ifndef __NEC__
+#define __NEC__
 
 #include "../container/Task.h"
 #include "../container/TaskSet.h"
-#include "../ops/TaskSetUtil.h"
 #include "../container/Param.h"
+#include <cmath>
 
-class GFB
+class NEC
 {
 private:
 	double nProc;
-public:
-	GFB(Param pr);
+public:	
+	NEC(Param pr);
 	bool isSchedulable(TaskSet ts);
 };
+
 #endif

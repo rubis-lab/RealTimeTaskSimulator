@@ -11,14 +11,18 @@ SOURCE = \
 	../src/container/TaskSet.cpp	\
 	../src/container/ParallelizableTaskSet.cpp	\
 	../src/experiment/Experiment.cpp	\
-	../src/experiment/RTAExp.cpp	\
+	../src/experiment/SimpleExperiment.cpp	\
 	../src/generator/Generator.cpp	\
 	../src/generator/SimpleGenerator.cpp	\
 	../src/ops/TaskModifier.cpp	\
 	../src/ops/TaskSetModifier.cpp	\
+	../src/ops/TaskUtil.cpp	\
+	../src/ops/TaskSetUtil.cpp	\
+	../src/test/NEC.cpp	\
 	../src/test/GFB.cpp \
 	../src/test/BCL.cpp \
 	../tools/CRand.cpp	\
+	../tools/PMath.cpp	\
 	../tools/FileIO.cpp	
 
 

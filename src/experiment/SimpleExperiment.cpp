@@ -7,7 +7,7 @@ SimpleExperiment::SimpleExperiment() : Experiment()
 
 int SimpleExperiment::set()
 {
-	sg = SimpleGenerator(pr.getSeed());
+	sg = SimpleGenerator(pr);
 
 	return 1;
 }

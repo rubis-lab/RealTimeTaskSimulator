@@ -8,7 +8,7 @@ RTAExperiment::RTAExperiment() : Experiment()
 int RTAExperiment::testRun()
 {
 	// generate task
-	SimpleGenerator sg = SimpleGenerator(1000);
+	SimpleGenerator sg = SimpleGenerator();
 	TaskSet ts = sg.nextTaskSet();
 	// apply tests
 	BCL bcl = BCL(pr);

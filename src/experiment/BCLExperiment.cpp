@@ -7,7 +7,7 @@ BCLExperiment::BCLExperiment() : Experiment()
 
 int BCLExperiment::set()
 {
-	sg = SimpleGenerator(pr.getSeed());
+	sg = SimpleGenerator(pr);
 
 	return 1;
 }

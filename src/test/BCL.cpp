@@ -1,8 +1,13 @@
 #include "BCL.h"
 
-BCL::BCL(Param pr)
+BCL::BCL()
 {
-	nProc = pr.getNProc();
+	pr = Param();
+}
+
+BCL::BCL(Param paramExt)
+{
+	pr = paramExt;
 }
 
 double BCL::calcInterference(TaskSet ts, int baseTaskIndex, int interTaskIndex)
@@ -45,7 +50,7 @@ bool BCL::isSchedulable(TaskSet ts)
 					continue;
 				sumJ += calcInterference(ts, baseTaskIndex, interTaskIndex);
 			}
-			sumJ = std::floor(sumJ / nProc);
+			sumJ = std::floor(sumJ / pr.getNProc());
 
 			double sum = dBase - cBase - sumJ;
 

@@ -14,6 +14,7 @@ SOURCE = \
 	../src/experiment/SimpleExperiment.cpp	\
 	../src/generator/Generator.cpp	\
 	../src/generator/SimpleGenerator.cpp	\
+	../src/generator/MarcoGenerator.cpp	\
 	../src/ops/TaskModifier.cpp	\
 	../src/ops/TaskSetModifier.cpp	\
 	../src/ops/TaskUtil.cpp	\

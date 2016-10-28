@@ -1,15 +1,20 @@
 #ifndef __MARCOGEN__
 #define __MARCOGEN__
 
-#include "Generator.h"
+#include "../generator/Generator.h"
+#include "../ops/TaskSetUtil.h"
+#include "../test/NEC.h"
 
 class MarcoGenerator : public Generator
 {
 private:
 	int init(std::ifstream &file);
+	double lmbd;
+	NEC nec;
 public:
-	SimpleGenerator(int seed);
-	SimpleGenerator(int seed, std::ifstream &file);
+	MarcoGenerator();
+	MarcoGenerator(Param paramExt);
+	MarcoGenerator(Param paramExt, std::ifstream &file);
 	
 	int loadConfig(std::ifstream &file);
 	

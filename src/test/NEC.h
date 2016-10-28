@@ -1,19 +1,22 @@
 #ifndef __NEC__
 #define __NEC__
 
+#include "../container/Param.h"
 #include "../container/Task.h"
 #include "../container/TaskSet.h"
 #include "../ops/TaskUtil.h"
 #include "../ops/TaskSetUtil.h"
-#include "../container/Param.h"
+
 #include <cmath>
 
 class NEC
 {
 private:
-	double nProc;
+	Param pr;
+	int init();
 public:	
-	NEC(Param pr);
+	NEC();
+	NEC(Param paramExt);
 	bool passesNecTest(TaskSet ts);
 };
 

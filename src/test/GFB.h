@@ -9,9 +9,10 @@
 class GFB
 {
 private:
-	double nProc;
+	Param pr;
 public:
-	GFB(Param pr);
+	GFB();
+	GFB(Param paramExt);
 	bool isSchedulable(TaskSet ts);
 };
 #endif

@@ -1,6 +1,6 @@
 #include "MarcoGenerator.h"
 
-MarcoGenerator::MarcoGenerator(int seed) : Generator(seed)
+MarcoGenerator::MarcoGenerator() : Generator()
 {
 	// Default configuration
 	std::ifstream file;
@@ -9,13 +9,24 @@ MarcoGenerator::MarcoGenerator(int seed) : Generator(seed)
 	file.close();
 }
 
-MarcoGenerator::MarcoGenerator(int seed, std::ifstream &file) : Generator(seed)
+MarcoGenerator::MarcoGenerator(Param paramExt) : Generator(paramExt)
+{
+	// Default configuration
+	std::ifstream file;
+	file.open("../config/marcogen.cfg");
+	init(file);
+	file.close();
+}
+
+
+MarcoGenerator::MarcoGenerator(Param paramExt, std::ifstream &file) : Generator(paramExt)
 {
 	init(file);
 }
 
 int MarcoGenerator::init(std::ifstream &file)
 {
+	nec = NEC(pr);
 	loadConfig(file);
 	return 1;
 }
@@ -26,32 +37,58 @@ int MarcoGenerator::loadConfig(std::ifstream &file)
 
 	std::string buf;
 	file >> buf;
-	file >> numTask;
+	file >> lmbd;
+	file >> buf;
+	file >> minPeriod;
 	file >> buf;
 	file >> maxPeriod;
-	file >> buf;
-	file >> maxDeadline;
-	file >> buf;
-	file >> maxExecTime;
 
 	return 1;
 }
 
 Task MarcoGenerator::nextTask()
 {
+	// pick a utilization < 1.0
+	double candUtilization;
+	while(candUtilization < 0.0 || candUtilization >= 1.0) {
+		candUtilization = cr.exponential(lmbd);
+	}
+	double candPeriod = std::floor(cr.uniform(minPeriod, maxPeriod));
+	double candExecTime = std::floor(candPeriod * candUtilization);
+	double candDeadline = std::floor(cr.uniform(candExecTime, candPeriod));
+
 	Task t = Task();
-	t.setExecTime(cr.uniform(minExecTime, maxExecTime));
-	t.setDeadline(cr.uniform(minDeadline, maxDeadline));
-	t.setPeriod(cr.uniform(minPeriod, maxPeriod));
+	t.setExecTime(candExecTime);
+	t.setDeadline(candDeadline);
+	t.setPeriod(candPeriod);
+
 	return t;
 }
 
 TaskSet MarcoGenerator::nextTaskSet()
 {
-	TaskSet tset = TaskSet();
-	for(int i = 0; i < numTask; i++) {
-		Task t = nextTask();
-		tset.pushBack(t);
+	// clean run
+	if(ts.count() == 0) {
+		// generate m + 1 tasks
+		do {
+			while(ts.count() <= pr.getNProc()) {
+				Task t = nextTask();
+				ts.pushBack(t);
+			}
+		// until it passes necessary test
+		} while (!nec.passesNecTest(ts));
+		return ts;
 	}
-	return tset;
+	
+	// already have some tasks in --> append a new task
+	Task t = nextTask();
+	ts.pushBack(t);
+
+	// cannot pass necessary test --> start over
+	if(!nec.passesNecTest(ts)) {
+		ts.clear();
+		return nextTaskSet();
+	}
+
+	return ts;
 }

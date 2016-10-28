@@ -1,8 +1,20 @@
 #include "NEC.h"
 
-NEC::NEC(Param pr)
+NEC::NEC()
 {
-	nProc = pr.getNProc();
+	pr = Param();
+	init();
+}
+
+NEC::NEC(Param paramExt)
+{
+	pr = paramExt;
+	init();
+}
+
+int NEC::init()
+{
+	return 1;
 }
 
 bool NEC::passesNecTest(TaskSet ts)
@@ -26,7 +38,7 @@ bool NEC::passesNecTest(TaskSet ts)
 			}
 
 			// sum(total demand + throw-forwards) < m * interval
-			if(sum > nProc * interval) {
+			if(sum > pr.getNProc() * interval) {
 				return false;
 			}
 

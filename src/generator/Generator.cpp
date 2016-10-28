@@ -2,18 +2,19 @@
 
 Generator::Generator()
 {
-	cr = CRand();
+	pr = Param();
 	init();
 }
 
-Generator::Generator(int seed)
+Generator::Generator(Param paramExt)
 {
-	cr = CRand(seed);
+	pr = paramExt;
 	init();
 }
 
 int Generator::init()
 {
+	cr = CRand(pr.getSeed());
 	return 1;
 }
 

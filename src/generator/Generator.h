@@ -5,6 +5,7 @@
 #include <fstream>
 #include <stdlib.h>
 
+#include "../container/Param.h"
 #include "../container/Task.h"
 #include "../container/TaskSet.h"
 #include "../../tools/FileIO.h"
@@ -13,6 +14,9 @@
 class Generator
 {
 protected:
+	Param pr;
+	CRand cr;
+	TaskSet ts;
 	double numTask;
 	double minPeriod;
 	double maxPeriod;
@@ -20,12 +24,11 @@ protected:
 	double maxDeadline;
 	double minExecTime;
 	double maxExecTime;
-	CRand cr;
 	int init();
 
 public:
 	Generator();
-	Generator(int seed);
+	Generator(Param paramExt);
 
 	int loadConfig(std::ifstream &file);
 	int saveConfig();

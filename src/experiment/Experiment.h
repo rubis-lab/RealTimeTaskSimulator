@@ -4,10 +4,11 @@
 #include <iostream>
 #include <fstream>
 
-#include "TaskSet.h"
-#include "Param.h"
+#include "../container/TaskSet.h"
+#include "../container/Param.h"
 #include "../generator/SimpleGenerator.h"
 #include "../test/GFB.h"
+#include "../ops/TaskSetModifier.h"
 
 class Experiment
 {
@@ -16,12 +17,12 @@ private:
 	Param pr;
 	//Generator gen;
 	TaskSet ts;
-
+	int init();
 public:
 	Experiment();
 	Experiment(std::ifstream &file);
-	int init();
-	int run();
+	
+	int naiveTest();
 	int output();
 };
 

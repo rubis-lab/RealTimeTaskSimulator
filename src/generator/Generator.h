@@ -21,12 +21,15 @@ protected:
 	double minExecTime;
 	double maxExecTime;
 	CRand cr;
+	int init();
+
 public:
 	Generator();
 	Generator(int seed);
-	int init();
+
 	int loadConfig(std::ifstream &file);
 	int saveConfig();
+	
 	Task nextTask();
 	TaskSet nextTaskSet();
 };

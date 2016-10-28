@@ -17,7 +17,7 @@ int Experiment::init()
 	return 1;
 }
 
-int Experiment::run()
+int Experiment::naiveTest()
 {
 	// generate task
 	SimpleGenerator sg = SimpleGenerator(1000);
@@ -31,7 +31,6 @@ int Experiment::run()
 	} else {
 		std::cout << "not Schedulable" << std::endl;
 	}
-	
 	return 1;
 }
 

@@ -5,9 +5,21 @@ BCL::BCL(Param pr)
 	nProc = pr.getNProc();
 }
 
-double calcInterference(Task tk, Task ti)
+double BCL::calcInterference(TaskSet ts, int baseTaskIndex, int interTaskIndex)
 {
-	return 0.0;
+	Task baseTask = ts.getTask(baseTaskIndex);
+	Task interTask = ts.getTask(interTaskIndex);
+
+	double nInterfereTask = std::floor(baseTask.getDeadline() / interTask.getPeriod());
+
+	double carryIn = (std::remainder(baseTask.getDeadline(), interTask.getPeriod()) - slack[interTaskIndex]);
+	if(carryIn < 0.0) { 
+		carryIn = 0.0;
+	}
+
+	double jk = interTask.getExecTime() * nInterfereTask + std::min(interTask.getExecTime(), carryIn);
+
+	return std::min(jk, baseTask.getDeadline() - baseTask.getExecTime() + 1.0);
 }
 
 bool BCL::isSchedulable(TaskSet ts)
@@ -22,26 +34,31 @@ bool BCL::isSchedulable(TaskSet ts)
 		isFeasible = true;
 		updated = false;
 
-		// Dk - Ck - |_(1/m) sum(i!=k)min(J, Dk - Ck + 1)_|
-
-		for(int k = 0; k < ts.count(); k++) {
-			Task tk = ts.getTask(k);
-			double dk = tk.getDeadline();
-			double ck = tk.getExecTime();
+		for(int baseTaskIndex = 0; baseTaskIndex < ts.count(); baseTaskIndex++) {
+			Task baseTask = ts.getTask(baseTaskIndex);
+			double dBase = baseTask.getDeadline();
+			double cBase = baseTask.getExecTime();
 
 			double sumJ = 0.0;
-			for(int i = 0; i < ts.count(); i++) {
-				if(i == k)
+			for(int interTaskIndex = 0; interTaskIndex < ts.count(); interTaskIndex++) {
+				if(interTaskIndex == baseTaskIndex)
 					continue;
-				Task ti = ts.getTask(i);
-				sumJ += std::min(calcInterference(tk, ti), dk - ck + 1.0);
+				sumJ += calcInterference(ts, baseTaskIndex, interTaskIndex);
 			}
+			sumJ = std::floor(sumJ / nProc);
 
-			double sum = sumJ = dk - ck + ;
+			double sum = dBase - cBase - sumJ;
+
+			if(sum < 0.0) {
+				isFeasible = false;
+			} else if (sum > slack[baseTaskIndex]) {
+				slack[baseTaskIndex] = sum;
+				updated = true;
+			}
 		}
-
-
+		if(isFeasible) {
+			return isFeasible;
+		}
 	}
-
 	return isFeasible;
 }

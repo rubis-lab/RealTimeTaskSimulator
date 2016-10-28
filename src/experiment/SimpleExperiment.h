@@ -3,7 +3,6 @@
 
 #include "../experiment/Experiment.h"
 #include "../generator/SimpleGenerator.h"
-#include "../ops/TaskSetModifier.h"
 #include "../test/GFB.h"
 
 class SimpleExperiment : public Experiment

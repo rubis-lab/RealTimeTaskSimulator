@@ -3,6 +3,8 @@
 
 #include "../container/Task.h"
 #include "../container/TaskSet.h"
+#include "../ops/TaskUtil.h"
+#include "../ops/TaskSetUtil.h"
 #include "../container/Param.h"
 #include <cmath>
 
@@ -12,7 +14,7 @@ private:
 	double nProc;
 public:	
 	NEC(Param pr);
-	bool isSchedulable(TaskSet ts);
+	bool passesNecTest(TaskSet ts);
 };
 
 #endif

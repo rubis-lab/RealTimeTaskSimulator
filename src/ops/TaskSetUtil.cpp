@@ -18,7 +18,7 @@ TaskSet TaskSetUtil::readTaskSet(std::ifstream &file)
 	return retTaskSet;
 }
 
-int TaskSetUtil::printTaskSet(TaskSet ts)
+int TaskSetUtil::printTaskSet(TaskSet &ts)
 {
 	std::cout << ts.count() << std::endl;
 
@@ -30,7 +30,7 @@ int TaskSetUtil::printTaskSet(TaskSet ts)
 	return 1;
 }
 
-double TaskSetUtil::sumDensity(TaskSet ts)
+double TaskSetUtil::sumDensity(TaskSet &ts)
 {
 	double sum = 0.0;
 	for(int i = 0; i < ts.count(); i++) 
@@ -38,7 +38,7 @@ double TaskSetUtil::sumDensity(TaskSet ts)
 	return sum;
 }
 
-double TaskSetUtil::sumUtilization(TaskSet ts)
+double TaskSetUtil::sumUtilization(TaskSet &ts)
 {
 	double sum = 0.0;
 	for(int i = 0; i < ts.count(); i++) 
@@ -46,7 +46,7 @@ double TaskSetUtil::sumUtilization(TaskSet ts)
 	return sum;
 }
 
-double TaskSetUtil::getMaxDensity(TaskSet ts)
+double TaskSetUtil::getMaxDensity(TaskSet &ts)
 {
 	std::vector<Task> tsvec = ts.getVector();
 	auto maxDensityTask = std::minmax_element(tsvec.begin(), tsvec.end(), \
@@ -56,7 +56,7 @@ double TaskSetUtil::getMaxDensity(TaskSet ts)
 	return TaskUtil::calcDensity(*maxDensityTask.first);
 }
 
-double TaskSetUtil::getMaxUtilization(TaskSet ts)
+double TaskSetUtil::getMaxUtilization(TaskSet &ts)
 {
 	std::vector<Task> tsvec = ts.getVector();
 	auto maxUtilizationTask = std::minmax_element(tsvec.begin(), tsvec.end(), \
@@ -66,7 +66,7 @@ double TaskSetUtil::getMaxUtilization(TaskSet ts)
 	return TaskUtil::calcUtilization(*maxUtilizationTask.first);
 }
 
-int TaskSetUtil::sortByDensity(TaskSet ts)
+int TaskSetUtil::sortByDensity(TaskSet &ts)
 {
 	std::vector<Task> tsvec = ts.getVector();
 	std::sort(tsvec.begin(), tsvec.end(), \
@@ -74,7 +74,7 @@ int TaskSetUtil::sortByDensity(TaskSet ts)
 	return 1;
 }
 
-double TaskSetUtil::calcTaskLCM(TaskSet ts)
+double TaskSetUtil::calcTaskLCM(TaskSet &ts)
 {
 	std::vector<int> periodArr;
 	for(int i = 0; i < ts.count(); i++) {

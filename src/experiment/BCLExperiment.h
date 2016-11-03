@@ -8,6 +8,7 @@
 #include "../generator/MarcoGenerator.h"
 #include "../ops/TaskSetUtil.h"
 #include "../test/BCL.h"
+#include "../test/GFB.h"
 
 class BCLExperiment : public Experiment
 {
@@ -15,13 +16,16 @@ private:
 	int init();
 	MarcoGenerator *mg;
 	BCL *bcl;
-	bool schedulable;
+	GFB *gfb;
+	double utilizationInc;
 	int init(std::ifstream &file);
 	int loadEnvironment(std::ifstream &file);
-	//std::vector<bool> schedulable;
+	std::vector<double> taskSetUtilization;
+	std::vector<bool> schedulability;
 public:
 	BCLExperiment();
 	int set();
+	int reset();
 	int run();
 	int output();
 };

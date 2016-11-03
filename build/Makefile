@@ -3,11 +3,19 @@ CC = g++
 
 #release option
 #DEBUG ?= 1
-ifeq ($(DEBUG), 1)
+#ifeq ($(DEBUG), 1)
+#	CFLAGS = -g -Wall -O1 -std=c++11 -I$(LIB_OPTION) \
+#		-D__DEBUG=1
+#else
+#	CFLAGS = -O1 -std=c++11 -I$(LIB_OPTION)
+#endif
+
+#release option
+ifeq ($(RELEASE), 1)
+	CFLAGS = -O1 -std=c++11 -I$(LIB_OPTION)
+else
 	CFLAGS = -g -Wall -O1 -std=c++11 -I$(LIB_OPTION) \
 		-D__DEBUG=1
-else
-	CFLAGS = -O2 -std=c++11 -I$(LIB_OPTION)
 endif
 
 #sources

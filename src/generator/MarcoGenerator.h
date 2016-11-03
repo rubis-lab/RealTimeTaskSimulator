@@ -8,15 +8,15 @@
 class MarcoGenerator : public Generator
 {
 private:
-	int init(std::ifstream &file);
 	double lmbd;
 	NEC *nec;
+	int init(std::ifstream &file);
+	int loadConfig(std::ifstream &file);
+	int reset();
 public:
 	MarcoGenerator();
 	MarcoGenerator(Param *paramExt);
 	MarcoGenerator(Param *paramExt, std::ifstream &file);
-	
-	int loadConfig(std::ifstream &file);
 	
 	Task nextTask();
 	TaskSet nextTaskSet();

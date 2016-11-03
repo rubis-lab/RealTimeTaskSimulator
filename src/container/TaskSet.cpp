@@ -10,7 +10,7 @@ int TaskSet::count()
 	return ts.size();
 }
 
-Task TaskSet::getTask(int idx)
+Task& TaskSet::getTask(int idx)
 {
 	return ts[idx];
 }

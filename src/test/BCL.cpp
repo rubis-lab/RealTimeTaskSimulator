@@ -10,7 +10,13 @@ BCL::BCL(Param *paramExt)
 	pr = paramExt;
 }
 
-double BCL::calcInterference(TaskSet ts, int baseTaskIndex, int interTaskIndex)
+int BCL::reset()
+{
+	slack.clear();
+	return 1;
+}
+
+double BCL::calcInterference(TaskSet &ts, int baseTaskIndex, int interTaskIndex)
 {
 	Task baseTask = ts.getTask(baseTaskIndex);
 	Task interTask = ts.getTask(interTaskIndex);
@@ -27,8 +33,10 @@ double BCL::calcInterference(TaskSet ts, int baseTaskIndex, int interTaskIndex)
 	return std::min(jk, baseTask.getDeadline() - baseTask.getExecTime() + 1.0);
 }
 
-bool BCL::isSchedulable(TaskSet ts)
+bool BCL::isSchedulable(TaskSet &ts)
 {
+	reset();
+
 	// init slack
 	for(int i = 0; i < ts.count(); i++) {
 		slack.push_back(0.0);

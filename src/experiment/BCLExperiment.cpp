@@ -11,6 +11,7 @@ BCLExperiment::BCLExperiment() : Experiment()
 int BCLExperiment::init(std::ifstream &file)
 {
 	loadEnvironment(file);
+	reset();
 	return 1;
 }
 
@@ -21,6 +22,8 @@ int BCLExperiment::loadEnvironment(std::ifstream &file)
 	std::string buf;
 	file >> buf;
 	file >> expName;
+	file >> buf;
+	file >> utilizationInc;
 
 	return 1;
 }
@@ -28,7 +31,15 @@ int BCLExperiment::loadEnvironment(std::ifstream &file)
 int BCLExperiment::set()
 {
 	mg = new MarcoGenerator(pr);
-	bcl = new BCL(pr);
+	//bcl = new BCL(pr);
+	gfb = new GFB(pr);
+	return 1;
+}
+
+int BCLExperiment::reset()
+{
+	taskSetUtilization.clear();
+	schedulability.clear();
 	return 1;
 }
 
@@ -36,8 +47,11 @@ int BCLExperiment::run()
 {
 	for(int i = 0; i < iter; i++) {
 		TaskSet ts = mg->nextTaskSet();
-		TaskSetUtil::printTaskSet(ts);
-		schedulable = bcl->isSchedulable(ts);
+		//TaskSetUtil::printTaskSet(ts);
+		
+		taskSetUtilization.push_back(TaskSetUtil::sumUtilization(ts));
+
+		schedulability.push_back(gfb->isSchedulable(ts));
 	}
 	
 	return 1;
@@ -45,14 +59,7 @@ int BCLExperiment::run()
 
 int BCLExperiment::output()
 {
-	el = new ExperimentLogger(expName);
-
-	/*
-	if(schedulable) {
-		std::cout << "Schedulable" << std::endl;
-	} else {
-		std::cout << "not Schedulable" << std::endl;
-	}
-	*/
+	el = new ExperimentLogger(expName, pr);
+	el->printUtilVsSchedulability(taskSetUtilization, schedulability, utilizationInc);
 	return 1;
 }

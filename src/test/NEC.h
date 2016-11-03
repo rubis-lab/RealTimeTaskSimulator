@@ -17,7 +17,8 @@ private:
 public:	
 	NEC();
 	NEC(Param *paramExt);
-	bool passesNecTest(TaskSet ts);
+	bool passesNaiveNecTest(TaskSet &ts);
+	bool passesNecTest(TaskSet &ts);
 };
 
 #endif

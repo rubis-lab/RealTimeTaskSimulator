@@ -16,20 +16,20 @@ namespace TaskSetUtil
 {
 	// Config
 	TaskSet readTaskSet(std::ifstream &file);
-	int printTaskSet(TaskSet ts);
+	int printTaskSet(TaskSet &ts);
 
 	// Sums
-	double sumDensity(TaskSet ts);
-	double sumUtilization(TaskSet ts);
+	double sumDensity(TaskSet &ts);
+	double sumUtilization(TaskSet &ts);
 
 	// Min/Max
-	double getMaxDensity(TaskSet ts);
-	double getMaxUtilization(TaskSet ts);
+	double getMaxDensity(TaskSet &ts);
+	double getMaxUtilization(TaskSet &ts);
 
 	// Sorter
-	int sortByDensity(TaskSet ts);
+	int sortByDensity(TaskSet &ts);
 
 	//lcm
-	double calcTaskLCM(TaskSet ts);
+	double calcTaskLCM(TaskSet &ts);
 }
 #endif

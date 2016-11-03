@@ -11,10 +11,11 @@ class BCL
 private:
 	Param *pr;
 	std::vector<double> slack;
-	double calcInterference(TaskSet ts, int baseTaskIndex, int interTaskIndex);
+	int reset();
+	double calcInterference(TaskSet &ts, int baseTaskIndex, int interTaskIndex);
 public:
 	BCL();
 	BCL(Param *paramExt);
-	bool isSchedulable(TaskSet ts);
+	bool isSchedulable(TaskSet &ts);
 };
 #endif

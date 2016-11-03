@@ -18,7 +18,6 @@ MarcoGenerator::MarcoGenerator(Param *paramExt) : Generator(paramExt)
 	file.close();
 }
 
-
 MarcoGenerator::MarcoGenerator(Param *paramExt, std::ifstream &file) : Generator(paramExt)
 {
 	init(file);
@@ -43,6 +42,11 @@ int MarcoGenerator::loadConfig(std::ifstream &file)
 	file >> buf;
 	file >> maxPeriod;
 
+	return 1;
+}
+
+int MarcoGenerator::reset()
+{
 	return 1;
 }
 
@@ -88,7 +92,8 @@ TaskSet MarcoGenerator::nextTaskSet()
 				ts.pushBack(t);
 			}
 		// until it passes necessary test
-		} while (!nec->passesNecTest(ts));
+		} while (!nec->passesNaiveNecTest(ts));
+		//while (!nec->passesNecTest(ts));
 		return ts;
 	}
 	
@@ -97,9 +102,11 @@ TaskSet MarcoGenerator::nextTaskSet()
 	ts.pushBack(t);
 
 	// cannot pass necessary test --> start over
-	if(!nec->passesNecTest(ts)) {
+	if(!nec->passesNaiveNecTest(ts)) {
+	//if(!nec->passesNecTest(ts)) {
 		ts.clear();
 		return nextTaskSet();
 	}
+
 	return ts;
 }

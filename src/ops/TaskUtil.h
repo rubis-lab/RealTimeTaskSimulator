@@ -9,13 +9,13 @@
 namespace TaskUtil
 {
 	// print
-	int printTask(Task t);
+	int printTask(Task &t);
 
 	// primitive
-	double calcDensity(Task t);
-	double calcUtilization(Task t);
+	double calcDensity(Task &t);
+	double calcUtilization(Task &t);
 
 	// Demand 
-	double calcDemandOverInterval(Task t, double interval);
+	double calcDemandOverInterval(Task &t, double interval);
 }
 #endif

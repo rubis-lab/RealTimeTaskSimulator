@@ -17,7 +17,16 @@ int NEC::init()
 	return 1;
 }
 
-bool NEC::passesNecTest(TaskSet ts)
+bool NEC::passesNaiveNecTest(TaskSet &ts)
+{
+	// U < m
+	if(TaskSetUtil::sumUtilization(ts) < pr->getNProc()) {
+		return true;
+	}
+	return false;
+}
+
+bool NEC::passesNecTest(TaskSet &ts)
 {
 	double taskSetLCM = TaskSetUtil::calcTaskLCM(ts);
 	

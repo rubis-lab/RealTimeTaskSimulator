@@ -15,7 +15,7 @@ private:
 public:	
 	Param();
 	Param(std::ifstream &file);
-	int getNProc();
+	double getNProc();
 	int getSeed();
 };
 #endif

@@ -22,7 +22,6 @@ private:
 public:	
 	ExperimentLogger();
 	ExperimentLogger(std::string ename, Param *paramExt);
-	//int printUtilVsSchedulability(double *tsutil, bool *sched, double inc);
 	int printUtilVsSchedulability(std::vector<double> &tsutil, std::vector<bool> &sched, double inc);
 };
 

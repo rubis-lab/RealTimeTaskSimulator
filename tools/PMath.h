@@ -2,6 +2,9 @@
 #define __P_MATH__
 
 #include <vector>
+#include <cstdlib>
+#include <ctime>
+#include <cmath>
 
 namespace PMath 
 {
@@ -9,6 +12,7 @@ namespace PMath
 	int GCD(std::vector<int> arr);
 	int LCM(int a, int b);
 	int LCM(std::vector<int> arr);
+	std::vector<double> Unifast(int n, double total);
 }
 
 #endif

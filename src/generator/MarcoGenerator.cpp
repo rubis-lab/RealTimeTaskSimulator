@@ -87,7 +87,7 @@ TaskSet MarcoGenerator::nextTaskSet()
 		// generate m + 1 tasks
 		do {
 			ts.clear();
-			while(ts.count() <= pr->getNProc()) {
+			while((double)ts.count() <= pr->getNProc()) {
 				Task t = nextTask();
 				ts.pushBack(t);
 			}

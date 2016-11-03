@@ -57,3 +57,33 @@ int PMath::LCM(std::vector<int> arr)
 
 	return ret;
 }
+
+std::vector<double> PMath::Unifast(int n, double total)
+{
+	std::vector<double> ret;
+	double sum = total;
+	for(int i = 0; i < n - 1; i++) {
+		double base = (double)(rand() % 10000) / 10000;
+		double tmp = sum * std::pow(base, (1.00 / (double)(n - i)));
+		ret.push_back(sum - tmp);
+		sum = tmp;
+	}
+	ret.push_back(sum);
+	return ret;
+}
+
+/*
+public double[] UUnifast (int n, double total) {
+		double [] result = new double [n];
+		double sum = total;
+	
+		for (int i = 0; i < n - 1; i++) {
+			double tmp = sum * Math.pow(random.nextDouble(), (double)(1.000000 / (n - i)));
+			result[i] = sum - tmp;
+			sum = tmp;
+		}
+		result[n - 1] = sum;
+	
+		return result;
+	}
+	*/

@@ -35,7 +35,7 @@ int ExperimentLogger::printUtilVsSchedulability(std::vector<double> &tsutil, std
 	// total task sets in utilization
 	std::vector<int> ntot(containerSize);
 
-	// sorting by utilization
+	// condense by utilization
 	for(int i = 0; i < iter; i++) {
 		int idx = (int)std::floor(tsutil[i] / inc);
 		ntot[idx]++;

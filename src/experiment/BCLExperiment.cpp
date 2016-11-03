@@ -30,7 +30,8 @@ int BCLExperiment::loadEnvironment(std::ifstream &file)
 
 int BCLExperiment::set()
 {
-	mg = new MarcoGenerator(pr);
+	//mg = new MarcoGenerator(pr);
+	ug = new UniFastGenerator(pr);
 	//bcl = new BCL(pr);
 	gfb = new GFB(pr);
 	return 1;
@@ -46,7 +47,7 @@ int BCLExperiment::reset()
 int BCLExperiment::run()
 {
 	for(int i = 0; i < iter; i++) {
-		TaskSet ts = mg->nextTaskSet();
+		TaskSet ts = ug->nextTaskSet();
 		//TaskSetUtil::printTaskSet(ts);
 		
 		taskSetUtilization.push_back(TaskSetUtil::sumUtilization(ts));

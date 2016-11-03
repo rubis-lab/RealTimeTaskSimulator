@@ -9,12 +9,14 @@
 #include "../ops/TaskSetUtil.h"
 #include "../test/BCL.h"
 #include "../test/GFB.h"
+#include "../generator/UniFastGenerator.h"
 
 class BCLExperiment : public Experiment
 {
 private:
 	int init();
-	MarcoGenerator *mg;
+	//MarcoGenerator *mg;
+	UniFastGenerator *ug;
 	BCL *bcl;
 	GFB *gfb;
 	double utilizationInc;

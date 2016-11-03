@@ -32,6 +32,7 @@ SOURCE = \
 	../src/generator/Generator.cpp	\
 	../src/generator/SimpleGenerator.cpp	\
 	../src/generator/MarcoGenerator.cpp	\
+	../src/generator/UniFastGenerator.cpp	\
 	../src/ops/TaskModifier.cpp	\
 	../src/ops/TaskSetModifier.cpp	\
 	../src/ops/TaskUtil.cpp	\

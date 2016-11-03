@@ -43,7 +43,7 @@ bool BCL::isSchedulable(TaskSet &ts)
 	}
 
 	bool isFeasible = false;
-	bool updated = false;
+	bool updated = true;
 
 	// terminate when not feasible & not updated
 	while(updated) {

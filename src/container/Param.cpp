@@ -35,7 +35,7 @@ int Param::loadEnvironment(std::ifstream &file)
 	return 1;
 }
 
-int Param::getNProc()
+double Param::getNProc()
 {
 	return nProc;
 }

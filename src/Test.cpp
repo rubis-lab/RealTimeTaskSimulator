@@ -1,7 +1,10 @@
 #include "experiment/BCLExperiment.h"
+#include <cstdlib>
+#include <ctime>
 
 int main(int argc, char *argv[])
 {
+	srand(time(NULL));
 	BCLExperiment bclexp = BCLExperiment();
 	bclexp.set();
 	bclexp.run();

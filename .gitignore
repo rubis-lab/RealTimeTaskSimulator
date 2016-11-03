@@ -4,6 +4,7 @@
 *rtts
 build/bin
 /obj
+build/core.*
 
 # raw data 
 *.in

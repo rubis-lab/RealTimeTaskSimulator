@@ -1,7 +1,14 @@
 TARGET = bin/rtts
 CC = g++
-CFLAGS = -g -Wall -O1 -std=c++11 -I$(LIB_OPTION)
-LIBS = 
+
+#release option
+#DEBUG ?= 1
+ifeq ($(DEBUG), 1)
+	CFLAGS = -g -Wall -O1 -std=c++11 -I$(LIB_OPTION) \
+		-D__DEBUG=1
+else
+	CFLAGS = -O2 -std=c++11 -I$(LIB_OPTION)
+endif
 
 #sources
 SOURCE = \
@@ -10,6 +17,7 @@ SOURCE = \
 	../src/container/Task.cpp	\
 	../src/container/TaskSet.cpp	\
 	../src/container/ParallelizableTaskSet.cpp	\
+	../src/dataproc/ExperimentLogger.cpp	\
 	../src/experiment/Experiment.cpp	\
 	../src/experiment/SimpleExperiment.cpp	\
 	../src/experiment/BCLExperiment.cpp	\
@@ -30,11 +38,13 @@ SOURCE = \
 
 #more includes
 INCLUDE = -I.
+LIBS = 
 LIB_OPTION = -lpthread
 
 #dependency dest
 VPATH = ../src	\
 	../src/container	\
+	../src/dataproc	\
 	../src/experiment	\
 	../src/generator	\
 	../src/ops	\
@@ -65,6 +75,11 @@ $(TARGET): $(OBJ)
 	@$(CC) $(CFLAGS) -c $< -o $@ $(LIBS)
 
 ../src/container/../obj/%.o: %.cpp
+	@mkdir -p $(dir $@)
+	@echo "Compiling $<" 
+	@$(CC) $(CFLAGS) -c $< -o $@ $(LIBS)	
+
+../src/dataproc/../obj/%.o: %.cpp
 	@mkdir -p $(dir $@)
 	@echo "Compiling $<" 
 	@$(CC) $(CFLAGS) -c $< -o $@ $(LIBS)	

@@ -2,18 +2,34 @@
 
 Experiment::Experiment()
 {
-	pr = new Param();
-	init();
+	std::ifstream file;
+	file.open("../config/exp.cfg");
+	init(file);
+	file.close();
 }
 
 Experiment::Experiment(std::ifstream &file)
 {
-	pr = new Param(file);
-	init();
+	init(file);
 }
 
-int Experiment::init()
+int Experiment::init(std::ifstream &file)
 {
+	pr = new Param();
+	loadEnvironment(file);
+	return 1;
+}
+
+int Experiment::loadEnvironment(std::ifstream &file)
+{
+	FileIO::goToLine(file, 4);
+
+	std::string buf;
+	file >> buf;
+	file >> expName;
+	file >> buf;
+	file >> iter;
+
 	return 1;
 }
 

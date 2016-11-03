@@ -1,8 +1,6 @@
 #ifndef __TASK__
 #define __TASK__
 
-#include <iostream>
-
 class Task
 {
 private:

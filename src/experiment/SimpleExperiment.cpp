@@ -8,15 +8,14 @@ SimpleExperiment::SimpleExperiment() : Experiment()
 int SimpleExperiment::set()
 {
 	sg = SimpleGenerator(pr);
-
+	gfb = GFB(pr);
 	return 1;
 }
 
 int SimpleExperiment::run()
 {
 	TaskSet ts = sg.nextTaskSet();
-	// apply tests
-	GFB gfb = GFB(pr);
+
 	schedulable = gfb.isSchedulable(ts);
 
 	return 1;

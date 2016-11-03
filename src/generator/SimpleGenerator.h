@@ -9,8 +9,8 @@ private:
 	int init(std::ifstream &file);
 public:
 	SimpleGenerator();
-	SimpleGenerator(Param paramExt);
-	SimpleGenerator(Param paramExt, std::ifstream &file);
+	SimpleGenerator(Param *paramExt);
+	SimpleGenerator(Param *paramExt, std::ifstream &file);
 	
 	int loadConfig(std::ifstream &file);
 	

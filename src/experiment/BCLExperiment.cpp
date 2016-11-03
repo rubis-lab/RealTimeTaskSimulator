@@ -2,23 +2,22 @@
 
 BCLExperiment::BCLExperiment() : Experiment()
 {
-	
+
 }
 
 int BCLExperiment::set()
 {
-	sg = SimpleGenerator(pr);
-
+	mg = new MarcoGenerator(pr);
+	bcl = new BCL(pr);
 	return 1;
 }
 
 int BCLExperiment::run()
 {
-	TaskSet ts = sg.nextTaskSet();
-	// apply tests
-	GFB gfb = GFB(pr);
-	schedulable = gfb.isSchedulable(ts);
+	TaskSet ts = mg->nextTaskSet();
+	TaskSetUtil::printTaskSet(ts);
 
+	schedulable = bcl->isSchedulable(ts);
 	return 1;
 }
 

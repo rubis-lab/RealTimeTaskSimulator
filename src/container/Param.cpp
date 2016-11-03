@@ -4,7 +4,7 @@ Param::Param()
 {
 	// Default configuration
 	std::ifstream file;
-	file.open("../../config/env.cfg");
+	file.open("../config/env.cfg");
 	init(file);
 	file.close();
 }
@@ -17,6 +17,9 @@ Param::Param(std::ifstream &file)
 int Param::init(std::ifstream &file)
 {
 	loadEnvironment(file);
+	if(!seed) {
+		seed = rand();
+	}
 	return 1;
 }
 
@@ -29,7 +32,6 @@ int Param::loadEnvironment(std::ifstream &file)
 	file >> nProc;
 	file >> buf;
 	file >> seed;
-
 	return 1;
 }
 
@@ -40,7 +42,5 @@ int Param::getNProc()
 
 int Param::getSeed()
 {
-	if(!seed) 
-		return (int)time(NULL);
 	return seed;
 }

@@ -2,13 +2,13 @@
 
 Experiment::Experiment()
 {
-	pr = Param();
+	pr = new Param();
 	init();
 }
 
 Experiment::Experiment(std::ifstream &file)
 {
-	pr = Param(file);
+	pr = new Param(file);
 	init();
 }
 

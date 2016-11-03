@@ -1,6 +1,6 @@
 TARGET = bin/rtts
 CC = g++
-CFLAGS = -Wall -O1 -std=c++11 -I$(LIB_OPTION)
+CFLAGS = -g -Wall -O1 -std=c++11 -I$(LIB_OPTION)
 LIBS = 
 
 #sources
@@ -12,6 +12,7 @@ SOURCE = \
 	../src/container/ParallelizableTaskSet.cpp	\
 	../src/experiment/Experiment.cpp	\
 	../src/experiment/SimpleExperiment.cpp	\
+	../src/experiment/BCLExperiment.cpp	\
 	../src/generator/Generator.cpp	\
 	../src/generator/SimpleGenerator.cpp	\
 	../src/generator/MarcoGenerator.cpp	\

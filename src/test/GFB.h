@@ -9,10 +9,10 @@
 class GFB
 {
 private:
-	Param pr;
+	Param *pr;
 public:
 	GFB();
-	GFB(Param paramExt);
+	GFB(Param *paramExt);
 	bool isSchedulable(TaskSet ts);
 };
 #endif

@@ -6,7 +6,7 @@
 class Experiment
 {
 protected:
-	Param pr;
+	Param *pr;
 	int init();
 public:
 	Experiment();

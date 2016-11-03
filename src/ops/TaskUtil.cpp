@@ -18,6 +18,6 @@ double TaskUtil::calcUtilization(Task t)
 
 double TaskUtil::calcDemandOverInterval(Task t, double interval)
 {
-	double stepFunc = std::floor(interval - t.getDeadline()) / t.getPeriod();
+	double stepFunc = std::floor((interval - t.getDeadline()) / t.getPeriod());
 	return t.getExecTime() * (stepFunc + 1.0);
 }

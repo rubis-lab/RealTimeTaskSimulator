@@ -33,6 +33,7 @@ class CRand
 {
 private:
 	std::tr1::ranlux_base_01 eng;
+	//std::tr1::mt19937 eng;
 public:
 	CRand();
 	CRand(int seed);

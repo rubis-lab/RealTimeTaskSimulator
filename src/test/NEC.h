@@ -12,11 +12,11 @@
 class NEC
 {
 private:
-	Param pr;
+	Param *pr;
 	int init();
 public:	
 	NEC();
-	NEC(Param paramExt);
+	NEC(Param *paramExt);
 	bool passesNecTest(TaskSet ts);
 };
 

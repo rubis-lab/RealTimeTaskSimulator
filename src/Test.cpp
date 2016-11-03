@@ -1,10 +1,10 @@
-#include <iostream>
-#include "experiment/Experiment.h"
+#include "experiment/BCLExperiment.h"
 
 int main(int argc, char *argv[])
 {
-	// gfb
-	Experiment exp = Experiment();
-	exp.run();
+	BCLExperiment bclexp = BCLExperiment();
+	bclexp.set();
+	bclexp.run();
+	bclexp.output();
 	return 1;
 }

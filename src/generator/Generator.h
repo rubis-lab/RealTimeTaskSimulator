@@ -14,7 +14,7 @@
 class Generator
 {
 protected:
-	Param pr;
+	Param* pr;
 	CRand cr;
 	TaskSet ts;
 	double numTask;
@@ -28,7 +28,7 @@ protected:
 
 public:
 	Generator();
-	Generator(Param paramExt);
+	Generator(Param* paramExt);
 
 	int loadConfig(std::ifstream &file);
 	int saveConfig();

@@ -10,6 +10,7 @@ class SimpleExperiment : public Experiment
 private:
 	int init();
 	SimpleGenerator sg;
+	GFB gfb;
 	bool schedulable;
 public:
 	SimpleExperiment();

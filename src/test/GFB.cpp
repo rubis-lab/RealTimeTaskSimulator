@@ -1,10 +1,10 @@
 #include "GFB.h"
 GFB::GFB()
 {
-	pr = Param();
+	pr = new Param();
 }
 
-GFB::GFB(Param paramExt)
+GFB::GFB(Param *paramExt)
 {
 	pr = paramExt;
 }
@@ -16,6 +16,6 @@ bool GFB::isSchedulable(TaskSet ts)
 	double lmdTot = TaskSetUtil::sumUtilization(ts);
 	double lmdMax = TaskSetUtil::getMaxUtilization(ts);
 
-	ret = (lmdTot <= pr.getNProc() * (1.0 - lmdMax) + lmdMax);
+	ret = (lmdTot <= pr->getNProc() * (1.0 - lmdMax) + lmdMax);
 	return ret;
 }

@@ -13,6 +13,10 @@ private:
 public:	
 	ExperimentLogger();
 	ExperimentLogger(std::string name);
+	int toConsole();
+	int toFile();
+	int silent();
+	int printTask();
 
 	int printSchedulabilitySimple();
 };

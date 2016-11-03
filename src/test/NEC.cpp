@@ -2,11 +2,11 @@
 
 NEC::NEC()
 {
-	pr = Param();
+	pr = new Param();
 	init();
 }
 
-NEC::NEC(Param paramExt)
+NEC::NEC(Param *paramExt)
 {
 	pr = paramExt;
 	init();
@@ -20,7 +20,7 @@ int NEC::init()
 bool NEC::passesNecTest(TaskSet ts)
 {
 	double taskSetLCM = TaskSetUtil::calcTaskLCM(ts);
-
+	
 	for(int j = 0; j < ts.count(); j++) {
 		Task baseTask = ts.getTask(j);
 		// need only be checked at Dj + kTj
@@ -38,7 +38,7 @@ bool NEC::passesNecTest(TaskSet ts)
 			}
 
 			// sum(total demand + throw-forwards) < m * interval
-			if(sum > pr.getNProc() * interval) {
+			if(sum > pr->getNProc() * interval) {
 				return false;
 			}
 

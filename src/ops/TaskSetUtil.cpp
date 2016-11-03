@@ -23,8 +23,8 @@ int TaskSetUtil::printTaskSet(TaskSet ts)
 	std::cout << ts.count() << std::endl;
 
 	for(int i = 0; i < ts.count(); i++) {
-		std::cout << ts.getTask(i).getExecTime() << " ";
-		std::cout << ts.getTask(i).getDeadline() << " ";
+		std::cout << ts.getTask(i).getExecTime() << "\t";
+		std::cout << ts.getTask(i).getDeadline() << "\t";
 		std::cout << ts.getTask(i).getPeriod() << std::endl;
 	}
 	return 1;

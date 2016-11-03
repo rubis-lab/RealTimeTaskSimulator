@@ -2,10 +2,10 @@
 
 BCL::BCL()
 {
-	pr = Param();
+	pr = new Param();
 }
 
-BCL::BCL(Param paramExt)
+BCL::BCL(Param *paramExt)
 {
 	pr = paramExt;
 }
@@ -29,41 +29,49 @@ double BCL::calcInterference(TaskSet ts, int baseTaskIndex, int interTaskIndex)
 
 bool BCL::isSchedulable(TaskSet ts)
 {
+	// init slack
 	for(int i = 0; i < ts.count(); i++) {
-		slack[i] = 0.0;
+		slack.push_back(0.0);
 	}
+
 	bool isFeasible = false;
 	bool updated = false;
 
+	// terminate when not feasible & not updated
 	while(updated) {
 		isFeasible = true;
 		updated = false;
 
+		// check each task's feasibility
 		for(int baseTaskIndex = 0; baseTaskIndex < ts.count(); baseTaskIndex++) {
 			Task baseTask = ts.getTask(baseTaskIndex);
-			double dBase = baseTask.getDeadline();
-			double cBase = baseTask.getExecTime();
 
+			// add up all demand from interfering tasks
 			double sumJ = 0.0;
 			for(int interTaskIndex = 0; interTaskIndex < ts.count(); interTaskIndex++) {
 				if(interTaskIndex == baseTaskIndex)
 					continue;
 				sumJ += calcInterference(ts, baseTaskIndex, interTaskIndex);
 			}
-			sumJ = std::floor(sumJ / pr.getNProc());
+			sumJ = std::floor(sumJ / pr->getNProc());
 
-			double sum = dBase - cBase - sumJ;
+			double slackTmp = baseTask.getDeadline() - baseTask.getExecTime() - sumJ;
 
-			if(sum < 0.0) {
+			// slack < 0 --> infeasible
+			if(slackTmp < 0.0) {
 				isFeasible = false;
-			} else if (sum > slack[baseTaskIndex]) {
-				slack[baseTaskIndex] = sum;
+			// slack updated
+			} else if (slackTmp > slack[baseTaskIndex]) {
+				slack[baseTaskIndex] = slackTmp;
 				updated = true;
 			}
 		}
+
+		// taskset feasible
 		if(isFeasible) {
 			return isFeasible;
 		}
 	}
-	return isFeasible;
+
+	return false;
 }

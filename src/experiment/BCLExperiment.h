@@ -1,16 +1,22 @@
 #ifndef __BCL_EXP__
 #define __BCL_EXP__
 
-#include "../expriment/Experiment.h"
+#include "../experiment/Experiment.h"
+#include "../generator/MarcoGenerator.h"
+#include "../ops/TaskSetUtil.h"
 #include "../test/BCL.h"
+#include <vector>
 
 class BCLExperiment : public Experiment
 {
 private:
 	int init();
+	MarcoGenerator *mg;
+	BCL *bcl;
+	bool schedulable;
+	//std::vector<bool> schedulable;
 public:
-	RTAExp();
-	int testRun();
+	BCLExperiment();
 	int set();
 	int run();
 	int output();

@@ -10,11 +10,11 @@ class MarcoGenerator : public Generator
 private:
 	int init(std::ifstream &file);
 	double lmbd;
-	NEC nec;
+	NEC *nec;
 public:
 	MarcoGenerator();
-	MarcoGenerator(Param paramExt);
-	MarcoGenerator(Param paramExt, std::ifstream &file);
+	MarcoGenerator(Param *paramExt);
+	MarcoGenerator(Param *paramExt, std::ifstream &file);
 	
 	int loadConfig(std::ifstream &file);
 	

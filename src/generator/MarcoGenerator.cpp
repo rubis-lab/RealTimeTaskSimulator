@@ -9,7 +9,7 @@ MarcoGenerator::MarcoGenerator() : Generator()
 	file.close();
 }
 
-MarcoGenerator::MarcoGenerator(Param paramExt) : Generator(paramExt)
+MarcoGenerator::MarcoGenerator(Param *paramExt) : Generator(paramExt)
 {
 	// Default configuration
 	std::ifstream file;
@@ -19,14 +19,14 @@ MarcoGenerator::MarcoGenerator(Param paramExt) : Generator(paramExt)
 }
 
 
-MarcoGenerator::MarcoGenerator(Param paramExt, std::ifstream &file) : Generator(paramExt)
+MarcoGenerator::MarcoGenerator(Param *paramExt, std::ifstream &file) : Generator(paramExt)
 {
 	init(file);
 }
 
 int MarcoGenerator::init(std::ifstream &file)
 {
-	nec = NEC(pr);
+	nec = new NEC(pr);
 	loadConfig(file);
 	return 1;
 }
@@ -49,10 +49,21 @@ int MarcoGenerator::loadConfig(std::ifstream &file)
 Task MarcoGenerator::nextTask()
 {
 	// pick a utilization < 1.0
-	double candUtilization;
+	// should be exp dist, but has error
+	/*
+	double candUtilization = 0.0;
 	while(candUtilization < 0.0 || candUtilization >= 1.0) {
 		candUtilization = cr.exponential(lmbd);
 	}
+	*/
+	
+	double candUtilization = 0.0;
+	
+	while(candUtilization <= 0.0 || candUtilization >= 1.0) {
+		candUtilization = cr.normal(lmbd, 0.2);
+	}
+	//std::cout<<"util: "<<candUtilization<<std::endl;
+	
 	double candPeriod = std::floor(cr.uniform(minPeriod, maxPeriod));
 	double candExecTime = std::floor(candPeriod * candUtilization);
 	double candDeadline = std::floor(cr.uniform(candExecTime, candPeriod));
@@ -71,12 +82,13 @@ TaskSet MarcoGenerator::nextTaskSet()
 	if(ts.count() == 0) {
 		// generate m + 1 tasks
 		do {
-			while(ts.count() <= pr.getNProc()) {
+			ts.clear();
+			while(ts.count() <= pr->getNProc()) {
 				Task t = nextTask();
 				ts.pushBack(t);
 			}
 		// until it passes necessary test
-		} while (!nec.passesNecTest(ts));
+		} while (!nec->passesNecTest(ts));
 		return ts;
 	}
 	
@@ -85,10 +97,9 @@ TaskSet MarcoGenerator::nextTaskSet()
 	ts.pushBack(t);
 
 	// cannot pass necessary test --> start over
-	if(!nec.passesNecTest(ts)) {
+	if(!nec->passesNecTest(ts)) {
 		ts.clear();
 		return nextTaskSet();
 	}
-
 	return ts;
 }

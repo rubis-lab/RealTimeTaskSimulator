@@ -5,7 +5,7 @@ UniFastGenerator::UniFastGenerator() : Generator()
 {
 	// Default configuration
 	std::ifstream file;
-	file.open("../config/ufast.cfg");
+	file.open("../cfg/gen/ufast.cfg");
 	init(file);
 	file.close();
 }
@@ -14,7 +14,7 @@ UniFastGenerator::UniFastGenerator(Param *paramExt) : Generator(paramExt)
 {
 	// Default configuration
 	std::ifstream file;
-	file.open("../config/ufast.cfg");
+	file.open("../cfg/gen/ufast.cfg");
 	init(file);
 	file.close();
 }

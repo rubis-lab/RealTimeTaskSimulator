@@ -2,15 +2,6 @@ TARGET = bin/rtts
 CC = g++
 
 #release option
-#DEBUG ?= 1
-#ifeq ($(DEBUG), 1)
-#	CFLAGS = -g -Wall -O1 -std=c++11 -I$(LIB_OPTION) \
-#		-D__DEBUG=1
-#else
-#	CFLAGS = -O1 -std=c++11 -I$(LIB_OPTION)
-#endif
-
-#release option
 ifeq ($(RELEASE), 1)
 	CFLAGS = -O1 -std=c++11 -I$(LIB_OPTION)
 else
@@ -29,6 +20,7 @@ SOURCE = \
 	../src/experiment/Experiment.cpp	\
 	../src/experiment/SimpleExperiment.cpp	\
 	../src/experiment/BCLExperiment.cpp	\
+	../src/experiment/BARExperiment.cpp	\
 	../src/generator/Generator.cpp	\
 	../src/generator/SimpleGenerator.cpp	\
 	../src/generator/MarcoGenerator.cpp	\
@@ -40,6 +32,7 @@ SOURCE = \
 	../src/test/NEC.cpp	\
 	../src/test/GFB.cpp \
 	../src/test/BCL.cpp \
+	../src/test/BAR.cpp	\
 	../tools/CRand.cpp	\
 	../tools/PMath.cpp	\
 	../tools/FileIO.cpp	

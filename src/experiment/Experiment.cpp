@@ -3,7 +3,7 @@
 Experiment::Experiment()
 {
 	std::ifstream file;
-	file.open("../config/exp.cfg");
+	file.open("../cfg/exp/exp.cfg");
 	init(file);
 	file.close();
 }

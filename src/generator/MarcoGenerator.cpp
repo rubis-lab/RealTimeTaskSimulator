@@ -4,7 +4,7 @@ MarcoGenerator::MarcoGenerator() : Generator()
 {
 	// Default configuration
 	std::ifstream file;
-	file.open("../config/marcogen.cfg");
+	file.open("../cfg/gen/marcogen.cfg");
 	init(file);
 	file.close();
 }
@@ -13,7 +13,7 @@ MarcoGenerator::MarcoGenerator(Param *paramExt) : Generator(paramExt)
 {
 	// Default configuration
 	std::ifstream file;
-	file.open("../config/marcogen.cfg");
+	file.open("../cfg/gen/marcogen.cfg");
 	init(file);
 	file.close();
 }

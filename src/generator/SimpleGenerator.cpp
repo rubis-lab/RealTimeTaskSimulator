@@ -4,7 +4,7 @@ SimpleGenerator::SimpleGenerator() : Generator()
 {
 	// Default configuration
 	std::ifstream file;
-	file.open("../config/sgen.cfg");
+	file.open("../cfg/gen/sgen.cfg");
 	init(file);
 	file.close();
 }
@@ -13,7 +13,7 @@ SimpleGenerator::SimpleGenerator(Param *paramExt) : Generator(paramExt)
 {
 	// Default configuration
 	std::ifstream file;
-	file.open("../config/sgen.cfg");
+	file.open("../cfg/gen/sgen.cfg");
 	init(file);
 	file.close();
 }

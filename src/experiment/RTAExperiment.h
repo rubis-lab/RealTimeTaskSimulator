@@ -1,14 +1,30 @@
-#ifndef __RTAEXPERIMENT__
-#define __RTAEXPERIMENT__
+#ifndef __RTA_EXP__
+#define __RTA_EXP__
 
-#include "../expriment/Experiment.h"
-#include "../test/BCL.h"
+#include <vector>
 
-class RTAExp : public Experiment
+#include "../dataproc/ExperimentLogger.h"
+#include "../experiment/Experiment.h"
+#include "../ops/TaskSetUtil.h"
+#include "../test/RTA.h"
+#include "../generator/UniFastGenerator.h"
+
+class RTAExperiment : public Experiment
 {
 private:
+	int init();
+	UniFastGenerator *ug;
+	BCL *bcl;
+	double utilizationInc;
+	int init(std::ifstream &file);
+	int loadEnvironment(std::ifstream &file);
+	std::vector<double> taskSetUtilization;
+	std::vector<bool> schedulability;
 public:
-	RTAExp();
-	int testRun();
+	RTAExperiment();
+	int set();
+	int reset();
+	int run();
+	int output();
 };
 #endif

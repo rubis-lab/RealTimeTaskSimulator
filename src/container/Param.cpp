@@ -4,7 +4,7 @@ Param::Param()
 {
 	// Default configuration
 	std::ifstream file;
-	file.open("../config/env.cfg");
+	file.open("../cfg/env.cfg");
 	init(file);
 	file.close();
 }

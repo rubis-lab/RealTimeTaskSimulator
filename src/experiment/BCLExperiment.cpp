@@ -3,7 +3,7 @@
 BCLExperiment::BCLExperiment() : Experiment()
 {
 	std::ifstream file;
-	file.open("../config/bclexp.cfg");
+	file.open("../cfg/exp/bclexp.cfg");
 	init(file);
 	file.close();
 }

@@ -15,7 +15,7 @@ Task& TaskSet::getTask(int idx)
 	return ts[idx];
 }
 
-int TaskSet::pushBack(Task t)
+int TaskSet::pushBack(Task &t)
 {
 	ts.push_back(t);
 	return 1;

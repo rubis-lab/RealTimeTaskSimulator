@@ -72,18 +72,28 @@ std::vector<double> PMath::Unifast(int n, double total)
 	return ret;
 }
 
-/*
-public double[] UUnifast (int n, double total) {
-		double [] result = new double [n];
-		double sum = total;
-	
-		for (int i = 0; i < n - 1; i++) {
-			double tmp = sum * Math.pow(random.nextDouble(), (double)(1.000000 / (n - i)));
-			result[i] = sum - tmp;
-			sum = tmp;
-		}
-		result[n - 1] = sum;
-	
-		return result;
+std::vector<double> PMath::kMin(std::vector<double> arr, int k)
+{
+	std::vector<double> ret;
+
+	for(i = 0; i < k; i++) {
+		std::vector<double>::iterator it = std::min_element(std::begin(arr), std::end(arr));
+		ret.push_back(*it);
+		arr.erase(it);
 	}
-	*/
+
+	return ret;
+}
+
+std::vector<double> PMath::kMax(std::vector<double> arr, int k)
+{
+	std::vector<double> ret;
+
+	for(i = 0; i < k; i++) {
+		std::vector<double>::iterator it = std::max_element(std::begin(arr), std::end(arr));
+		ret.push_back(*it);
+		arr.erase(it);
+	}
+
+	return ret;
+}

@@ -76,7 +76,7 @@ std::vector<double> PMath::kMin(std::vector<double> arr, int k)
 {
 	std::vector<double> ret;
 
-	for(i = 0; i < k; i++) {
+	for(int i = 0; i < k; i++) {
 		std::vector<double>::iterator it = std::min_element(std::begin(arr), std::end(arr));
 		ret.push_back(*it);
 		arr.erase(it);
@@ -89,7 +89,7 @@ std::vector<double> PMath::kMax(std::vector<double> arr, int k)
 {
 	std::vector<double> ret;
 
-	for(i = 0; i < k; i++) {
+	for(int i = 0; i < k; i++) {
 		std::vector<double>::iterator it = std::max_element(std::begin(arr), std::end(arr));
 		ret.push_back(*it);
 		arr.erase(it);

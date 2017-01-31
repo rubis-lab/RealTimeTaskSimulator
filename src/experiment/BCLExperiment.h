@@ -5,7 +5,6 @@
 
 #include "../dataproc/ExperimentLogger.h"
 #include "../experiment/Experiment.h"
-#include "../generator/MarcoGenerator.h"
 #include "../ops/TaskSetUtil.h"
 #include "../test/BCL.h"
 #include "../test/GFB.h"
@@ -15,9 +14,8 @@ class BCLExperiment : public Experiment
 {
 private:
 	int init();
-	//MarcoGenerator *mg;
 	UniFastGenerator *ug;
-	BCL *bcl;
+	//BCL *bcl;
 	GFB *gfb;
 	double utilizationInc;
 	int init(std::ifstream &file);

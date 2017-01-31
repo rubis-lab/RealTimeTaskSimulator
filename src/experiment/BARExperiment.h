@@ -14,8 +14,7 @@ class BARExperiment : public Experiment
 private:
 	int init();
 	UniFastGenerator *ug;
-	BCL *bcl;
-	GFB *gfb;
+	BAR *bar;
 	double utilizationInc;
 	int init(std::ifstream &file);
 	int loadEnvironment(std::ifstream &file);

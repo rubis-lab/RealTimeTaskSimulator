@@ -23,14 +23,14 @@ std::vector<double> BAR::getKMaxInterferingExecTime(TaskSet &ts, int k, int base
 	return ret;
 }
 
-double double BAR::calcExtendedIntervalBound(TaskSet &ts, int baseTaskIndex)
+double BAR::calcExtendedIntervalBound(TaskSet &ts, int baseTaskIndex)
 {
 	// m - 1 largest Ci's
 	std::vector<double> maxExecTime = getKMaxInterferingExecTime(ts, pr->getNProc() - 1, baseTaskIndex);
 
 	// Csum
 	double csum = 0.0;
-	for(int i = 0; i < maxExecTime.size(); i++) {
+	for(unsigned int i = 0; i < maxExecTime.size(); i++) {
 		csum += maxExecTime[i];
 	}
 
@@ -59,22 +59,22 @@ double double BAR::calcExtendedIntervalBound(TaskSet &ts, int baseTaskIndex)
 	return extBound;
 }
 
-double BAR::calcNCInterference(TaskSet &ts, int baseTaskIndex, int interTaskIndex, double extendedInterval);
+double BAR::calcNCInterference(TaskSet &ts, int baseTaskIndex, int interTaskIndex, double extendedInterval)
 {
 	Task baseTask = ts.getTask(baseTaskIndex);
 	Task interTask = ts.getTask(interTaskIndex);
 
 	double dbf = TaskUtil::calcDemandOverInterval(interTask, extendedInterval + baseTask.getDeadline());
-
+	double ret = 0.0;
 	// case i != k
 	if(baseTaskIndex != interTaskIndex) {
 		// min(DBF(ti, ak + dk), ak + dk - ck)
-		double ret = std::min(dbf, extendedInterval + baseTask.getDeadline() - baseTask.getExecTime());
+		ret = std::min(dbf, extendedInterval + baseTask.getDeadline() - baseTask.getExecTime());
 
 	// case i == k
 	} else {
 		// min(DBF(ti, ak + dk) - ck, ak)	(i == k)
-		double ret = std::min(dbf - baseTask.getExecTime(), extendedInterval);
+		ret = std::min(dbf - baseTask.getExecTime(), extendedInterval);
 	}
 
 	return ret;
@@ -86,14 +86,15 @@ double BAR::calcCarryIn(TaskSet &ts, int baseTaskIndex, int interTaskIndex, doub
 	Task interTask = ts.getTask(interTaskIndex);
 
 	// case i != k
+	double ret = 0.0;
 	if(baseTaskIndex != interTaskIndex) {
 		// min(Ci, t mod Ti)
-		double ret = std::remainder(interTask.getExecTime(), extendedInterval + baseTask.getDeadline());
+		ret = std::remainder(interTask.getExecTime(), extendedInterval + baseTask.getDeadline());
 		ret = std::min(ret, interTask.getExecTime());
 
 	// case i == k
 	} else {
-		double ret = 0.0;
+		ret = 0.0;
 	}
 
 	return ret;
@@ -124,10 +125,10 @@ bool BAR::isSchedulable(TaskSet &ts)
 
 			// Sum I
 			double isum = 0.0;
-			for(int i = 0; i < iNC.size(); i++) {
+			for(unsigned int i = 0; i < iNC.size(); i++) {
 				isum += iNC[i];
 			}
-			for(int i = 0; i < iKMaxCI.size(); i++) {
+			for(unsigned int i = 0; i < iKMaxCI.size(); i++) {
 				isum += iKMaxCI[i];
 			}
 

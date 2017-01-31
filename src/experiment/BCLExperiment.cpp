@@ -11,7 +11,7 @@ BCLExperiment::BCLExperiment() : Experiment()
 int BCLExperiment::init(std::ifstream &file)
 {
 	loadEnvironment(file);
-	reset();
+	set();
 	return 1;
 }
 

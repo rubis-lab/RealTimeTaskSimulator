@@ -16,7 +16,10 @@ namespace TaskSetUtil
 {
 	// Config
 	TaskSet readTaskSet(std::ifstream &file);
+
+	// Debug
 	int printTaskSet(TaskSet &ts);
+	int printTaskInfo(TaskSet &ts);
 
 	// Sums
 	double sumDensity(TaskSet &ts);

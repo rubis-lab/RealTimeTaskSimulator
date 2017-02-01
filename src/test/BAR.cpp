@@ -2,7 +2,7 @@
 
 BAR::BAR()
 {
-	pr = new Param();
+	
 }
 
 BAR::BAR(Param *paramExt)
@@ -10,53 +10,65 @@ BAR::BAR(Param *paramExt)
 	pr = paramExt;
 }
 
-std::vector<double> BAR::getKMaxInterferingExecTime(TaskSet &ts, int k, int baseTaskIndex)
+BAR::~BAR()
+{
+
+}
+
+std::vector<double> BAR::getKMaxInterferingExecTime(TaskSet &ts, int k)
 {
 	std::vector<double> execTimes;
 	for(int i = 0; i < ts.count(); i++) {
-		if(i != baseTaskIndex) {
-			execTimes.push_back(ts.getTask(i).getExecTime());
-		}
+		execTimes.push_back(ts.getTask(i).getExecTime());
 	}
 	std::vector<double> ret = PMath::kMax(execTimes, k);
 
 	return ret;
 }
 
-double BAR::calcExtendedIntervalBound(TaskSet &ts, int baseTaskIndex)
+std::vector<double> BAR::calcExtendedIntervalBound(TaskSet &ts)
 {
-	// m - 1 largest Ci's
-	std::vector<double> maxExecTime = getKMaxInterferingExecTime(ts, pr->getNProc() - 1, baseTaskIndex);
+	std::vector<double> extendedIntervalList;
+	std::vector<double> maxExecTime = getKMaxInterferingExecTime(ts, pr->getNProc() - 1);
+	/*
+	std::cout << "maxExecTime ";
+	for(unsigned int i = 0; i < maxExecTime.size(); i++) {
+		std::cout << maxExecTime[i] << " ";
+	}
+	std::cout << std::endl;
+	*/
+	// AkBase = [Csum + sum {(Ti - Di) * Ui}]
 
 	// Csum
 	double csum = 0.0;
 	for(unsigned int i = 0; i < maxExecTime.size(); i++) {
 		csum += maxExecTime[i];
 	}
+	//std::cout << "csum " << csum << std::endl;
 
-	// Utot
-	double utot = TaskSetUtil::sumUtilization(ts);
-
-	// Ak = [Csum - Dk(m - Utot) + sum {(Ti - Di) * Ui} + m * Ck ] / [m - Utot]
-	Task baseTask = ts.getTask(baseTaskIndex);
-	// Csum - Dk(m - Utot)
-	double extBound = csum - baseTask.getDeadline() * (pr->getNProc() - utot);
-	
+	double AkBase = csum;
 	// sum {(Ti - Di) * Ui}
 	for(int i = 0; i < ts.count(); i++) {
-		if(i != baseTaskIndex) {
-			Task interTask = ts.getTask(i);
-			extBound += (interTask.getPeriod() - interTask.getDeadline()) / TaskUtil::calcUtilization(interTask);	
-		}
+		Task t = ts.getTask(i);
+		AkBase += (t.getPeriod() - t.getDeadline()) * TaskUtil::calcUtilization(t);
+	}
+	//std::cout << "akbase " << AkBase << std::endl;
+
+	// utot 
+	double utot = TaskSetUtil::sumUtilization(ts);
+	//std::cout << "utot " << utot << std::endl;
+
+	// => Ak = [AkBase + Dk * Utot - m * Dk + m * Ck ] / [m - Utot]
+	for(int i = 0; i < ts.count(); i++) {
+		Task t = ts.getTask(i);
+		double nProc = pr->getNProc();
+		double AkRemainder = t.getDeadline() * (utot - nProc) +  nProc * t.getExecTime();
+		//std::cout << "AkRemainder " << AkRemainder << std::endl;
+		AkRemainder = (AkBase + AkRemainder) / (nProc - utot);
+		extendedIntervalList.push_back(AkRemainder);
 	}
 
-	// m * Ck
-	extBound += pr->getNProc() * baseTask.getExecTime();
-
-	// m - Utot
-	extBound = extBound / (pr->getNProc() - utot);
-
-	return extBound;
+	return extendedIntervalList;
 }
 
 double BAR::calcNCInterference(TaskSet &ts, int baseTaskIndex, int interTaskIndex, double extendedInterval)
@@ -102,20 +114,30 @@ double BAR::calcCarryIn(TaskSet &ts, int baseTaskIndex, int interTaskIndex, doub
 
 bool BAR::isSchedulable(TaskSet &ts)
 {
+	// Ak bound
+	std::vector<double> extIntervalBoundList = calcExtendedIntervalBound(ts);
+
 	for(int baseTaskIndex = 0; baseTaskIndex < ts.count(); baseTaskIndex++) {
-		// Ak bound
-		double extIntervalBound = calcExtendedIntervalBound(ts, baseTaskIndex);
+		
+		//std::cout << "extIntervalBoundList : " << extIntervalBoundList[baseTaskIndex] << std::endl;
+		// Ak <= 0, don't need to check
+		if(extIntervalBoundList[baseTaskIndex] <= 0.0) {
+			continue;
+		}
 		// RHS m(Ak + Dk - Ck)
 		double rhs = ts.getTask(baseTaskIndex).getDeadline() - ts.getTask(baseTaskIndex).getExecTime();
-
+		//std::cout << "rhs : " << rhs << std::endl;
 		// iterate with Ak
 		double extInterval = 0.0;
-		while(extInterval < extIntervalBound) {
+		while(extInterval < extIntervalBoundList[baseTaskIndex]) {
 			std::vector<double> iNC;
-			std::vector<double> iCI;
 			for(int interTaskIndex = 0; interTaskIndex < ts.count(); interTaskIndex++) {
 				// non carry-in
 				iNC.push_back(calcNCInterference(ts, baseTaskIndex, interTaskIndex, extInterval));
+			}
+
+			std::vector<double> iCI;
+			for(int interTaskIndex = 0; interTaskIndex < ts.count(); interTaskIndex++) {
 				// carry-in
 				iCI.push_back(calcCarryIn(ts, baseTaskIndex, interTaskIndex, extInterval));
 			}

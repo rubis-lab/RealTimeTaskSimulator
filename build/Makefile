@@ -5,7 +5,7 @@ CC = g++
 ifeq ($(RELEASE), 1)
 	CFLAGS = -O1 -std=c++11 -I$(LIB_OPTION)
 else
-	CFLAGS = -g -Wall -O1 -std=c++11 -I$(LIB_OPTION) \
+	CFLAGS = -g -Wall -std=c++11 -I$(LIB_OPTION) \
 		-D__DEBUG=1
 endif
 
@@ -25,6 +25,7 @@ SOURCE = \
 	../src/generator/SimpleGenerator.cpp	\
 	../src/generator/MarcoGenerator.cpp	\
 	../src/generator/UniFastGenerator.cpp	\
+	../src/generator/NormalGenerator.cpp	\
 	../src/ops/TaskModifier.cpp	\
 	../src/ops/TaskSetModifier.cpp	\
 	../src/ops/TaskUtil.cpp	\

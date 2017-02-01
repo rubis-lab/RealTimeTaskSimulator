@@ -14,14 +14,23 @@ class ExperimentLogger
 {
 private:
 	Param *pr;
+	double incrementSize;
 	std::string expName;
 	std::string fileName;
 	std::vector<TaskSet> taskSets;
 	std::ofstream *outFile;
+	std::vector<int> schedulableSetCount;
+	std::vector<int> totalSetCount;
+	std::vector<double> probSchedulable;
 	int init();
+	int normalizeRecord();
 public:	
 	ExperimentLogger();
 	ExperimentLogger(std::string ename, Param *paramExt);
+	~ExperimentLogger();
+	int startRecord(double inc);
+	int addRecord(double util, bool sched);
+	int printRecord();
 	int printUtilVsSchedulability(std::vector<double> &tsutil, std::vector<bool> &sched, double inc);
 };
 

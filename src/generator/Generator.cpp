@@ -2,7 +2,6 @@
 
 Generator::Generator()
 {
-	pr = new Param();
 	init();
 }
 
@@ -10,6 +9,11 @@ Generator::Generator(Param* paramExt)
 {
 	pr = paramExt;
 	init();
+}
+
+Generator::~Generator()
+{
+
 }
 
 int Generator::init()

@@ -29,6 +29,7 @@ protected:
 public:
 	Generator();
 	Generator(Param* paramExt);
+	~Generator();
 
 	int loadConfig(std::ifstream &file);
 	int saveConfig();

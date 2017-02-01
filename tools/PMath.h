@@ -6,6 +6,7 @@
 #include <algorithm>
 #include <ctime>
 #include <cmath>
+#include <iostream>
 
 namespace PMath 
 {
@@ -13,7 +14,6 @@ namespace PMath
 	int GCD(std::vector<int> arr);
 	int LCM(int a, int b);
 	int LCM(std::vector<int> arr);
-	std::vector<double> Unifast(int n, double total);
 	std::vector<double> kMin(std::vector<double> arr, int k);
 	std::vector<double> kMax(std::vector<double> arr, int k);
 }

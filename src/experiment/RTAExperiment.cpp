@@ -58,7 +58,7 @@ int RTAExperiment::run()
 
 int RTAExperiment::output()
 {
-	el = new ExperimentLogger(expName, pr);
+	//el = new ExperimentLogger(expName, pr);
 	el->printUtilVsSchedulability(taskSetUtilization, schedulability, utilizationInc);
 	return 1;
 }

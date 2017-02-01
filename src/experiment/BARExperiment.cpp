@@ -8,6 +8,12 @@ BARExperiment::BARExperiment() : Experiment()
 	file.close();
 }
 
+BARExperiment::~BARExperiment()
+{
+	delete ng;
+	delete bar;
+}
+
 int BARExperiment::init(std::ifstream &file)
 {
 	loadEnvironment(file);
@@ -30,26 +36,25 @@ int BARExperiment::loadEnvironment(std::ifstream &file)
 
 int BARExperiment::set()
 {
-	ug = new UniFastGenerator(pr);
+	ng = new NormalGenerator(pr);
 	bar = new BAR(pr);
+	el->startRecord(utilizationInc);
 	return 1;
 }
 
 int BARExperiment::reset()
 {
-	taskSetUtilization.clear();
-	schedulability.clear();
 	return 1;
 }
 
 int BARExperiment::run()
 {
 	for(int i = 0; i < iter; i++) {
-		TaskSet ts = ug->nextTaskSet();
-		
-		taskSetUtilization.push_back(TaskSetUtil::sumUtilization(ts));
+		TaskSet ts = ng->nextTaskSet();
+		//TaskSetUtil::printTaskInfo(ts);
+		//TaskSetUtil::printTaskSet(ts);
 
-		schedulability.push_back(bar->isSchedulable(ts));
+		el->addRecord(TaskSetUtil::sumUtilization(ts), bar->isSchedulable(ts));
 	}
 	
 	return 1;
@@ -57,7 +62,7 @@ int BARExperiment::run()
 
 int BARExperiment::output()
 {
-	el = new ExperimentLogger(expName, pr);
-	el->printUtilVsSchedulability(taskSetUtilization, schedulability, utilizationInc);
+	el->printRecord();
+
 	return 1;
 }

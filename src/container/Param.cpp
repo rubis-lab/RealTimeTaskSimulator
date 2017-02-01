@@ -14,6 +14,11 @@ Param::Param(std::ifstream &file)
 	init(file);
 }
 
+Param::~Param()
+{
+	
+}
+
 int Param::init(std::ifstream &file)
 {
 	loadEnvironment(file);

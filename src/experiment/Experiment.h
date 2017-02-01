@@ -17,6 +17,7 @@ protected:
 	int loadEnvironment(std::ifstream &file);
 public:
 	Experiment();
+	~Experiment();
 	Experiment(std::ifstream &file);
 	int set();
 	int run();

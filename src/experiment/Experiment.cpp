@@ -13,9 +13,16 @@ Experiment::Experiment(std::ifstream &file)
 	init(file);
 }
 
+Experiment::~Experiment() {
+	delete pr;
+	delete el;
+}
+
 int Experiment::init(std::ifstream &file)
 {
 	pr = new Param();
+	el = new ExperimentLogger(expName, pr);
+	
 	loadEnvironment(file);
 	return 1;
 }

@@ -1,5 +1,4 @@
 #include "UniFastGenerator.h"
-#include <iostream>
 
 UniFastGenerator::UniFastGenerator() : Generator()
 {
@@ -47,11 +46,25 @@ int UniFastGenerator::loadConfig(std::ifstream &file)
 	return 1;
 }
 
+std::vector<double> UniFastGenerator::unifast(int n, double total)
+{
+	std::vector<double> ret;
+	double sum = total;
+	for(int i = 0; i < n - 1; i++) {
+		double base = cr.uniform(0.00, 1.00);
+		double tmp = sum * std::pow(base, (1.00 / (double)(n - i)));
+		ret.push_back(sum - tmp);
+		sum = tmp;
+	}
+	ret.push_back(sum);
+	return ret;
+}
+
 Task UniFastGenerator::nextTask(double util)
 {
 	double candPeriod = std::floor(cr.uniform(minPeriod, maxPeriod));
 	double candExecTime = std::floor(candPeriod * util);
-	double candDeadline = std::floor(cr.uniform(candExecTime, candPeriod));
+	double candDeadline = std::ceil(cr.uniform(candExecTime, candPeriod));
 	
 	Task t = Task();
 	t.setExecTime(candExecTime);
@@ -63,9 +76,10 @@ Task UniFastGenerator::nextTask(double util)
 TaskSet UniFastGenerator::nextTaskSet()
 {
 	double candSumUtil = cr.uniform(0.0, pr->getNProc());
-	int numTask = (int)std::round(cr.uniform(minN - 0.5, maxN + 0.5));
-	std::vector<double> candUtilArray = PMath::Unifast(numTask, candSumUtil);
 
+	int numTask = (int)std::round(cr.uniform(minN - 0.5, maxN + 0.5));
+	std::vector<double> candUtilArray = unifast(numTask, candSumUtil);
+	
 	TaskSet tset = TaskSet();
 	for(int i = 0; i < numTask; i++) {
 		Task t = nextTask(candUtilArray[i]);

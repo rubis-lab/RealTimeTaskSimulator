@@ -30,6 +30,8 @@ int BARExperiment::loadEnvironment(std::ifstream &file)
 	file >> expName;
 	file >> buf;
 	file >> utilizationInc;
+	file >> buf;
+	file >> midResult;
 
 	return 1;
 }
@@ -55,6 +57,10 @@ int BARExperiment::run()
 		//TaskSetUtil::printTaskSet(ts);
 
 		el->addRecord(TaskSetUtil::sumUtilization(ts), bar->isSchedulable(ts));
+
+		if(i % midResult == 0) {
+			el->printProbSched();
+		}
 	}
 	
 	return 1;
@@ -62,7 +68,7 @@ int BARExperiment::run()
 
 int BARExperiment::output()
 {
-	el->printRecord();
+	el->printRecordLong();
 
 	return 1;
 }

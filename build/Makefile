@@ -15,6 +15,7 @@ SOURCE = \
 	../src/container/Param.cpp	\
 	../src/container/Task.cpp	\
 	../src/container/TaskSet.cpp	\
+	../src/container/Thread.cpp	\
 	../src/container/ParallelizableTaskSet.cpp	\
 	../src/dataproc/ExperimentLogger.cpp	\
 	../src/experiment/Experiment.cpp	\

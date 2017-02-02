@@ -12,6 +12,11 @@ Task::Task(double e, double d, double p)
 	period = p;
 }
 
+Task::~Task()
+{
+	
+}
+
 double Task::getExecTime()
 {
 	return execTime;

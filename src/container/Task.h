@@ -13,6 +13,7 @@ private:
 public:	
 	Task();
 	Task(double e, double d, double p);
+	~Task();
 
 	double getExecTime();
 	double getDeadline();

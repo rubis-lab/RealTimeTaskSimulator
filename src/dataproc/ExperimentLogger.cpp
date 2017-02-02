@@ -15,7 +15,18 @@ ExperimentLogger::ExperimentLogger(std::string ename, Param *paramExt)
 
 ExperimentLogger::~ExperimentLogger()
 {
-	
+	delete outFile;
+}
+
+int ExperimentLogger::loadEnvironment(std::ifstream &file)
+{
+	FileIO::goToLine(file, 4);
+
+	std::string buf;
+	file >> buf;
+	file >> prec;
+
+	return 1;
 }
 
 int ExperimentLogger::init()
@@ -26,6 +37,12 @@ int ExperimentLogger::init()
 	// std::ofstream(std::ofstream::out | std::ofstream::app);
 	*outFile << "test output";
 	outFile->close();
+
+	std::ifstream inFile;
+	inFile.open("../cfg/log.cfg");
+	loadEnvironment(inFile);
+	inFile.close();
+
 	return 1;
 }
 
@@ -67,11 +84,11 @@ int ExperimentLogger::addRecord(double util, bool sched)
 	return 1;
 }
 
-int ExperimentLogger::printRecord()
+int ExperimentLogger::printRecordLong()
 {
 	normalizeRecord();
 
-	std::cout << std::setprecision(2) << std::fixed;
+	std::cout << std::setprecision(prec) << std::fixed;
 	// print
 	std::cout<<"ntot"<<std::endl;
 	for(unsigned int i = 0; i < totalSetCount.size(); i++) {
@@ -81,6 +98,19 @@ int ExperimentLogger::printRecord()
 	for(unsigned int i = 0; i < schedulableSetCount.size(); i++) {
 		std::cout<<i * incrementSize<<"\t"<<schedulableSetCount[i]<<std::endl;
 	}
+	std::cout<<"probsched"<<std::endl;
+	for(unsigned int i = 0; i < probSchedulable.size(); i++) {
+		std::cout<<i * incrementSize<<"\t"<<probSchedulable[i]<<std::endl;
+	}
+
+	return 1;
+}
+
+int ExperimentLogger::printProbSched()
+{
+	normalizeRecord();
+	std::cout << std::setprecision(prec) << std::fixed;
+
 	std::cout<<"probsched"<<std::endl;
 	for(unsigned int i = 0; i < probSchedulable.size(); i++) {
 		std::cout<<i * incrementSize<<"\t"<<probSchedulable[i]<<std::endl;

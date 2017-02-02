@@ -14,6 +14,7 @@ class ExperimentLogger
 {
 private:
 	Param *pr;
+	int prec;
 	double incrementSize;
 	std::string expName;
 	std::string fileName;
@@ -23,6 +24,7 @@ private:
 	std::vector<int> totalSetCount;
 	std::vector<double> probSchedulable;
 	int init();
+	int loadEnvironment(std::ifstream &file);
 	int normalizeRecord();
 public:	
 	ExperimentLogger();
@@ -30,7 +32,8 @@ public:
 	~ExperimentLogger();
 	int startRecord(double inc);
 	int addRecord(double util, bool sched);
-	int printRecord();
+	int printRecordLong();
+	int printProbSched();
 	int printUtilVsSchedulability(std::vector<double> &tsutil, std::vector<bool> &sched, double inc);
 };
 

@@ -16,6 +16,7 @@ private:
 	NormalGenerator *ng;
 	BAR *bar;
 	double utilizationInc;
+	int midResult;
 	int init(std::ifstream &file);
 	int loadEnvironment(std::ifstream &file);
 public:

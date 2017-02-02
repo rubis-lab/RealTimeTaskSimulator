@@ -9,7 +9,7 @@ MarcoGenerator::MarcoGenerator() : Generator()
 	file.close();
 }
 
-MarcoGenerator::MarcoGenerator(Param *paramExt, CRand *cr) : Generator(paramExt, cr)
+MarcoGenerator::MarcoGenerator(Param *paramExt, CRand *crExt) : Generator(paramExt, crExt)
 {
 	// Default configuration
 	std::ifstream file;

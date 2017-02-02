@@ -9,7 +9,6 @@
 namespace TaskModifier
 {
 	std::vector<Task> splitTaskUniformly(Task baseTask, int pcs);
-	std::vector<Thread> parallelizeTask(Task baseTask);
 }
 
 #endif

@@ -9,7 +9,7 @@ SimpleGenerator::SimpleGenerator() : Generator()
 	file.close();
 }
 
-SimpleGenerator::SimpleGenerator(Param *paramExt, CRand *cr) : Generator(paramExt, cr)
+SimpleGenerator::SimpleGenerator(Param *paramExt, CRand *crExt) : Generator(paramExt, crExt)
 {
 	// Default configuration
 	std::ifstream file;

@@ -16,7 +16,6 @@ SOURCE = \
 	../src/container/Task.cpp	\
 	../src/container/TaskSet.cpp	\
 	../src/container/Thread.cpp	\
-	../src/container/ParallelizableTaskSet.cpp	\
 	../src/dataproc/ExperimentLogger.cpp	\
 	../src/experiment/Experiment.cpp	\
 	../src/experiment/SimpleExperiment.cpp	\
@@ -27,11 +26,10 @@ SOURCE = \
 	../src/generator/MarcoGenerator.cpp	\
 	../src/generator/UniFastGenerator.cpp	\
 	../src/generator/NormalGenerator.cpp	\
-	../src/ops/TaskModifier.cpp	\
-	../src/ops/TaskSetModifier.cpp	\
 	../src/ops/TaskUtil.cpp	\
 	../src/ops/TaskSetUtil.cpp	\
 	../src/ops/TaskParallelizer.cpp	\
+	../src/ops/TaskSetParallelizer.cpp	\
 	../src/test/NEC.cpp	\
 	../src/test/GFB.cpp \
 	../src/test/BCL.cpp \

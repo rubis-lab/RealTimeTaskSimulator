@@ -9,7 +9,7 @@ NormalGenerator::NormalGenerator() : Generator()
 	file.close();
 }
 
-NormalGenerator::NormalGenerator(Param *paramExt, CRand *cr) : Generator(paramExt, cr)
+NormalGenerator::NormalGenerator(Param *paramExt, CRand *crExt) : Generator(paramExt, crExt)
 {
 	// Default configuration
 	std::ifstream file;
@@ -102,7 +102,7 @@ TaskSet NormalGenerator::nextTaskSet()
 {
 	double candSumUtil = cr->uniform(0.0, pr->getNProc());
 
-	int numTask = (int)std::round(cr->uniform(minN - 0.5, maxN + 0.5));
+	int numTask = (int)std::round(cr->uniform(minN - 0.49, maxN + 0.49));
 
 	std::vector<double> candUtilArray = generateUtilizationArray(numTask, candSumUtil);
 	

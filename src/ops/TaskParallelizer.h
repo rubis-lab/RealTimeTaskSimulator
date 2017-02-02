@@ -13,12 +13,15 @@ class TaskParallelizer
 {
 private:
 	Param* pr;
-	CRand cr;
+	CRand* cr;
 	int init();
 public:
 	TaskParallelizer();
-	TaskParallelizer(Param* paramExt);
+	TaskParallelizer(Param* paramExt, CRand* crExt);
 	~TaskParallelizer();
+
+	std::vector<Thread> parallelizeTask(Task baseTask, int pcs, double meanOverhead, double variance);
+	std::vector<Thread> splitTaskUniformly(Task baseTask, int pcs);
 };
 
 #endif

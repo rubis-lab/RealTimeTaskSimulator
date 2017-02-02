@@ -9,7 +9,7 @@ UniFastGenerator::UniFastGenerator() : Generator()
 	file.close();
 }
 
-UniFastGenerator::UniFastGenerator(Param *paramExt, CRand *cr) : Generator(paramExt, cr)
+UniFastGenerator::UniFastGenerator(Param *paramExt, CRand *crExt) : Generator(paramExt, crExt)
 {
 	// Default configuration
 	std::ifstream file;
@@ -78,7 +78,7 @@ TaskSet UniFastGenerator::nextTaskSet()
 {
 	double candSumUtil = cr->uniform(0.0, pr->getNProc());
 
-	int numTask = (int)std::round(cr->uniform(minN - 0.5, maxN + 0.5));
+	int numTask = (int)std::round(cr->uniform(minN - 0.49, maxN + 0.49));
 	std::vector<double> candUtilArray = unifast(numTask, candSumUtil);
 	
 	TaskSet tset = TaskSet();

@@ -5,6 +5,7 @@
 
 #include "../container/Param.h"
 #include "../dataproc/ExperimentLogger.h"
+#include "../ops/TaskSetParallelizer.h"
 #include "../../tools/CRand.h"
 #include "../../tools/FileIO.h"
 
@@ -12,10 +13,13 @@ class Experiment
 {
 protected:
 	Param *pr;
-	ExperimentLogger *el;
+	//ExperimentLogger *el;
 	CRand *cr;
+	TaskSetParallelizer *tsp;
 	std::string expName;
 	int iter;
+	double utilizationInc;
+	int midResult;
 	int init(std::ifstream &file);
 	int loadEnvironment(std::ifstream &file);
 public:

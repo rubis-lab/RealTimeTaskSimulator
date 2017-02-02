@@ -14,16 +14,18 @@ Experiment::Experiment(std::ifstream &file)
 }
 
 Experiment::~Experiment() {
+	delete tsp;
 	delete cr;
-	delete el;
+	//delete el;
 	delete pr;
 }
 
 int Experiment::init(std::ifstream &file)
 {
 	pr = new Param();
-	el = new ExperimentLogger(expName, pr);
+	//el = new ExperimentLogger(expName, pr);
 	cr = new CRand(pr->getSeed());
+	tsp = new TaskSetParallelizer(pr, cr);
 	
 	loadEnvironment(file);
 	return 1;
@@ -38,6 +40,10 @@ int Experiment::loadEnvironment(std::ifstream &file)
 	file >> expName;
 	file >> buf;
 	file >> iter;
+	file >> buf;
+	file >> midResult;
+	file >> buf;
+	file >> utilizationInc;
 
 	return 1;
 }

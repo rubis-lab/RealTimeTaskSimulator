@@ -15,8 +15,8 @@ private:
 	int init();
 	NormalGenerator *ng;
 	BAR *bar;
-	double utilizationInc;
-	int midResult;
+	ExperimentLogger *elNorm;
+	ExperimentLogger *elPara;
 	int init(std::ifstream &file);
 	int loadEnvironment(std::ifstream &file);
 public:

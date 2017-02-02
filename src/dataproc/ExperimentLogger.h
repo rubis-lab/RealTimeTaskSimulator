@@ -14,8 +14,8 @@ class ExperimentLogger
 {
 private:
 	Param *pr;
-	int prec;
-	double incrementSize;
+	int outPrecision;
+	double incSize;
 	std::string expName;
 	std::string fileName;
 	std::vector<TaskSet> taskSets;
@@ -28,9 +28,8 @@ private:
 	int normalizeRecord();
 public:	
 	ExperimentLogger();
-	ExperimentLogger(std::string ename, Param *paramExt);
+	ExperimentLogger(std::string ename, Param *paramExt, double inc);
 	~ExperimentLogger();
-	int startRecord(double inc);
 	int addRecord(double util, bool sched);
 	int printRecordLong();
 	int printProbSched();

@@ -26,12 +26,12 @@ std::vector<Thread> TaskParallelizer::parallelizeTask(Task baseTask, int pcs, do
 {
 	// apply overhead
 	// overhead = 0 --> Ck
-	// 			= 1 --> m * Ck
+	// 			= 1 --> Opt * Ck
 	// Ck * [1 + (m - 1) * overhead]
-	double overheadExecTime = baseTask.getExecTime() * (1.0 + (pr->getNProc() - 1.0) * meanOverhead);
+	double overheadExecTime = baseTask.getExecTime() * (1.0 + (pcs - 1.0) * meanOverhead);
 
 	// /m per thread
-	overheadExecTime = overheadExecTime / pr->getNProc();
+	overheadExecTime = overheadExecTime / pcs;
 
 	// normalize variance
 	// variance = 0 --> max 0 difference 

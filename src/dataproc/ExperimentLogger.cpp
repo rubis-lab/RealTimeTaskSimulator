@@ -6,15 +6,17 @@ ExperimentLogger::ExperimentLogger()
 	init();
 }
 
-ExperimentLogger::ExperimentLogger(std::string ename, Param *paramExt)
+ExperimentLogger::ExperimentLogger(std::string ename, Param *paramExt, double inc)
 {
 	pr = paramExt;
 	expName = ename;
+	incSize = inc;
 	init();
 }
 
 ExperimentLogger::~ExperimentLogger()
 {
+	outFile->close();
 	delete outFile;
 }
 
@@ -24,7 +26,7 @@ int ExperimentLogger::loadEnvironment(std::ifstream &file)
 
 	std::string buf;
 	file >> buf;
-	file >> prec;
+	file >> outPrecision;
 
 	return 1;
 }
@@ -36,12 +38,17 @@ int ExperimentLogger::init()
 	outFile = new std::ofstream(fileName, std::ofstream::out);
 	// std::ofstream(std::ofstream::out | std::ofstream::app);
 	*outFile << "test output";
-	outFile->close();
 
 	std::ifstream inFile;
-	inFile.open("../cfg/log.cfg");
+	inFile.open("../cfg/ExperimentLogger.cfg");
 	loadEnvironment(inFile);
 	inFile.close();
+
+	int containerSize = (int)std::ceil(pr->getNProc() / incSize);
+
+	totalSetCount.resize(containerSize, 0);
+	schedulableSetCount.resize(containerSize, 0);
+	probSchedulable.resize(containerSize, 0.0);
 
 	return 1;
 }
@@ -59,21 +66,9 @@ int ExperimentLogger::normalizeRecord()
 	return 1;
 }
 
-int ExperimentLogger::startRecord(double inc)
-{
-	incrementSize = inc;
-	int containerSize = (int)std::ceil(pr->getNProc() / incrementSize);
-
-	totalSetCount.resize(containerSize, 0);
-	schedulableSetCount.resize(containerSize, 0);
-	probSchedulable.resize(containerSize, 0.0);
-
-	return 1;
-}
-
 int ExperimentLogger::addRecord(double util, bool sched) 
 {
-	int idx = (int)std::floor(util / incrementSize);
+	int idx = (int)std::floor(util / incSize);
 	// ntot
 	totalSetCount[idx]++;
 	// nsched
@@ -87,21 +82,23 @@ int ExperimentLogger::addRecord(double util, bool sched)
 int ExperimentLogger::printRecordLong()
 {
 	normalizeRecord();
-
-	std::cout << std::setprecision(prec) << std::fixed;
+	std::cout << std::setprecision(4) << std::fixed;
 	// print
 	std::cout<<"ntot"<<std::endl;
 	for(unsigned int i = 0; i < totalSetCount.size(); i++) {
-		std::cout<<i * incrementSize<<"\t"<<totalSetCount[i]<<std::endl;
+		std::cout << i * incSize << "\t" << totalSetCount[i] << std::endl;
 	}
 	std::cout<<"nsched"<<std::endl;
 	for(unsigned int i = 0; i < schedulableSetCount.size(); i++) {
-		std::cout<<i * incrementSize<<"\t"<<schedulableSetCount[i]<<std::endl;
+		std::cout << i * incSize << "\t" << schedulableSetCount[i] << std::endl;
 	}
 	std::cout<<"probsched"<<std::endl;
 	for(unsigned int i = 0; i < probSchedulable.size(); i++) {
-		std::cout<<i * incrementSize<<"\t"<<probSchedulable[i]<<std::endl;
+		std::cout << i * incSize << "\t" << probSchedulable[i] << std::endl;
 	}
+
+	// roll-back cout precision
+	std::cout.copyfmt(std::ios(NULL));
 
 	return 1;
 }
@@ -109,13 +106,13 @@ int ExperimentLogger::printRecordLong()
 int ExperimentLogger::printProbSched()
 {
 	normalizeRecord();
-	std::cout << std::setprecision(prec) << std::fixed;
+	std::cout << std::setprecision(4) << std::fixed;
 
 	std::cout<<"probsched"<<std::endl;
 	for(unsigned int i = 0; i < probSchedulable.size(); i++) {
-		std::cout<<i * incrementSize<<"\t"<<probSchedulable[i]<<std::endl;
+		std::cout<<i * incSize<<"\t"<<probSchedulable[i]<<std::endl;
 	}
-
+	std::cout.copyfmt(std::ios(NULL));
 	return 1;
 }
 

@@ -17,7 +17,6 @@ private:
 	UniFastGenerator *ug;
 	//BCL *bcl;
 	GFB *gfb;
-	double utilizationInc;
 	int init(std::ifstream &file);
 	int loadEnvironment(std::ifstream &file);
 	std::vector<double> taskSetUtilization;

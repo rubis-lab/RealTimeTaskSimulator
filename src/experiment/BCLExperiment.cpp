@@ -22,8 +22,6 @@ int BCLExperiment::loadEnvironment(std::ifstream &file)
 	std::string buf;
 	file >> buf;
 	file >> expName;
-	file >> buf;
-	file >> utilizationInc;
 
 	return 1;
 }
@@ -61,6 +59,6 @@ int BCLExperiment::run()
 int BCLExperiment::output()
 {
 	//el = new ExperimentLogger(expName, pr);
-	el->printUtilVsSchedulability(taskSetUtilization, schedulability, utilizationInc);
+	//el->printUtilVsSchedulability(taskSetUtilization, schedulability, utilizationInc);
 	return 1;
 }

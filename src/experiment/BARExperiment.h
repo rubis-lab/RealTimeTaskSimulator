@@ -12,6 +12,10 @@
 class BARExperiment : public Experiment
 {
 private:
+	int oMin;
+	int oMax;
+	double pOverhead;
+	double pVariance;
 	int init();
 	NormalGenerator *ng;
 	BAR *bar;

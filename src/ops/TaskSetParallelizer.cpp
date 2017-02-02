@@ -41,6 +41,10 @@ TaskSet TaskSetParallelizer::parallelizeIntoOption(TaskSet baseTaskSet, int opti
 	
 	return retTaskSet;
 }
+TaskSet TaskSetParallelizer::parallelizeIntoRandomOption(TaskSet baseTaskSet, int optionMin, int optionMax)
+{
+	return parallelizeIntoRandomOption(baseTaskSet, optionMin, optionMax, 0.0, 0.0);
+}
 
 TaskSet TaskSetParallelizer::parallelizeIntoRandomOption(TaskSet baseTaskSet, int optionMin, int optionMax, double overhead, double variance)
 {

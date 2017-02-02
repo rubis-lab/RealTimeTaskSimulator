@@ -30,6 +30,15 @@ int BARExperiment::loadEnvironment(std::ifstream &file)
 	std::string buf;
 	file >> buf;
 	file >> expName;
+	file >> buf;
+	file >> oMin;
+	file >> buf;
+	file >> oMax;
+	file >> buf;
+	file >> pOverhead;
+	file >> buf;
+	file >> pVariance;
+
 	return 1;
 }
 
@@ -60,7 +69,8 @@ int BARExperiment::run()
 		elNorm->addRecord(TaskSetUtil::sumUtilization(ts), bar->isSchedulable(ts));
 
 		// Parallelized Tasks
-		TaskSet tsPara = tsp->parallelizeIntoOption(ts, 4);
+		//TaskSet tsPara = tsp->parallelizeIntoOption(ts, 4);
+		TaskSet tsPara = tsp->parallelizeIntoRandomOption(ts, oMin, oMax, pOverhead, pVariance);
 		//TaskSetUtil::printTaskInfo(tsPara);
 		//TaskSetUtil::printTaskSet(tsPara);
 		elPara->addRecord(TaskSetUtil::sumUtilization(tsPara), bar->isSchedulable(tsPara));

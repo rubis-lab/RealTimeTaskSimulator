@@ -22,6 +22,7 @@ public:
 	~TaskSetParallelizer();
 	TaskSet parallelizeIntoOption(TaskSet baseTaskSet, int option);
 	TaskSet parallelizeIntoOption(TaskSet baseTaskSet, int option, double overhead, double variance);
+	TaskSet parallelizeIntoRandomOption(TaskSet baseTaskSet, int optionMin, int optionMax);
 	TaskSet parallelizeIntoRandomOption(TaskSet baseTaskSet, int optionMin, int optionMax, double overhead, double variance);
 	
 };

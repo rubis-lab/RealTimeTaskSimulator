@@ -9,7 +9,7 @@ NormalGenerator::NormalGenerator() : Generator()
 	file.close();
 }
 
-NormalGenerator::NormalGenerator(Param *paramExt) : Generator(paramExt)
+NormalGenerator::NormalGenerator(Param *paramExt, CRand *cr) : Generator(paramExt, cr)
 {
 	// Default configuration
 	std::ifstream file;
@@ -17,11 +17,12 @@ NormalGenerator::NormalGenerator(Param *paramExt) : Generator(paramExt)
 	init(file);
 	file.close();
 }
-
+/*
 NormalGenerator::NormalGenerator(Param *paramExt, std::ifstream &file) : Generator(paramExt)
 {
 	init(file);
 }
+*/
 
 NormalGenerator::~NormalGenerator()
 {
@@ -71,7 +72,7 @@ std::vector<double> NormalGenerator::generateUtilizationArray(int n, double util
 		for(int i = 0; i < n; i++) {
 			double candUtilization = -1.0;
 			while(1) {
-				candUtilization = cr.normal(meanUtilization, normalizedSig);
+				candUtilization = cr->normal(meanUtilization, normalizedSig);
 				if(candUtilization < 1.0 && candUtilization >= 0.0) {
 					sum += candUtilization;
 					ret.push_back(candUtilization);
@@ -86,9 +87,9 @@ std::vector<double> NormalGenerator::generateUtilizationArray(int n, double util
 
 Task NormalGenerator::nextTask(double util)
 {
-	double candPeriod = std::floor(cr.uniform(minPeriod, maxPeriod));
+	double candPeriod = std::floor(cr->uniform(minPeriod, maxPeriod));
 	double candExecTime = std::floor(candPeriod * util);
-	double candDeadline = std::ceil(cr.uniform(candExecTime, candPeriod));
+	double candDeadline = std::ceil(cr->uniform(candExecTime, candPeriod));
 	
 	Task t = Task();
 	t.setExecTime(candExecTime);
@@ -99,9 +100,9 @@ Task NormalGenerator::nextTask(double util)
 
 TaskSet NormalGenerator::nextTaskSet()
 {
-	double candSumUtil = cr.uniform(0.0, pr->getNProc());
+	double candSumUtil = cr->uniform(0.0, pr->getNProc());
 
-	int numTask = (int)std::round(cr.uniform(minN - 0.5, maxN + 0.5));
+	int numTask = (int)std::round(cr->uniform(minN - 0.5, maxN + 0.5));
 
 	std::vector<double> candUtilArray = generateUtilizationArray(numTask, candSumUtil);
 	

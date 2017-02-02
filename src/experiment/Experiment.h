@@ -5,12 +5,15 @@
 
 #include "../container/Param.h"
 #include "../dataproc/ExperimentLogger.h"
+#include "../../tools/CRand.h"
+#include "../../tools/FileIO.h"
 
 class Experiment
 {
 protected:
 	Param *pr;
 	ExperimentLogger *el;
+	CRand *cr;
 	std::string expName;
 	int iter;
 	int init(std::ifstream &file);

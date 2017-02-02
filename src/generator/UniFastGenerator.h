@@ -15,8 +15,8 @@ private:
 	std::vector<double> unifast(int n, double total);
 public:
 	UniFastGenerator();
-	UniFastGenerator(Param *paramExt);
-	UniFastGenerator(Param *paramExt, std::ifstream &file);
+	UniFastGenerator(Param *paramExt, CRand *crExt);
+	//UniFastGenerator(Param *paramExt, std::ifstream &file);
 	
 	Task nextTask(double util);
 	TaskSet nextTaskSet();

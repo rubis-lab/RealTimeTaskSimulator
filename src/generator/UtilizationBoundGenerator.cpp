@@ -9,18 +9,13 @@ UtilizationBoundGenerator::UtilizationBoundGenerator() : Generator()
 	file.close();
 }
 
-UtilizationBoundGenerator::UtilizationBoundGenerator(Param *paramExt) : Generator(paramExt)
+UtilizationBoundGenerator::UtilizationBoundGenerator(Param *paramExt, CRand *cr) : Generator(paramExt, cr)
 {
 	// Default configuration
 	std::ifstream file;
 	file.open("../cfg/gen/ubgen.cfg");
 	init(file);
 	file.close();
-}
-
-UtilizationBoundGenerator::UtilizationBoundGenerator(Param *paramExt, std::ifstream &file) : Generator(paramExt)
-{
-	init(file);
 }
 
 std::vector<double> BoundSplit(int n, double boundMin, double boundMax, double total)
@@ -38,7 +33,7 @@ std::vector<double> BoundSplit(int n, double boundMin, double boundMax, double t
 	while(1) {
 		ret.clear();
 		for(int i = 0; i < n - 1; i++) {
-			ret.push_back(cr.uniform(boundMin, boundMax));
+			ret.push_back(cr->uniform(boundMin, boundMax));
 		}
 
 	}
@@ -76,9 +71,9 @@ int UtilizationBoundGenerator::loadConfig(std::ifstream &file)
 
 Task UtilizationBoundGenerator::nextTask(double util)
 {
-	double candPeriod = std::floor(cr.uniform(minPeriod, maxPeriod));
+	double candPeriod = std::floor(cr->uniform(minPeriod, maxPeriod));
 	double candExecTime = std::floor(candPeriod * util);
-	double candDeadline = std::ceil(cr.uniform(candExecTime, candPeriod));
+	double candDeadline = std::ceil(cr->uniform(candExecTime, candPeriod));
 	
 	Task t = Task();
 	t.setExecTime(candExecTime);
@@ -89,9 +84,9 @@ Task UtilizationBoundGenerator::nextTask(double util)
 
 TaskSet UtilizationBoundGenerator::nextTaskSet()
 {
-	double candSumUtil = cr.uniform(0.0, pr->getNProc());
+	double candSumUtil = cr->uniform(0.0, pr->getNProc());
 
-	int numTask = (int)std::round(cr.uniform(minN - 0.5, maxN + 0.5));
+	int numTask = (int)std::round(cr->uniform(minN - 0.5, maxN + 0.5));
 	std::vector<double> candUtilArray = PMath::Unifast(numTask, candSumUtil);
 	
 	TaskSet tset = TaskSet();

@@ -31,6 +31,7 @@ SOURCE = \
 	../src/ops/TaskSetModifier.cpp	\
 	../src/ops/TaskUtil.cpp	\
 	../src/ops/TaskSetUtil.cpp	\
+	../src/ops/TaskParallelizer.cpp	\
 	../src/test/NEC.cpp	\
 	../src/test/GFB.cpp \
 	../src/test/BCL.cpp \

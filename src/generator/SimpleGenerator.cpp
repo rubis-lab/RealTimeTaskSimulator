@@ -9,7 +9,7 @@ SimpleGenerator::SimpleGenerator() : Generator()
 	file.close();
 }
 
-SimpleGenerator::SimpleGenerator(Param *paramExt) : Generator(paramExt)
+SimpleGenerator::SimpleGenerator(Param *paramExt, CRand *cr) : Generator(paramExt, cr)
 {
 	// Default configuration
 	std::ifstream file;
@@ -17,11 +17,12 @@ SimpleGenerator::SimpleGenerator(Param *paramExt) : Generator(paramExt)
 	init(file);
 	file.close();
 }
-
+/*
 SimpleGenerator::SimpleGenerator(Param *paramExt, std::ifstream &file) : Generator(paramExt)
 {
 	init(file);
 }
+*/
 
 int SimpleGenerator::init(std::ifstream &file)
 {
@@ -55,9 +56,9 @@ int SimpleGenerator::loadConfig(std::ifstream &file)
 Task SimpleGenerator::nextTask()
 {
 	Task t = Task();
-	t.setExecTime(cr.uniform(minExecTime, maxExecTime));
-	t.setDeadline(cr.uniform(minDeadline, maxDeadline));
-	t.setPeriod(cr.uniform(minPeriod, maxPeriod));
+	t.setExecTime(cr->uniform(minExecTime, maxExecTime));
+	t.setDeadline(cr->uniform(minDeadline, maxDeadline));
+	t.setPeriod(cr->uniform(minPeriod, maxPeriod));
 	return t;
 }
 

@@ -5,9 +5,10 @@ Generator::Generator()
 	init();
 }
 
-Generator::Generator(Param* paramExt)
+Generator::Generator(Param* paramExt, CRand* crExt)
 {
 	pr = paramExt;
+	cr = crExt;
 	init();
 }
 
@@ -18,7 +19,7 @@ Generator::~Generator()
 
 int Generator::init()
 {
-	cr = CRand(pr->getSeed());
+	//cr = CRand(pr->getSeed());
 	return 1;
 }
 

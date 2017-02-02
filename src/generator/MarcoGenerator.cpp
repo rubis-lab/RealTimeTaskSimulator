@@ -9,7 +9,7 @@ MarcoGenerator::MarcoGenerator() : Generator()
 	file.close();
 }
 
-MarcoGenerator::MarcoGenerator(Param *paramExt) : Generator(paramExt)
+MarcoGenerator::MarcoGenerator(Param *paramExt, CRand *cr) : Generator(paramExt, cr)
 {
 	// Default configuration
 	std::ifstream file;
@@ -18,10 +18,12 @@ MarcoGenerator::MarcoGenerator(Param *paramExt) : Generator(paramExt)
 	file.close();
 }
 
+/*
 MarcoGenerator::MarcoGenerator(Param *paramExt, std::ifstream &file) : Generator(paramExt)
 {
 	init(file);
 }
+*/
 
 int MarcoGenerator::init(std::ifstream &file)
 {
@@ -57,20 +59,20 @@ Task MarcoGenerator::nextTask()
 	/*
 	double candUtilization = 0.0;
 	while(candUtilization < 0.0 || candUtilization >= 1.0) {
-		candUtilization = cr.exponential(lmbd);
+		candUtilization = cr->exponential(lmbd);
 	}
 	*/
 	
 	double candUtilization = 0.0;
 	
 	while(candUtilization <= 0.0 || candUtilization >= 1.0) {
-		candUtilization = cr.normal(lmbd, 0.2);
+		candUtilization = cr->normal(lmbd, 0.2);
 	}
 	//std::cout<<"util: "<<candUtilization<<std::endl;
 	
-	double candPeriod = std::floor(cr.uniform(minPeriod, maxPeriod));
+	double candPeriod = std::floor(cr->uniform(minPeriod, maxPeriod));
 	double candExecTime = std::floor(candPeriod * candUtilization);
-	double candDeadline = std::floor(cr.uniform(candExecTime, candPeriod));
+	double candDeadline = std::floor(cr->uniform(candExecTime, candPeriod));
 
 	Task t = Task();
 	t.setExecTime(candExecTime);

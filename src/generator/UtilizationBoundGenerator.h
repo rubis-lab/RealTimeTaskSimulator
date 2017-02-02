@@ -16,8 +16,8 @@ private:
 	int reset();
 public:
 	UtilizationBoundGenerator();
-	UtilizationBoundGenerator(Param *paramExt);
-	UtilizationBoundGenerator(Param *paramExt, std::ifstream &file);
+	UtilizationBoundGenerator(Param *paramExt, CRand *crExt);
+	//UtilizationBoundGenerator(Param *paramExt, std::ifstream &file);
 	
 	Task nextTask(double util);
 	TaskSet nextTaskSet();

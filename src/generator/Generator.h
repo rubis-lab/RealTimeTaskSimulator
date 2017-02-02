@@ -3,7 +3,7 @@
 
 #include <iostream>
 #include <fstream>
-#include <stdlib.h>
+#include <cstdlib>
 
 #include "../container/Param.h"
 #include "../container/Task.h"
@@ -15,7 +15,7 @@ class Generator
 {
 protected:
 	Param* pr;
-	CRand cr;
+	CRand* cr;
 	TaskSet ts;
 	double numTask;
 	double minPeriod;
@@ -28,7 +28,7 @@ protected:
 
 public:
 	Generator();
-	Generator(Param* paramExt);
+	Generator(Param* paramExt, CRand* crExt);
 	~Generator();
 
 	int loadConfig(std::ifstream &file);

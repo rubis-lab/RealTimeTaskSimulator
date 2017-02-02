@@ -38,7 +38,7 @@ int BARExperiment::loadEnvironment(std::ifstream &file)
 
 int BARExperiment::set()
 {
-	ng = new NormalGenerator(pr);
+	ng = new NormalGenerator(pr, cr);
 	bar = new BAR(pr);
 	el->startRecord(utilizationInc);
 	return 1;

@@ -14,14 +14,16 @@ Experiment::Experiment(std::ifstream &file)
 }
 
 Experiment::~Experiment() {
-	delete pr;
+	delete cr;
 	delete el;
+	delete pr;
 }
 
 int Experiment::init(std::ifstream &file)
 {
 	pr = new Param();
 	el = new ExperimentLogger(expName, pr);
+	cr = new CRand(pr->getSeed());
 	
 	loadEnvironment(file);
 	return 1;

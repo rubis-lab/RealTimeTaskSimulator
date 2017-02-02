@@ -16,8 +16,8 @@ private:
 	std::vector<double> generateUtilizationArray(int n, double util);
 public:
 	NormalGenerator();
-	NormalGenerator(Param *paramExt);
-	NormalGenerator(Param *paramExt, std::ifstream &file);
+	NormalGenerator(Param *paramExt, CRand *crExt);
+	//NormalGenerator(Param *paramExt, std::ifstream &file);
 	~NormalGenerator();
 	
 	Task nextTask(double util);

@@ -7,7 +7,7 @@ SimpleExperiment::SimpleExperiment() : Experiment()
 
 int SimpleExperiment::set()
 {
-	sg = SimpleGenerator(pr);
+	sg = SimpleGenerator(pr, cr);
 	gfb = GFB(pr);
 	return 1;
 }

@@ -15,8 +15,8 @@ private:
 	int reset();
 public:
 	MarcoGenerator();
-	MarcoGenerator(Param *paramExt);
-	MarcoGenerator(Param *paramExt, std::ifstream &file);
+	MarcoGenerator(Param *paramExt, CRand *crExt);
+	//MarcoGenerator(Param *paramExt, std::ifstream &file);
 	
 	Task nextTask();
 	TaskSet nextTaskSet();

@@ -9,6 +9,7 @@ private:
 public:	
 	Thread();
 	Thread(double e, double d, double p);
+	~Thread();
 };
 
 #endif

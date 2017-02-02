@@ -31,7 +31,7 @@ int BCLExperiment::loadEnvironment(std::ifstream &file)
 int BCLExperiment::set()
 {
 	//mg = new MarcoGenerator(pr);
-	ug = new UniFastGenerator(pr);
+	ug = new UniFastGenerator(pr, cr);
 	//bcl = new BCL(pr);
 	gfb = new GFB(pr);
 	return 1;

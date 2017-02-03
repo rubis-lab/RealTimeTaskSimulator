@@ -12,6 +12,7 @@ endif
 #sources
 SOURCE = \
 	../src/Test.cpp	\
+	../src/algorithm/Knapsack.cpp	\
 	../src/container/Param.cpp	\
 	../src/container/Task.cpp	\
 	../src/container/TaskSet.cpp	\
@@ -46,6 +47,7 @@ LIB_OPTION = -lpthread
 
 #dependency dest
 VPATH = ../src	\
+	../src/algorithm	\
 	../src/container	\
 	../src/dataproc	\
 	../src/experiment	\
@@ -76,6 +78,11 @@ $(TARGET): $(OBJ)
 	@mkdir -p $(dir $@)
 	@echo "Compiling $<" 
 	@$(CC) $(CFLAGS) -c $< -o $@ $(LIBS)
+
+../src/algorithm/../obj/%.o: %.cpp
+	@mkdir -p $(dir $@)
+	@echo "Compiling $<" 
+	@$(CC) $(CFLAGS) -c $< -o $@ $(LIBS)	
 
 ../src/container/../obj/%.o: %.cpp
 	@mkdir -p $(dir $@)

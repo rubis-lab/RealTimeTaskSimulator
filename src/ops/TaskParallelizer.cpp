@@ -22,6 +22,15 @@ int TaskParallelizer::init()
 	return 1;
 }
 
+// Sorts threads in execution time descending order.
+std::vector<Thread> TaskParallelizer::sortThreadsDescending(std::vector<Thread> thrList)
+{
+	//std::vector<Thread> ret;
+	std::sort(thrList.begin(), thrList.end(), \
+		[] (Thread t1, Thread t2) {return t1.getExecTime() > t2.getExecTime();});
+	return thrList;
+}
+
 std::vector<Thread> TaskParallelizer::parallelizeTask(Task baseTask, int pcs, double meanOverhead, double variance)
 {
 	// apply overhead
@@ -53,7 +62,7 @@ std::vector<Thread> TaskParallelizer::parallelizeTask(Task baseTask, int pcs, do
 	double a = overheadExecTime - intervalLength;
 	double b = overheadExecTime + intervalLength;
 
-	std::vector<Thread> retThreadList;
+	std::vector<Thread> tmpThreadList;
 	for(int i = 0; i < pcs; i++) {
 		Thread thr = Thread();
 		thr.setExecTime(std::round(cr->uniform(a, b)));
@@ -61,7 +70,17 @@ std::vector<Thread> TaskParallelizer::parallelizeTask(Task baseTask, int pcs, do
 		// D, P --> same
 		thr.setDeadline(baseTask.getDeadline());
 		thr.setPeriod(baseTask.getPeriod());
-		retThreadList.push_back(thr);
+
+		// parent ID
+		thr.setID(baseTask.getID());
+
+		tmpThreadList.push_back(thr);
+	}
+
+	// sort threads
+	std::vector<Thread> retThreadList = sortThreadsDescending(tmpThreadList);
+	for(int i = 0; i < pcs; i++) {
+		retThreadList[i].setTID(i);
 	}
 
 	return retThreadList;
@@ -87,6 +106,11 @@ std::vector<Thread> TaskParallelizer::splitTaskUniformly(Task baseTask, int pcs)
 		// D, P --> same
 		thr.setDeadline(baseTask.getDeadline());
 		thr.setPeriod(baseTask.getPeriod());
+
+		// ID
+		thr.setID(baseTask.getID());
+		thr.setTID(i);
+		
 		retThreadList.push_back(thr);
 	}
 

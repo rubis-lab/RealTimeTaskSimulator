@@ -4,7 +4,7 @@
 class Task
 {
 private:
-	int id;
+	int ID;
 	double period;
 	double execTime;
 	double deadline;
@@ -13,12 +13,15 @@ private:
 public:	
 	Task();
 	Task(double e, double d, double p);
+	Task(int id, double e, double d, double p);
 	~Task();
 
+	int getID();
 	double getExecTime();
 	double getDeadline();
 	double getPeriod();
 
+	int setID(int id);
 	int setExecTime(double e);
 	int setDeadline(double d);
 	int setPeriod(double p);

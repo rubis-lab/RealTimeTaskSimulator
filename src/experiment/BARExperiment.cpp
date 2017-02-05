@@ -14,6 +14,7 @@ BARExperiment::~BARExperiment()
 	delete elPara;
 	delete ng;
 	delete bar;
+	delete barMod;
 }
 
 int BARExperiment::init(std::ifstream &file)
@@ -46,6 +47,7 @@ int BARExperiment::set()
 {
 	ng = new NormalGenerator(pr, cr);
 	bar = new BAR(pr);
+	barMod = new BARMod(pr);
 	elNorm = new ExperimentLogger(expName+"Norm", pr, utilizationInc);
 	//elNorm->startRecord(utilizationInc);
 	elPara = new ExperimentLogger(expName+"Para", pr, utilizationInc);

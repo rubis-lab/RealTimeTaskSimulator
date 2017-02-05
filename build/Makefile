@@ -35,6 +35,7 @@ SOURCE = \
 	../src/test/GFB.cpp \
 	../src/test/BCL.cpp \
 	../src/test/BAR.cpp	\
+	../src/test/BARMod.cpp	\
 	../tools/CRand.cpp	\
 	../tools/PMath.cpp	\
 	../tools/FileIO.cpp	

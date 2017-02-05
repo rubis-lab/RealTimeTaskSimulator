@@ -12,9 +12,23 @@ Task::Task(double e, double d, double p)
 	period = p;
 }
 
+Task::Task(int id, double e, double d, double p)
+{
+	ID = id;
+	execTime = e;
+	deadline = d;
+	period = p;
+}
+
+
 Task::~Task()
 {
 	
+}
+
+int Task::getID()
+{
+	return ID;
 }
 
 double Task::getExecTime()
@@ -30,6 +44,12 @@ double Task::getDeadline()
 double Task::getPeriod()
 {
 	return period;
+}
+
+int Task::setID(int id)
+{
+	ID = id;
+	return 1;
 }
 
 int Task::setExecTime(double e)

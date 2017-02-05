@@ -3,6 +3,7 @@
 
 #include <vector>
 #include <cmath>
+#include <algorithm>
 
 #include "../container/Param.h"
 #include "../container/Thread.h"
@@ -20,6 +21,7 @@ public:
 	TaskParallelizer(Param* paramExt, CRand* crExt);
 	~TaskParallelizer();
 
+	std::vector<Thread> sortThreadsDescending(std::vector<Thread> thrList);
 	std::vector<Thread> parallelizeTask(Task baseTask, int pcs, double meanOverhead, double variance);
 	std::vector<Thread> splitTaskUniformly(Task baseTask, int pcs);
 };

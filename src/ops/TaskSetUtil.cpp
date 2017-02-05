@@ -21,6 +21,7 @@ TaskSet TaskSetUtil::readTaskSet(std::ifstream &file)
 int TaskSetUtil::printTaskSet(TaskSet &ts)
 {
 	for(int i = 0; i < ts.count(); i++) {
+		std::cout << ts.getTask(i).getID() << "\t";
 		std::cout << ts.getTask(i).getExecTime() << "\t";
 		std::cout << ts.getTask(i).getDeadline() << "\t";
 		std::cout << ts.getTask(i).getPeriod() << std::endl;

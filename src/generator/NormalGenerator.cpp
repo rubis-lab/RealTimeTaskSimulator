@@ -109,6 +109,7 @@ TaskSet NormalGenerator::nextTaskSet()
 	TaskSet tset = TaskSet();
 	for(int i = 0; i < numTask; i++) {
 		Task t = nextTask(candUtilArray[i]);
+		t.setID(i);
 		tset.pushBack(t);
 	}
 	return tset;

@@ -1,17 +1,17 @@
 #include "Knapsack.h"
 
-double knapsackMinial(int maxWeight, std::vector<int> itemWeight, std::vector<double> itemCost)
+double Knapsack::knapsackMinial(int maxWeight, std::vector<int> itemWeight, std::vector<double> itemCost)
 {
 	// 2-D Cache for iterative solution
 	std::vector<std::vector<double>> knapCache;
 	for(int i = 0; i < 2; i++) {
-		std::vector<double> kanpCacheRow;
-		kanpCacheRow.resize(maxWeight, 0.0);
-		knapCache.push_back(kanpCacheRow);
+		std::vector<double> knapCacheRow;
+		knapCacheRow.resize(maxWeight, 0.0);
+		knapCache.push_back(knapCacheRow);
 	}
 
-	for(int i = 0; i < itemWeight.size(); i++) {
-		std::cout<<i<<"\t: ";
+	for(unsigned int i = 0; i < itemWeight.size(); i++) {
+		//std::cout<<i<<"\t: ";
 		for(int j = 1; j <= maxWeight; j++) {
 			// current item cannot fit --> use previous
 			if(j < itemWeight[i]) {
@@ -20,15 +20,15 @@ double knapsackMinial(int maxWeight, std::vector<int> itemWeight, std::vector<do
 			// can fit --> either take current item or not.
 				knapCache[i % 2][j] = std::max(knapCache[1 - i % 2][j], knapCache[1 - i % 2][j - itemWeight[i]] + itemCost[i]);
 			}
-			std::cout<<knapCache[i % 2][j]<<" ";
+			//std::cout<<knapCache[i % 2][j]<<" ";
 		}
-		std::cout<<std::endl;
+		//std::cout<<std::endl;
 	}
 
 	return knapCache[(itemWeight.size() - 1) % 2][maxWeight];
 }
 
-double knapsackFalseWeight(int maxWeight, std::vector<int> falseWeight, std::vector<int> itemWeight, std::vector<double> itemCost)
+double Knapsack::knapsackFalseWeight(int maxWeight, std::vector<int> falseWeight, std::vector<int> itemWeight, std::vector<double> itemCost)
 {
 	// Items have false weight, 
 	// For example, item (2, 1, 10) will be included after pass 2
@@ -40,13 +40,13 @@ double knapsackFalseWeight(int maxWeight, std::vector<int> falseWeight, std::vec
 	// 2-D Cache for iterative solution
 	std::vector<std::vector<double>> knapCache;
 	for(int i = 0; i < 2; i++) {
-		std::vector<double> kanpCacheRow;
-		kanpCacheRow.resize(maxWeight, 0.0);
-		knapCache.push_back(kanpCacheRow);
+		std::vector<double> knapCacheRow;
+		knapCacheRow.resize(maxWeight, 0.0);
+		knapCache.push_back(knapCacheRow);
 	}
 
-	for(int i = 0; i < itemWeight.size(); i++) {
-		std::cout<<i<<"\t: ";
+	for(unsigned int i = 0; i < itemWeight.size(); i++) {
+		//std::cout<<i<<"\t: ";
 		for(int j = 1; j <= maxWeight; j++) {
 			// current item cannot fit --> use previous
 			if(j < falseWeight[i]) {
@@ -55,9 +55,9 @@ double knapsackFalseWeight(int maxWeight, std::vector<int> falseWeight, std::vec
 			// can fit --> either take current item or not.
 				knapCache[i % 2][j] = std::max(knapCache[1 - i % 2][j], knapCache[1 - i % 2][j - itemWeight[i]] + itemCost[i]);
 			}
-			std::cout<<knapCache[i % 2][j]<<" ";
+			//std::cout<<knapCache[i % 2][j]<<" ";
 		}
-		std::cout<<std::endl;
+		//std::cout<<std::endl;
 	}
 
 	return knapCache[(itemWeight.size() - 1) % 2][maxWeight];

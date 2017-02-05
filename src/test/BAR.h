@@ -13,15 +13,12 @@
 
 class BAR
 {
-private:
+protected:
 	Param *pr;
-	std::vector<Task> CITask;
-	//std::vector<double> getKMaxInterferingExecTime(TaskSet &ts, int k, int baseTaskIndex);
+	std::vector<double> iNC;
+	std::vector<double> iCI;
 	std::vector<double> getKMaxInterferingExecTime(TaskSet &ts, int k);
-	//int chooseCITasks(TaskSet &ts);
-	//double calcDemandOverIntervalBase(TaskSet &ts)
 	std::vector<double> calcExtendedIntervalBound(TaskSet &ts);
-	//double calcExtendedIntervalBound(TaskSet &ts, int baseTaskIndex);
 	double calcNCInterference(TaskSet &ts, int baseTaskIndex, int interTaskIndex, double extendedInterval);
 	double calcCarryIn(TaskSet &ts, int baseTaskIndex, int interTaskIndex, double extendedInterval);
 public:

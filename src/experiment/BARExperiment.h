@@ -7,6 +7,7 @@
 #include "../experiment/Experiment.h"
 #include "../ops/TaskSetUtil.h"
 #include "../test/BAR.h"
+#include "../test/BARMod.h"
 #include "../generator/NormalGenerator.h"
 
 class BARExperiment : public Experiment
@@ -19,6 +20,7 @@ private:
 	int init();
 	NormalGenerator *ng;
 	BAR *bar;
+	BARMod *barMod;
 	ExperimentLogger *elNorm;
 	ExperimentLogger *elPara;
 	int init(std::ifstream &file);

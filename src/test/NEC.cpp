@@ -42,7 +42,7 @@ bool NEC::passesNecTest(TaskSet &ts)
 				sum += TaskUtil::calcDemandOverInterval(otherTask, interval);
 				// Baker et al. (throw-forwards)
 				sum += std::max(0.0, \
-					std::remainder((interval - otherTask.getDeadline() + otherTask.getExecTime()) \
+					std::fmod((interval - otherTask.getDeadline() + otherTask.getExecTime()) \
 						, otherTask.getPeriod()));
 			}
 

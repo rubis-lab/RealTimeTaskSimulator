@@ -25,10 +25,12 @@ private:
 	std::vector<int> packageTrueWeight;
 	std::vector<double> packageCost;
 	
-	int classifyThreads(TaskSet &ts, double extendedInterval);
+	int classifyThreads(TaskSet &ts, int baseTaskIndex, double extendedInterval);
 	int packageThreads(TaskSet &ts);
 	int calculatePackageCost(TaskSet &ts);
-	double calculateIDiff(TaskSet &ts, double extendedInterval);
+	double doKnapsack(TaskSet &ts);
+	int debugPrint(TaskSet &ts);
+	double calculateIDiff(TaskSet &ts, int baseTaskIndex, double extendedInterval);
 
 public:
 	BARMod();

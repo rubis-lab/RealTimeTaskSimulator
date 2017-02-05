@@ -90,7 +90,7 @@ std::vector<Thread> TaskParallelizer::parallelizeTask(Task baseTask, int pcs, do
 std::vector<Thread> TaskParallelizer::splitTaskUniformly(Task baseTask, int pcs)
 {
 	std::vector<Thread> retThreadList;
-	int idx = std::remainder((int)baseTask.getExecTime(), pcs);
+	int idx = std::fmod((int)baseTask.getExecTime(), pcs);
 
 	for(int i = 0; i < pcs; i++) {
 		Thread thr = Thread();

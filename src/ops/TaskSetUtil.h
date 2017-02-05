@@ -20,6 +20,7 @@ namespace TaskSetUtil
 	// Debug
 	int printTaskSet(TaskSet &ts);
 	int printTaskInfo(TaskSet &ts);
+	TaskSet copyTaskSet(TaskSet ts);
 
 	// Sums
 	double sumDensity(TaskSet &ts);

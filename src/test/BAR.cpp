@@ -8,11 +8,12 @@ BAR::BAR()
 BAR::BAR(Param *paramExt)
 {
 	pr = paramExt;
+	
 }
 
 BAR::~BAR()
 {
-
+	
 }
 
 std::vector<double> BAR::getKMaxInterferingExecTime(TaskSet &ts, int k)
@@ -91,9 +92,13 @@ double BAR::calcCarryIn(TaskSet &ts, int baseTaskIndex, int interTaskIndex, doub
 	double ret = 0.0;
 	if(baseTaskIndex != interTaskIndex) {
 		// min(Ci, t mod Ti)
-		ret = std::remainder(interTask.getExecTime(), extendedInterval + baseTask.getDeadline());
+		
+		//std::cout<<"i: "<<interTaskIndex<<" lhs : "<<extendedInterval + baseTask.getDeadline();
+		//std::cout<<" rhs: "<<interTask.getPeriod();
+		ret = std::fmod(extendedInterval + baseTask.getDeadline(), interTask.getPeriod());
+		//std::cout<<" res "<<ret;
 		ret = std::min(ret, interTask.getExecTime());
-
+		//std::cout<<" iCI "<<ret<<std::endl;
 	// case i == k
 	} else {
 		ret = 0.0;
@@ -113,11 +118,13 @@ bool BAR::isSchedulable(TaskSet &ts)
 		if(extIntervalBoundList[baseTaskIndex] <= 0.0) {
 			continue;
 		}
+
 		// RHS m(Ak + Dk - Ck)
 		double rhs = ts.getTask(baseTaskIndex).getDeadline() - ts.getTask(baseTaskIndex).getExecTime();
 		
 		// iterate with Ak
 		double extInterval = 0.0;
+		
 		while(extInterval < extIntervalBoundList[baseTaskIndex]) {
 			iNC.clear();
 			for(int interTaskIndex = 0; interTaskIndex < ts.count(); interTaskIndex++) {

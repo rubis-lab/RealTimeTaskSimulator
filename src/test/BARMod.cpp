@@ -1,28 +1,28 @@
 #include "BARMod.h"
 
-BARMod::BARMod()
+BARMod::BARMod() : BAR()
 {
-	
+
 }
 
-BARMod::BARMod(Param *paramExt)
+BARMod::BARMod(Param *paramExt) : BAR(paramExt)
 {
 	pr = paramExt;
 }
 
 BARMod::~BARMod()
 {
-
+	
 }
 
-int BARMod::classifyThreads(TaskSet &ts, double extendedInterval)
+int BARMod::classifyThreads(TaskSet &ts, int baseTaskIndex, double extendedInterval)
 {
 	threadClassification.clear();
-
+	Task baseTask = ts.getTask(baseTaskIndex);
 	for(int i = 0; i < ts.count(); i++) {
-		Task baseTask = ts.getTask(i);
-		double leftOverInterval = std::remainder(extendedInterval, baseTask.getPeriod());
-		if(iCI[i] < leftOverInterval) {
+		Task interTask = ts.getTask(i);
+		double leftOverInterval = std::fmod(extendedInterval + baseTask.getDeadline(), interTask.getPeriod());
+		if(iCI[i] > leftOverInterval) {
 			// CI impossible thread
 			threadClassification.push_back(false);
 		} else {
@@ -45,7 +45,7 @@ int BARMod::packageThreads(TaskSet &ts)
 		int cnt = 0;
 		while(ts.getTask(i).getID() == currID) {
 			// is CI able task
-			if(threadClassification[i]) {
+			if(!threadClassification[i]) {
 				// pop last one, put 0 inside to distinguish
 				if(cnt >= 1) {
 					packageFalseWeight.pop_back();
@@ -69,7 +69,8 @@ int BARMod::packageThreads(TaskSet &ts)
 		currID++;
 	}
 	// debug
-	std::cout<<"package count: "<<packageFalseWeight.size()<<std::endl;
+	//std::cout<<"false count: "<<packageFalseWeight.size()<<std::endl;
+	//std::cout<<"true count: "<<packageTrueWeight.size()<<std::endl;
 
 	return 1;
 }
@@ -83,23 +84,56 @@ int BARMod::calculatePackageCost(TaskSet &ts)
 		// add up until not zero.
 		while(packageTrueWeight[i] == 0) {
 			// push in 0.0 to distinguish
-			tmp += ts.getTask(i).getExecTime();
+			tmp += iCI[i];
 			packageCost.push_back(0.0);
 			i++;
 		}
-		tmp += ts.getTask(i).getExecTime();
+		tmp += iCI[i];
 		packageCost.push_back(tmp);
 		tmp = 0.0;
+	}
+	//std::cout<<"cost count: "<<packageCost.size()<<std::endl;
+	return 1;
+}
+
+int BARMod::debugPrint(TaskSet &ts)
+{
+	for(unsigned int i = 0; i < threadClassification.size(); i++) {
+		std::cout<<i<<", "<<threadClassification[i]<<", "<<packageFalseWeight[i]<<", "<<packageTrueWeight[i]<<", "<<packageCost[i]<<std::endl;
 	}
 	return 1;
 }
 
-double BARMod::calculateIDiff(TaskSet &ts, double extendedInterval)
+double BARMod::doKnapsack(TaskSet &ts)
 {
-	classifyThreads(ts, extendedInterval);
+	std::vector<int> pfweight;
+	std::vector<int> ptweight;
+	std::vector<double> pcost;
+	for(unsigned int i = 0; i < packageFalseWeight.size(); i++) {
+		if(packageFalseWeight[i] != 0) {
+			pfweight.push_back(packageFalseWeight[i]);
+			ptweight.push_back(packageTrueWeight[i]);
+			pcost.push_back(packageCost[i]);
+		}
+	}
+
+	/*
+	for(unsigned int i = 0; i < pfweight.size(); i++) {
+		std::cout<<i<<" "<<pfweight[i]<<", "<<ptweight[i]<<", "<<pcost[i]<<std::endl;
+	}
+	*/
+	return Knapsack::knapsackFalseWeight(pr->getNProc() - 1, pfweight, ptweight, pcost);
+}
+
+double BARMod::calculateIDiff(TaskSet &ts, int baseTaskIndex, double extendedInterval)
+{
+	//std::cout<<"interval: "<<extendedInterval + ts.getTask(baseTaskIndex).getDeadline()<<std::endl;
+	classifyThreads(ts, baseTaskIndex, extendedInterval);
 	packageThreads(ts);
 	calculatePackageCost(ts);
-	return Knapsack::knapsackFalseWeight(pr->getNProc() - 1, packageFalseWeight, packageTrueWeight, packageCost);
+	//debugPrint(ts);
+	return doKnapsack(ts);
+	//return Knapsack::knapsackFalseWeight(pr->getNProc() - 1, packageFalseWeight, packageTrueWeight, packageCost);
 }
 
 bool BARMod::isSchedulable(TaskSet &ts)
@@ -120,6 +154,7 @@ bool BARMod::isSchedulable(TaskSet &ts)
 		// iterate with Ak
 		double extInterval = 0.0;
 		while(extInterval < extIntervalBoundList[baseTaskIndex]) {
+			
 			iNC.clear();
 			for(int interTaskIndex = 0; interTaskIndex < ts.count(); interTaskIndex++) {
 				// non carry-in
@@ -137,7 +172,9 @@ bool BARMod::isSchedulable(TaskSet &ts)
 			for(unsigned int i = 0; i < iNC.size(); i++) {
 				isum += iNC[i];
 			}
-			isum += calculateIDiff(ts, extInterval);
+			double tmptmp = calculateIDiff(ts, baseTaskIndex, extInterval);
+			//std::cout<<"diff = "<<tmptmp<<std::endl;
+			isum += tmptmp;
 
 			// unschedule condition
 			if(isum > pr->getNProc() * (rhs + extInterval)) {

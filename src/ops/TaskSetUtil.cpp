@@ -36,6 +36,11 @@ int TaskSetUtil::printTaskInfo(TaskSet &ts)
 	return 1;
 }
 
+TaskSet TaskSetUtil::copyTaskSet(TaskSet ts)
+{
+	return ts;
+}
+
 double TaskSetUtil::sumDensity(TaskSet &ts)
 {
 	double sum = 0.0;

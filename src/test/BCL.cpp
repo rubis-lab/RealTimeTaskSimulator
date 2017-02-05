@@ -23,7 +23,7 @@ double BCL::calcInterference(TaskSet &ts, int baseTaskIndex, int interTaskIndex)
 
 	double nInterfereTask = std::floor(baseTask.getDeadline() / interTask.getPeriod());
 
-	double carryIn = (std::remainder(baseTask.getDeadline(), interTask.getPeriod()) - slack[interTaskIndex]);
+	double carryIn = (std::fmod(baseTask.getDeadline(), interTask.getPeriod()) - slack[interTaskIndex]);
 	if(carryIn < 0.0) { 
 		carryIn = 0.0;
 	}

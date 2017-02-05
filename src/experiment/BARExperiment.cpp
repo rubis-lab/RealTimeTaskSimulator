@@ -10,8 +10,9 @@ BARExperiment::BARExperiment() : Experiment()
 
 BARExperiment::~BARExperiment()
 {
-	delete elNorm;
+	//delete elNorm;
 	delete elPara;
+	delete elMod;
 	delete ng;
 	delete bar;
 	delete barMod;
@@ -48,10 +49,11 @@ int BARExperiment::set()
 	ng = new NormalGenerator(pr, cr);
 	bar = new BAR(pr);
 	barMod = new BARMod(pr);
-	elNorm = new ExperimentLogger(expName+"Norm", pr, utilizationInc);
-	//elNorm->startRecord(utilizationInc);
+	//elNorm = new ExperimentLogger(expName+"Norm", pr, utilizationInc);
+	
 	elPara = new ExperimentLogger(expName+"Para", pr, utilizationInc);
-	//elPara->startRecord(utilizationInc);
+	
+	elMod = new ExperimentLogger(expName+"Mod", pr, utilizationInc);
 
 	return 1;
 }
@@ -68,18 +70,21 @@ int BARExperiment::run()
 		TaskSet ts = ng->nextTaskSet();
 		//TaskSetUtil::printTaskInfo(ts);
 		//TaskSetUtil::printTaskSet(ts);
-		elNorm->addRecord(TaskSetUtil::sumUtilization(ts), bar->isSchedulable(ts));
+		//elNorm->addRecord(TaskSetUtil::sumUtilization(ts), bar->isSchedulable(ts));
 
 		// Parallelized Tasks
 		//TaskSet tsPara = tsp->parallelizeIntoOption(ts, 4);
 		TaskSet tsPara = tsp->parallelizeIntoRandomOption(ts, oMin, oMax, pOverhead, pVariance);
+
 		//TaskSetUtil::printTaskInfo(tsPara);
 		//TaskSetUtil::printTaskSet(tsPara);
+		
+		elMod->addRecord(TaskSetUtil::sumUtilization(tsPara), barMod->isSchedulable(tsPara));
 		elPara->addRecord(TaskSetUtil::sumUtilization(tsPara), bar->isSchedulable(tsPara));
-
 		// Output
 		if(i % midResult == 0) {
-			elNorm->printProbSched();
+			//elNorm->printProbSched();
+			elMod->printProbSched();
 			elPara->printProbSched();
 		}
 	}
@@ -89,7 +94,9 @@ int BARExperiment::run()
 
 int BARExperiment::output()
 {
-	elNorm->printRecordLong();
+	
+	//elNorm->printRecordLong();
+	elMod->printRecordLong();
 	elPara->printRecordLong();
 	return 1;
 }

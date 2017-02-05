@@ -23,6 +23,7 @@ private:
 	BARMod *barMod;
 	ExperimentLogger *elNorm;
 	ExperimentLogger *elPara;
+	ExperimentLogger *elMod;
 	int init(std::ifstream &file);
 	int loadEnvironment(std::ifstream &file);
 public:

@@ -4,7 +4,7 @@
 std::vector<Task> TaskModifier::splitTaskUniformly(Task baseTask, int pcs)
 {
 	std::vector<Task> retTasks;
-	int idx = std::remainder((int)baseTask.getExecTime(), pcs);
+	int idx = std::fmod((int)baseTask.getExecTime(), pcs);
 
 	for(int i = 0; i < pcs; i++) {
 		Task t = Task();

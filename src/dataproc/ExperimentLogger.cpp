@@ -16,8 +16,9 @@ ExperimentLogger::ExperimentLogger(std::string ename, Param *paramExt, double in
 
 ExperimentLogger::~ExperimentLogger()
 {
-	outFile->close();
-	delete outFile;
+	std::cout<<"closing "<<expName<<std::endl;
+	//outFile->close();
+	//delete outFile;
 }
 
 int ExperimentLogger::loadEnvironment(std::ifstream &file)
@@ -35,10 +36,15 @@ int ExperimentLogger::init()
 {
 	fileName = "../data/generated/" + expName + ".txt";
 	std::cout<<fileName<<std::endl;
-	outFile = new std::ofstream(fileName, std::ofstream::out);
+	//outFile = new std::ofstream(fileName, std::ofstream::out);
+	/*
+	outFile.open(fileName, std::ofstream::out);
 	// std::ofstream(std::ofstream::out | std::ofstream::app);
-	*outFile << "test output";
-
+	outFile << "test output";
+	outFile.close();
+	std::cout<<"open"<<std::endl;
+	*/
+	
 	std::ifstream inFile;
 	inFile.open("../cfg/ExperimentLogger.cfg");
 	loadEnvironment(inFile);

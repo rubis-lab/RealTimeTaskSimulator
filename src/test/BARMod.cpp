@@ -18,15 +18,16 @@ BARMod::~BARMod()
 int BARMod::classifyThreads(TaskSet &ts, int baseTaskIndex, double extendedInterval)
 {
 	threadClassification.clear();
+	//std::cout<<"Ak: "<<extendedInterval<<std::endl;
 	Task baseTask = ts.getTask(baseTaskIndex);
 	for(int i = 0; i < ts.count(); i++) {
 		Task interTask = ts.getTask(i);
 		double leftOverInterval = std::fmod(extendedInterval + baseTask.getDeadline(), interTask.getPeriod());
-		if(iCI[i] > leftOverInterval) {
-			// CI impossible thread
+		if(interTask.getExecTime() > leftOverInterval) {
+			// forced NC impossible thread
 			threadClassification.push_back(false);
 		} else {
-			// CI possible thread
+			// forced NC possible thread
 			threadClassification.push_back(true);
 		}
 	}
@@ -44,7 +45,7 @@ int BARMod::packageThreads(TaskSet &ts)
 		// task-wise iteration
 		int cnt = 0;
 		while(ts.getTask(i).getID() == currID) {
-			// is CI able task
+			// forced NC impossible thread
 			if(!threadClassification[i]) {
 				// pop last one, put 0 inside to distinguish
 				if(cnt >= 1) {
@@ -58,13 +59,16 @@ int BARMod::packageThreads(TaskSet &ts)
 				packageFalseWeight.push_back(cnt);
 				packageTrueWeight.push_back(cnt);
 			} else {
-				// CI not possible, cnt + 1 is the false weight
+				// forced NC is possible, cnt + 1 is the false weight
 				packageFalseWeight.push_back(cnt + 1);
+				// but it is single thread in real
 				packageTrueWeight.push_back(1);
 			}
 			i++;
+			if(i == ts.count()) {
+				break;
+			}
 		}
-		cnt = 0;
 		i--;
 		currID++;
 	}
@@ -79,18 +83,17 @@ int BARMod::calculatePackageCost(TaskSet &ts)
 {
 	packageCost.clear();
 
-	double tmp = 0.0;
 	for(int i = 0; i < ts.count(); i++) {
-		// add up until not zero.
-		while(packageTrueWeight[i] == 0) {
+		// add up until encounter with non-zero weight.
+		double tmp = 0.0;
+		while(packageFalseWeight[i] == 0) {
 			// push in 0.0 to distinguish
-			tmp += iCI[i];
+			tmp += iDiff[i];
 			packageCost.push_back(0.0);
 			i++;
 		}
-		tmp += iCI[i];
+		tmp += iDiff[i];
 		packageCost.push_back(tmp);
-		tmp = 0.0;
 	}
 	//std::cout<<"cost count: "<<packageCost.size()<<std::endl;
 	return 1;
@@ -99,7 +102,8 @@ int BARMod::calculatePackageCost(TaskSet &ts)
 int BARMod::debugPrint(TaskSet &ts)
 {
 	for(unsigned int i = 0; i < threadClassification.size(); i++) {
-		std::cout<<i<<", "<<threadClassification[i]<<", "<<packageFalseWeight[i]<<", "<<packageTrueWeight[i]<<", "<<packageCost[i]<<std::endl;
+		std::cout<<i<<": "<<threadClassification[i]<<", ("<<packageFalseWeight[i]<<", ";
+		std::cout<<packageTrueWeight[i]<<", "<<packageCost[i]<<"), "<<iDiff[i]<<std::endl;
 	}
 	return 1;
 }
@@ -125,7 +129,32 @@ double BARMod::doKnapsack(TaskSet &ts)
 	return Knapsack::knapsackFalseWeight(pr->getNProc() - 1, pfweight, ptweight, pcost);
 }
 
-double BARMod::calculateIDiff(TaskSet &ts, int baseTaskIndex, double extendedInterval)
+double BARMod::doKnapsackPrint(TaskSet &ts)
+{
+	std::vector<int> pfweight;
+	std::vector<int> ptweight;
+	std::vector<double> pcost;
+	for(unsigned int i = 0; i < packageFalseWeight.size(); i++) {
+		if(packageFalseWeight[i] != 0) {
+			pfweight.push_back(packageFalseWeight[i]);
+			ptweight.push_back(packageTrueWeight[i]);
+			pcost.push_back(packageCost[i]);
+		}
+	}
+
+	
+	for(unsigned int i = 0; i < pfweight.size(); i++) {
+		std::cout<<i<<" "<<pfweight[i]<<", "<<ptweight[i]<<", "<<pcost[i]<<std::endl;
+	}
+	std::cout<<"ts count: "<<ts.count()<<std::endl;
+	std::cout<<"false count: "<<packageFalseWeight.size()<<std::endl;
+	std::cout<<"true count: "<<packageTrueWeight.size()<<std::endl;
+	std::cout<<"cost count: "<<packageCost.size()<<std::endl;
+
+	return Knapsack::knapsackFalseWeightPrint(pr->getNProc() - 1, pfweight, ptweight, pcost);
+}
+
+double BARMod::calcSumIDiff(TaskSet &ts, int baseTaskIndex, double extendedInterval)
 {
 	//std::cout<<"interval: "<<extendedInterval + ts.getTask(baseTaskIndex).getDeadline()<<std::endl;
 	classifyThreads(ts, baseTaskIndex, extendedInterval);
@@ -143,14 +172,15 @@ bool BARMod::isSchedulable(TaskSet &ts)
 
 	for(int baseTaskIndex = 0; baseTaskIndex < ts.count(); baseTaskIndex++) {
 		
-		//std::cout << "extIntervalBoundList : " << extIntervalBoundList[baseTaskIndex] << std::endl;
 		// Ak <= 0, don't need to check
+		//std::cout<<baseTaskIndex<<"/"<<ts.count() - 1<<" ";
+		//std::cout<<"ext length: "<<extIntervalBoundList[baseTaskIndex]<<std::endl;
 		if(extIntervalBoundList[baseTaskIndex] <= 0.0) {
 			continue;
 		}
 		// RHS m(Ak + Dk - Ck)
 		double rhs = ts.getTask(baseTaskIndex).getDeadline() - ts.getTask(baseTaskIndex).getExecTime();
-		//std::cout << "rhs : " << rhs << std::endl;
+		
 		// iterate with Ak
 		double extInterval = 0.0;
 		while(extInterval < extIntervalBoundList[baseTaskIndex]) {
@@ -164,20 +194,60 @@ bool BARMod::isSchedulable(TaskSet &ts)
 			iCI.clear();
 			for(int interTaskIndex = 0; interTaskIndex < ts.count(); interTaskIndex++) {
 				// carry-in
-				iCI.push_back(calcCarryIn(ts, baseTaskIndex, interTaskIndex, extInterval));
+				iCI.push_back(calcCIInterference(ts, baseTaskIndex, interTaskIndex, extInterval));
 			}
 			
+			// IDiff
+			calcIDiff();
+
+			// print info
+			//debugPrintIDiff();
+
 			// Sum I
 			double isum = 0.0;
 			for(unsigned int i = 0; i < iNC.size(); i++) {
 				isum += iNC[i];
 			}
-			double tmptmp = calculateIDiff(ts, baseTaskIndex, extInterval);
-			//std::cout<<"diff = "<<tmptmp<<std::endl;
-			isum += tmptmp;
+
+			// find m - 1 carry-ins
+			double sum = calcSumIDiff(ts, baseTaskIndex, extInterval);
+			//std::cout<<"diff = "<<sum<<std::endl;
+			// vector init error.
+			if(sum < 1.0) {
+				sum = 0.0;
+			}
+			isum += sum;
+
+			// for checking
+			std::vector<double> iKMaxCI = PMath::kMax(iDiff, pr->getNProc() - 1);
+			double sumtmp = 0.0;
+			for(unsigned int i = 0; i < iKMaxCI.size(); i++) {
+				sumtmp += iKMaxCI[i];
+			}
+
+			if(sumtmp < sum) {
+				// this should not happen
+				std::cout<<"error"<<std::endl;
+				std::cout<<"BAR sum "<<sumtmp<<std::endl;
+				std::cout<<"BAR mod sum "<<sum<<std::endl;
+				debugPrintIDiff();
+				debugPrint(ts);
+				doKnapsackPrint(ts);
+				int a;
+				std::cin>>a;
+			}
+			
 
 			// unschedule condition
+			/*
+			std::cout<<"diff: "<<sum<<std::endl;
+			std::cout<<"sum: "<<isum<<std::endl;
+			std::cout<<"compare with: "<<pr->getNProc() * (rhs + extInterval)<<std::endl;
+			int a;
+			std::cin>>a;
+			*/
 			if(isum > pr->getNProc() * (rhs + extInterval)) {
+				//std::cout<<"****unsched"<<std::endl;
 				return false;
 			}
 
@@ -186,6 +256,6 @@ bool BARMod::isSchedulable(TaskSet &ts)
 			extInterval += 1.0;
 		}
 	}
-	
+	//std::cout<<"****shced"<<std::endl;
 	return true;
 }

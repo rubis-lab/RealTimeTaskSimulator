@@ -8,7 +8,6 @@ BAR::BAR()
 BAR::BAR(Param *paramExt)
 {
 	pr = paramExt;
-	
 }
 
 BAR::~BAR()
@@ -77,34 +76,58 @@ double BAR::calcNCInterference(TaskSet &ts, int baseTaskIndex, int interTaskInde
 	// case i == k
 	} else {
 		// min(DBF(ti, ak + dk) - ck, ak)	(i == k)
-		ret = std::min(dbf - baseTask.getExecTime(), extendedInterval);
+		ret = std::min(dbf - interTask.getExecTime(), extendedInterval);
 	}
 
 	return ret;
 }
 
-double BAR::calcCarryIn(TaskSet &ts, int baseTaskIndex, int interTaskIndex, double extendedInterval)
+double BAR::calcCIInterference(TaskSet &ts, int baseTaskIndex, int interTaskIndex, double extendedInterval)
 {
 	Task baseTask = ts.getTask(baseTaskIndex);
 	Task interTask = ts.getTask(interTaskIndex);
 
+	
+	
+	// min(Ci, t mod Ti)
+	// t mod Ti
+	double ret = std::fmod(extendedInterval + baseTask.getDeadline(), interTask.getPeriod());	
+	ret = std::min(ret, interTask.getExecTime());
+
+	// |t / Ti| * Ci 
+	ret += std::floor((extendedInterval + baseTask.getDeadline()) / interTask.getPeriod()) * interTask.getExecTime();
+
 	// case i != k
-	double ret = 0.0;
 	if(baseTaskIndex != interTaskIndex) {
-		// min(Ci, t mod Ti)
-		
-		//std::cout<<"i: "<<interTaskIndex<<" lhs : "<<extendedInterval + baseTask.getDeadline();
-		//std::cout<<" rhs: "<<interTask.getPeriod();
-		ret = std::fmod(extendedInterval + baseTask.getDeadline(), interTask.getPeriod());
-		//std::cout<<" res "<<ret;
-		ret = std::min(ret, interTask.getExecTime());
-		//std::cout<<" iCI "<<ret<<std::endl;
+		// min(DBF'(ti, Ak + Dk), Ak + Dk - Ck)
+		ret = std::min(ret, extendedInterval + baseTask.getDeadline() - baseTask.getExecTime());
 	// case i == k
 	} else {
-		ret = 0.0;
+		// min(DBF'(ti, Ak + Dk) - Ck, Ak)
+		ret = std::min(ret - baseTask.getExecTime(), extendedInterval);
 	}
 
 	return ret;
+}
+
+int BAR::calcIDiff() 
+{
+	iDiff.clear();
+	for(unsigned int i = 0; i < iNC.size(); i++) {
+		iDiff.push_back(iCI[i] - iNC[i]);
+		if(iDiff[i] < 0) {
+			std::cout<<"iDiff calculation error"<<std::endl;
+		}
+	}
+	return 1;
+}
+
+int BAR::debugPrintIDiff()
+{
+	for(unsigned int i = 0; i < iNC.size(); i++) {
+		std::cout << i << ", [" << iNC[i] << ", " << iCI[i] << ", " << iDiff[i] << "]" << std::endl;
+	}
+	return 1;
 }
 
 bool BAR::isSchedulable(TaskSet &ts)
@@ -124,8 +147,8 @@ bool BAR::isSchedulable(TaskSet &ts)
 		
 		// iterate with Ak
 		double extInterval = 0.0;
-		
 		while(extInterval < extIntervalBoundList[baseTaskIndex]) {
+
 			iNC.clear();
 			for(int interTaskIndex = 0; interTaskIndex < ts.count(); interTaskIndex++) {
 				// non carry-in
@@ -135,17 +158,20 @@ bool BAR::isSchedulable(TaskSet &ts)
 			iCI.clear();
 			for(int interTaskIndex = 0; interTaskIndex < ts.count(); interTaskIndex++) {
 				// carry-in
-				iCI.push_back(calcCarryIn(ts, baseTaskIndex, interTaskIndex, extInterval));
+				iCI.push_back(calcCIInterference(ts, baseTaskIndex, interTaskIndex, extInterval));
 			}
 			
-			// find m-1 largest carry-in
-			std::vector<double> iKMaxCI = PMath::kMax(iCI, pr->getNProc() - 1);
+			// IDiff
+			calcIDiff();
 
 			// Sum I
 			double isum = 0.0;
 			for(unsigned int i = 0; i < iNC.size(); i++) {
 				isum += iNC[i];
 			}
+
+			// find m - 1 largest carry-in
+			std::vector<double> iKMaxCI = PMath::kMax(iDiff, pr->getNProc() - 1);
 			for(unsigned int i = 0; i < iKMaxCI.size(); i++) {
 				isum += iKMaxCI[i];
 			}

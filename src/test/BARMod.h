@@ -29,8 +29,9 @@ private:
 	int packageThreads(TaskSet &ts);
 	int calculatePackageCost(TaskSet &ts);
 	double doKnapsack(TaskSet &ts);
+	double doKnapsackPrint(TaskSet &ts);
 	int debugPrint(TaskSet &ts);
-	double calculateIDiff(TaskSet &ts, int baseTaskIndex, double extendedInterval);
+	double calcSumIDiff(TaskSet &ts, int baseTaskIndex, double extendedInterval);
 
 public:
 	BARMod();

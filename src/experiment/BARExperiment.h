@@ -21,7 +21,7 @@ private:
 	NormalGenerator *ng;
 	BAR *bar;
 	BARMod *barMod;
-	ExperimentLogger *elNorm;
+	//ExperimentLogger *elNorm;
 	ExperimentLogger *elPara;
 	ExperimentLogger *elMod;
 	int init(std::ifstream &file);

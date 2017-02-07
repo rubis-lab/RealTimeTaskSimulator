@@ -17,10 +17,13 @@ protected:
 	Param *pr;
 	std::vector<double> iNC;
 	std::vector<double> iCI;
+	std::vector<double> iDiff;
 	std::vector<double> getKMaxInterferingExecTime(TaskSet &ts, int k);
 	std::vector<double> calcExtendedIntervalBound(TaskSet &ts);
 	double calcNCInterference(TaskSet &ts, int baseTaskIndex, int interTaskIndex, double extendedInterval);
-	double calcCarryIn(TaskSet &ts, int baseTaskIndex, int interTaskIndex, double extendedInterval);
+	double calcCIInterference(TaskSet &ts, int baseTaskIndex, int interTaskIndex, double extendedInterval);
+	int calcIDiff();
+	int debugPrintIDiff();
 public:
 	BAR();
 	BAR(Param *paramExt);

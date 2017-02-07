@@ -19,7 +19,7 @@ private:
 	std::string expName;
 	std::string fileName;
 	std::vector<TaskSet> taskSets;
-	std::ofstream *outFile;
+	//std::ofstream outFile;
 	std::vector<int> schedulableSetCount;
 	std::vector<int> totalSetCount;
 	std::vector<double> probSchedulable;

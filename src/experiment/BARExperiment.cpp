@@ -11,8 +11,8 @@ BARExperiment::BARExperiment() : Experiment()
 BARExperiment::~BARExperiment()
 {
 	//delete elNorm;
-	delete elPara;
-	delete elMod;
+	//delete elMod;
+	//delete elPara;
 	delete ng;
 	delete bar;
 	delete barMod;
@@ -52,7 +52,6 @@ int BARExperiment::set()
 	//elNorm = new ExperimentLogger(expName+"Norm", pr, utilizationInc);
 	
 	elPara = new ExperimentLogger(expName+"Para", pr, utilizationInc);
-	
 	elMod = new ExperimentLogger(expName+"Mod", pr, utilizationInc);
 
 	return 1;
@@ -79,13 +78,13 @@ int BARExperiment::run()
 		//TaskSetUtil::printTaskInfo(tsPara);
 		//TaskSetUtil::printTaskSet(tsPara);
 		
-		elMod->addRecord(TaskSetUtil::sumUtilization(tsPara), barMod->isSchedulable(tsPara));
 		elPara->addRecord(TaskSetUtil::sumUtilization(tsPara), bar->isSchedulable(tsPara));
+		elMod->addRecord(TaskSetUtil::sumUtilization(tsPara), barMod->isSchedulable(tsPara));
 		// Output
 		if(i % midResult == 0) {
 			//elNorm->printProbSched();
-			elMod->printProbSched();
 			elPara->printProbSched();
+			elMod->printProbSched();
 		}
 	}
 
@@ -93,10 +92,9 @@ int BARExperiment::run()
 }
 
 int BARExperiment::output()
-{
-	
+{	
 	//elNorm->printRecordLong();
-	elMod->printRecordLong();
 	elPara->printRecordLong();
+	elMod->printRecordLong();
 	return 1;
 }

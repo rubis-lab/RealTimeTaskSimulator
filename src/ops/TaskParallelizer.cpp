@@ -42,6 +42,7 @@ std::vector<Thread> TaskParallelizer::parallelizeTask(Task baseTask, int pcs, do
 	// /m per thread
 	overheadExecTime = overheadExecTime / pcs;
 
+/*
 	// normalize variance
 	// variance = 0 --> max 0 difference 
 	//				a = Ck' .. b = Ck'
@@ -49,19 +50,31 @@ std::vector<Thread> TaskParallelizer::parallelizeTask(Task baseTask, int pcs, do
 	//				a = 0 	.. b = 2Ck'
 	
 	// intervalLength = variance * Ck'
-	double intervalLength = variance * overheadExecTime;
+	double intervalDiff = variance * overheadExecTime;
 
 	// b should not exceed Ck. (maximum of Ck - Ck')
 	double execTimeDifference = baseTask.getExecTime() - overheadExecTime;
-	if(intervalLength > execTimeDifference) {
-		intervalLength = execTimeDifference;
+	if(intervalDiff > execTimeDifference) {
+		intervalDiff = execTimeDifference;
 	}
 
 	// uniform distribution
 	// (a, b) = Ck' +- variance * Ck'
-	double a = overheadExecTime - intervalLength;
-	double b = overheadExecTime + intervalLength;
+	double a = overheadExecTime - intervalDiff;
+	double b = overheadExecTime + intervalDiff;
+*/
 
+	// normalize variance
+	// variance = 0 --> max 0 difference 
+	//				a = Ck' .. b = Ck'
+	// variance = 1 --> max Ck difference
+	//				a = 0 	.. b = Ck
+	// a = Ck'(1 - variance)
+	// b = Ck'(1 + (Ck - Ck') * variance)
+
+	double a = overheadExecTime * (1.0 - variance);
+	double b = overheadExecTime * (1.0 + (baseTask.getExecTime() - overheadExecTime) * variance);
+	
 	std::vector<Thread> tmpThreadList;
 	for(int i = 0; i < pcs; i++) {
 		Thread thr = Thread();

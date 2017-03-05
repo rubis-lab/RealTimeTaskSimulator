@@ -30,5 +30,6 @@ public:
 	~BAR();
 	
 	bool isSchedulable(TaskSet &ts);
+	bool isSchedulablePrint(TaskSet &ts);
 };
 #endif

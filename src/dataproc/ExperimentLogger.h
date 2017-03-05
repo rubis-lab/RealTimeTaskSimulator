@@ -10,6 +10,9 @@
 #include "../container/Param.h"
 #include "../container/TaskSet.h"
 
+#define __PRINT(x)	std::cout<<#x<<std::endl;
+#define __LINE 	std::cout<<"--------------------------------"<<std::endl;
+
 class ExperimentLogger
 {
 private:
@@ -19,7 +22,7 @@ private:
 	std::string expName;
 	std::string fileName;
 	std::vector<TaskSet> taskSets;
-	//std::ofstream outFile;
+	std::ofstream outFile;
 	std::vector<int> schedulableSetCount;
 	std::vector<int> totalSetCount;
 	std::vector<double> probSchedulable;
@@ -27,9 +30,13 @@ private:
 	int loadEnvironment(std::ifstream &file);
 	int normalizeRecord();
 public:	
-	ExperimentLogger();
-	ExperimentLogger(std::string ename, Param *paramExt, double inc);
+	ExperimentLogger(std::string ename = "Default", Param *paramExt = 0, double inc = 0.5);
 	~ExperimentLogger();
+	unsigned int getSize();
+	double getInc();
+	std::ofstream& getOutFile();
+
+	double getProbSchedAtIdx(unsigned int idx);
 	int addRecord(double util, bool sched);
 	int printRecordLong();
 	int printProbSched();

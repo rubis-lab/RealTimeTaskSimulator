@@ -39,5 +39,6 @@ public:
 	~BARMod();
 	
 	bool isSchedulable(TaskSet &ts);
+	bool isSchedulablePrint(TaskSet &ts);
 };
 #endif

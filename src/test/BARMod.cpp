@@ -170,6 +170,22 @@ bool BARMod::isSchedulable(TaskSet &ts)
 	// Ak bound
 	std::vector<double> extIntervalBoundList = calcExtendedIntervalBound(ts);
 
+	// Trivial Condition
+	double tsUtilSum = TaskSetUtil::sumUtilization(ts);
+	if(tsUtilSum <= 1.0) {
+		return true;
+	}
+	if(tsUtilSum >= pr->getNProc()) {
+		return false;
+	}
+
+	// Don't handle Dk > Ck case
+	for(int baseTaskIndex = 0; baseTaskIndex < ts.count(); baseTaskIndex++) {
+		if(ts.getTask(baseTaskIndex).getExecTime() > ts.getTask(baseTaskIndex).getDeadline()) {
+			return false;
+		}
+	}
+
 	for(int baseTaskIndex = 0; baseTaskIndex < ts.count(); baseTaskIndex++) {
 		
 		// Ak <= 0, don't need to check
@@ -178,6 +194,104 @@ bool BARMod::isSchedulable(TaskSet &ts)
 		if(extIntervalBoundList[baseTaskIndex] <= 0.0) {
 			continue;
 		}
+		// RHS m(Ak + Dk - Ck)
+		double rhs = ts.getTask(baseTaskIndex).getDeadline() - ts.getTask(baseTaskIndex).getExecTime();
+
+		// iterate with Ak
+		double extInterval = 0.0;
+		while(extInterval < extIntervalBoundList[baseTaskIndex]) {
+			
+			iNC.clear();
+			for(int interTaskIndex = 0; interTaskIndex < ts.count(); interTaskIndex++) {
+				// non carry-in
+				iNC.push_back(calcNCInterference(ts, baseTaskIndex, interTaskIndex, extInterval));
+			}
+
+			iCI.clear();
+			for(int interTaskIndex = 0; interTaskIndex < ts.count(); interTaskIndex++) {
+				// carry-in
+				iCI.push_back(calcCIInterference(ts, baseTaskIndex, interTaskIndex, extInterval));
+			}
+			
+			// IDiff
+			calcIDiff();
+
+			// print info
+			//debugPrintIDiff();
+
+			// Sum I
+			double isum = 0.0;
+			for(unsigned int i = 0; i < iNC.size(); i++) {
+				isum += iNC[i];
+			}
+
+			// find m - 1 carry-ins
+			double sum = calcSumIDiff(ts, baseTaskIndex, extInterval);
+			//std::cout<<"diff = "<<sum<<std::endl;
+			// vector init error.
+			if(sum < 1.0) {
+				sum = 0.0;
+			}
+			isum += sum;
+
+			// for checking
+			std::vector<double> iKMaxCI = PMath::kMax(iDiff, pr->getNProc() - 1);
+			double sumtmp = 0.0;
+			for(unsigned int i = 0; i < iKMaxCI.size(); i++) {
+				sumtmp += iKMaxCI[i];
+			}
+
+			if(sumtmp < sum) {
+				// this should not happen
+				std::cout<<"error"<<std::endl;
+				std::cout<<"BAR sum "<<sumtmp<<std::endl;
+				std::cout<<"BAR mod sum "<<sum<<std::endl;
+				debugPrintIDiff();
+				debugPrint(ts);
+				doKnapsackPrint(ts);
+				int a;
+				std::cin>>a;
+			}
+			
+
+			// unschedule condition
+			/*
+			std::cout<<"diff: "<<sum<<std::endl;
+			std::cout<<"sum: "<<isum<<std::endl;
+			std::cout<<"compare with: "<<pr->getNProc() * (rhs + extInterval)<<std::endl;
+			int a;
+			std::cin>>a;
+			*/
+			if(isum > pr->getNProc() * (rhs + extInterval)) {
+				//std::cout<<"****unsched"<<std::endl;
+				return false;
+			}
+
+			// next A (for now)
+			// can be checked everytime DBF changes
+			extInterval += 1.0;
+		}
+	}
+	//std::cout<<"****shced"<<std::endl;
+	return true;
+}
+
+bool BARMod::isSchedulablePrint(TaskSet &ts)
+{
+	std::cout<<"BARMod isSchedulablePrint"<<std::endl;
+
+	// Ak bound
+	std::vector<double> extIntervalBoundList = calcExtendedIntervalBound(ts);
+
+	for(int baseTaskIndex = 0; baseTaskIndex < ts.count(); baseTaskIndex++) {
+		
+		// Ak <= 0, don't need to check
+		//std::cout<<baseTaskIndex<<"/"<<ts.count() - 1<<" ";
+		//std::cout<<"ext length: "<<extIntervalBoundList[baseTaskIndex]<<std::endl;
+		if(extIntervalBoundList[baseTaskIndex] <= 0.0) {
+			continue;
+		}
+		std::cout<<"baseTaskIndex : "<<baseTaskIndex<<std::endl;
 		// RHS m(Ak + Dk - Ck)
 		double rhs = ts.getTask(baseTaskIndex).getDeadline() - ts.getTask(baseTaskIndex).getExecTime();
 		
@@ -246,6 +360,8 @@ bool BARMod::isSchedulable(TaskSet &ts)
 			int a;
 			std::cin>>a;
 			*/
+			std::cout<<extInterval<<", "<<isum / (rhs + extInterval)<<std::endl;
+			
 			if(isum > pr->getNProc() * (rhs + extInterval)) {
 				//std::cout<<"****unsched"<<std::endl;
 				return false;

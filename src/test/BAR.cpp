@@ -130,13 +130,90 @@ int BAR::debugPrintIDiff()
 	return 1;
 }
 
+bool BAR::isSchedulablePrint(TaskSet &ts)
+{
+	std::cout<<"BAR isSchedulablePrint"<<std::endl;
+
+	// Ak bound
+	std::vector<double> extIntervalBoundList = calcExtendedIntervalBound(ts);
+
+	for(int baseTaskIndex = 0; baseTaskIndex < ts.count(); baseTaskIndex++) {
+		// Ak <= 0, don't need to check
+		if(extIntervalBoundList[baseTaskIndex] <= 0.0) {
+			continue;
+		}
+		std::cout<<"baseTaskIndex : "<<baseTaskIndex<<std::endl;
+		// RHS m(Ak + Dk - Ck)
+		double rhs = ts.getTask(baseTaskIndex).getDeadline() - ts.getTask(baseTaskIndex).getExecTime();
+		
+		// iterate with Ak
+		double extInterval = 0.0;
+		while(extInterval < extIntervalBoundList[baseTaskIndex]) {
+
+			iNC.clear();
+			for(int interTaskIndex = 0; interTaskIndex < ts.count(); interTaskIndex++) {
+				// non carry-in
+				iNC.push_back(calcNCInterference(ts, baseTaskIndex, interTaskIndex, extInterval));
+			}
+
+			iCI.clear();
+			for(int interTaskIndex = 0; interTaskIndex < ts.count(); interTaskIndex++) {
+				// carry-in
+				iCI.push_back(calcCIInterference(ts, baseTaskIndex, interTaskIndex, extInterval));
+			}
+			
+			// IDiff
+			calcIDiff();
+
+			// Sum I
+			double isum = 0.0;
+			for(unsigned int i = 0; i < iNC.size(); i++) {
+				isum += iNC[i];
+			}
+
+			// find m - 1 largest carry-in
+			std::vector<double> iKMaxCI = PMath::kMax(iDiff, pr->getNProc() - 1);
+			for(unsigned int i = 0; i < iKMaxCI.size(); i++) {
+				isum += iKMaxCI[i];
+			}
+			std::cout<<extInterval<<", "<<isum / (rhs + extInterval);
+			// unschedule condition
+			if(isum > pr->getNProc() * (rhs + extInterval)) {
+				std::cout<<" *";
+			}
+			std::cout<<std::endl;
+
+
+			// next A (for now)
+			// can be checked everytime DBF changes
+			extInterval += 1.0;
+		}
+	}
+	return true;
+}
+
 bool BAR::isSchedulable(TaskSet &ts)
 {
 	// Ak bound
 	std::vector<double> extIntervalBoundList = calcExtendedIntervalBound(ts);
 
+	// Trivial Condition
+	double tsUtilSum = TaskSetUtil::sumUtilization(ts);
+	if(tsUtilSum <= 1.0) {
+		return true;
+	}
+	if(tsUtilSum >= pr->getNProc()) {
+		return false;
+	}
+
+	// Don't handle Dk > Ck case
 	for(int baseTaskIndex = 0; baseTaskIndex < ts.count(); baseTaskIndex++) {
-		
+		if(ts.getTask(baseTaskIndex).getExecTime() > ts.getTask(baseTaskIndex).getDeadline()) {
+			return false;
+		}
+	}
+	
+	for(int baseTaskIndex = 0; baseTaskIndex < ts.count(); baseTaskIndex++) {		
 		// Ak <= 0, don't need to check
 		if(extIntervalBoundList[baseTaskIndex] <= 0.0) {
 			continue;

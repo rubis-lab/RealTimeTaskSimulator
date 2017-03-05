@@ -27,6 +27,7 @@ SOURCE = \
 	../src/generator/MarcoGenerator.cpp	\
 	../src/generator/UniFastGenerator.cpp	\
 	../src/generator/NormalGenerator.cpp	\
+	../src/generator/VarianceGenerator.cpp	\
 	../src/ops/TaskUtil.cpp	\
 	../src/ops/TaskSetUtil.cpp	\
 	../src/ops/TaskParallelizer.cpp	\

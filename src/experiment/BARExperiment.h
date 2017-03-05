@@ -6,9 +6,11 @@
 #include "../dataproc/ExperimentLogger.h"
 #include "../experiment/Experiment.h"
 #include "../ops/TaskSetUtil.h"
+#include  "../test/GFB.h"
 #include "../test/BAR.h"
 #include "../test/BARMod.h"
 #include "../generator/NormalGenerator.h"
+#include "../generator/VarianceGenerator.h"
 
 class BARExperiment : public Experiment
 {
@@ -18,7 +20,9 @@ private:
 	double pOverhead;
 	double pVariance;
 	int init();
+	GFB *gfb;
 	NormalGenerator *ng;
+	VarianceGenerator *vg;
 	BAR *bar;
 	BARMod *barMod;
 	//ExperimentLogger *elNorm;
@@ -31,6 +35,7 @@ public:
 	~BARExperiment();
 	int set();
 	int reset();
+	int printInfo(std::ofstream &file);
 	int run();
 	int output();
 };

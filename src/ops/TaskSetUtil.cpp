@@ -29,6 +29,19 @@ int TaskSetUtil::printTaskSet(TaskSet &ts)
 	return 1;
 }
 
+int TaskSetUtil::printTaskSetToFile(TaskSet &ts, std::ofstream &file)
+{
+	std::cout << "cnt\t" << ts.count() << std::endl;
+	std::cout << "util\t" << sumUtilization(ts) <<std::endl;
+	for(int i = 0; i < ts.count(); i++) {
+		file << ts.getTask(i).getID() << "\t";
+		file << ts.getTask(i).getExecTime() << "\t";
+		file << ts.getTask(i).getDeadline() << "\t";
+		file << ts.getTask(i).getPeriod() << std::endl;
+	}
+	return 1;
+}
+
 int TaskSetUtil::printTaskInfo(TaskSet &ts)
 {
 	std::cout << "cnt\t" << ts.count() << std::endl;

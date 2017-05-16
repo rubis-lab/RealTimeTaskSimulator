@@ -1,18 +1,18 @@
 #include "ExperimentLogger.h"
 
-ExperimentLogger::ExperimentLogger(std::string ename, Param *paramExt, double inc)
+ExperimentLogger::ExperimentLogger(std::string ename, Param *paramExt, double cap, double inc)
 {
 	pr = paramExt;
 	expName = ename;
+	capacity = cap;
 	incSize = inc;
+	containerSize = (int)std::ceil(capacity / inc);
 	init();
 }
 
 ExperimentLogger::~ExperimentLogger()
 {
 	outFile.close();
-	//outFile->close();
-	//delete outFile;
 }
 
 int ExperimentLogger::loadEnvironment(std::ifstream &file)
@@ -30,23 +30,20 @@ int ExperimentLogger::init()
 {
 	fileName = "../data/generated/" + expName + ".txt";
 	std::cout<<fileName<<std::endl;
-	
+
 	outFile.open(fileName, std::ofstream::out);
 	outFile<<"***"<<expName<<std::endl;
-	outFile<<"core\t"<<pr->getNProc()<<std::endl;
-	outFile<<"seed\t"<<pr->getSeed()<<std::endl;
+	outFile<<"core\t\t"<<pr->getNProc()<<std::endl;
+	outFile<<"seed\t\t"<<pr->getSeed()<<std::endl;
+	outFile<<"capacity\t"<<capacity<<std::endl;
+	outFile<<"incSize\t\t"<<incSize<<std::endl;
+	outFile<<"containerSize\t"<<containerSize<<std::endl;
 	outFile<<"----------------"<<std::endl;
 
 	std::ifstream inFile;
 	inFile.open("../cfg/ExperimentLogger.cfg");
 	loadEnvironment(inFile);
 	inFile.close();
-
-	int containerSize = (int)std::ceil(pr->getNProc() / incSize);
-
-//	totalSetCount.resize(containerSize, 0);
-//	schedulableSetCount.resize(containerSize, 0);
-//	probSchedulable.resize(containerSize, 0.0);
 
 	totalSetCount = std::vector<int>(containerSize);
 	schedulableSetCount = std::vector<int>(containerSize);
@@ -64,7 +61,7 @@ int ExperimentLogger::init()
 
 int ExperimentLogger::normalizeRecord()
 {
-	for(unsigned int i = 0; i < probSchedulable.size(); i++) {
+	for(int i = 0; i < containerSize; i++) {
 		if(totalSetCount[i] == 0) {
 			probSchedulable[i] = 0.0;
 		} else {
@@ -75,12 +72,13 @@ int ExperimentLogger::normalizeRecord()
 	return 1;
 }
 
-int ExperimentLogger::addRecord(double util, bool sched) 
+int ExperimentLogger::addRecord(double itemIndex, bool sched) 
 {
-	if(util >= pr->getNProc()) {
-		return 1;
+	if(itemIndex >= capacity) {
+		std::cout<<"ExperimentLogger::addRecord: Index out of bound"<<std::endl;
+		return 0;
 	}
-	int idx = (int)std::floor(util / incSize);
+	int idx = (int)std::floor(itemIndex / incSize);
 	// ntot
 	totalSetCount[idx]++;
 	// nsched
@@ -95,19 +93,19 @@ int ExperimentLogger::addRecord(double util, bool sched)
 int ExperimentLogger::printRecordLong()
 {
 	normalizeRecord();
-	std::cout << std::setprecision(4) << std::fixed;
+	std::cout<<std::setprecision(4)<<std::fixed;
 	// print
 	std::cout<<"ntot"<<std::endl;
 	for(unsigned int i = 0; i < totalSetCount.size(); i++) {
-		std::cout << i * incSize << "\t" << totalSetCount[i] << std::endl;
+		std::cout<<i * incSize<<"\t"<<totalSetCount[i]<<std::endl;
 	}
 	std::cout<<"nsched"<<std::endl;
 	for(unsigned int i = 0; i < schedulableSetCount.size(); i++) {
-		std::cout << i * incSize << "\t" << schedulableSetCount[i] << std::endl;
+		std::cout<<i * incSize<<"\t"<<schedulableSetCount[i]<<std::endl;
 	}
 	std::cout<<"probsched"<<std::endl;
 	for(unsigned int i = 0; i < probSchedulable.size(); i++) {
-		std::cout << i * incSize << "\t" << probSchedulable[i] << std::endl;
+		std::cout<<i * incSize<<"\t"<<probSchedulable[i]<<std::endl;
 	}
 
 	// roll-back cout precision
@@ -116,9 +114,38 @@ int ExperimentLogger::printRecordLong()
 	return 1;
 }
 
-double ExperimentLogger::getProbSchedAtIdx(unsigned int idx)
+int ExperimentLogger::outputRecord(std::string str)
 {
-	if(idx >= probSchedulable.size()) {
+	normalizeRecord();
+
+	outFile<<str<<std::endl;
+	outFile<<std::setprecision(4)<<std::fixed;
+
+	// print
+	outFile<<"ntot"<<std::endl;
+	for(unsigned int i = 0; i < totalSetCount.size(); i++) {
+		outFile<<i * incSize<<"\t"<<totalSetCount[i]<<std::endl;
+	}
+	outFile<<"nsched"<<std::endl;
+	for(unsigned int i = 0; i < schedulableSetCount.size(); i++) {
+		outFile<<i * incSize<<"\t"<<schedulableSetCount[i]<<std::endl;
+	}
+	outFile<<"probsched"<<std::endl;
+	for(unsigned int i = 0; i < probSchedulable.size(); i++) {
+		outFile<<i * incSize<<"\t"<<probSchedulable[i]<<std::endl;
+	}
+	outFile<<"----------------"<<std::endl;
+
+	// roll-back cout precision
+	outFile.copyfmt(std::ios(NULL));
+
+	return 1;
+}
+
+double ExperimentLogger::getProbSchedAtIdx(int idx)
+{
+	if(idx >= containerSize) {
+		std::cout<<"ExperimentLogger::getProbSchedAtIdx: Index out of bound"<<std::endl;
 		return 0.0;
 	}
 	return probSchedulable[idx];
@@ -199,10 +226,3 @@ int ExperimentLogger::printUtilVsSchedulability(std::vector<double> &tsutil, std
 
 	return 1;
 }
-/*
-int ExperimentLogger::printRecordByIndex(std::vector<double> &index, std::vector<bool> &record, double inc)
-{
-
-	return 1;
-}
-*/

@@ -19,6 +19,7 @@ namespace TaskSetUtil
 
 	// Debug
 	int printTaskSet(TaskSet &ts);
+	int printTaskSetToFile(TaskSet &ts, std::ofstream &file);
 	int printTaskInfo(TaskSet &ts);
 	TaskSet copyTaskSet(TaskSet ts);
 

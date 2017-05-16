@@ -48,8 +48,8 @@ int BARExperiment::set()
 	barMod = new BARMod(pr);
 	//elNorm = new ExperimentLogger(expName+"Norm", pr, utilizationInc);
 	
-	elPara = new ExperimentLogger(expName+"Para", pr, utilizationInc);
-	elMod = new ExperimentLogger(expName+"Mod", pr, utilizationInc);
+	elPara = new ExperimentLogger(expName+"Para", pr, pr->getNProc(), utilizationInc);
+	elMod = new ExperimentLogger(expName+"Mod", pr, pr->getNProc(), utilizationInc);
 	printInfo(elPara->getOutFile());
 	vg->printInfo(elPara->getOutFile());
 	tsp->printInfo(elPara->getOutFile());
@@ -137,6 +137,7 @@ int BARExperiment::output()
 	//elNorm->printRecordLong();
 	elPara->printRecordLong();
 	elMod->printRecordLong();
+	elPara->outputRecord();
 	std::cout<<"Result\tPara\tMod\tDiff"<<std::endl;
 	std::cout << std::setprecision(4) << std::fixed;
 		for(unsigned int j = 0; j < elPara->getSize(); j++) {

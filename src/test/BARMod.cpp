@@ -22,7 +22,7 @@ int BARMod::classifyThreads(TaskSet &ts, int baseTaskIndex, double extendedInter
 	Task baseTask = ts.getTask(baseTaskIndex);
 	for(int i = 0; i < ts.count(); i++) {
 		Task interTask = ts.getTask(i);
-		double leftOverInterval = std::fmod(extendedInterval + baseTask.getDeadline(), interTask.getPeriod());
+		double leftOverInterval = interTask.getDeadline() - std::fmod(extendedInterval + baseTask.getDeadline(), interTask.getPeriod());
 		if(interTask.getExecTime() > leftOverInterval) {
 			// forced NC impossible thread
 			threadClassification.push_back(false);

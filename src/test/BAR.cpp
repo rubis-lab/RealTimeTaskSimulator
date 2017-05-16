@@ -176,10 +176,15 @@ bool BAR::isSchedulablePrint(TaskSet &ts)
 			for(unsigned int i = 0; i < iKMaxCI.size(); i++) {
 				isum += iKMaxCI[i];
 			}
-			std::cout<<extInterval<<", "<<isum / (rhs + extInterval);
+			if(rhs + extInterval != 0) {
+				std::cout<<extInterval<<", "<<isum / (rhs + extInterval);
+			} else {
+				std::cout<<extInterval<<", -1";;
+			}
+			
 			// unschedule condition
 			if(isum > pr->getNProc() * (rhs + extInterval)) {
-				std::cout<<" *";
+				std::cout<<" ****";
 			}
 			std::cout<<std::endl;
 

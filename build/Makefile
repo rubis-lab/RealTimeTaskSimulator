@@ -22,6 +22,8 @@ SOURCE = \
 	../src/experiment/SimpleExperiment.cpp	\
 	../src/experiment/BCLExperiment.cpp	\
 	../src/experiment/BARExperiment.cpp	\
+	../src/experiment/BARModExperiment.cpp	\
+	../src/experiment/TestExperiment.cpp	\
 	../src/generator/Generator.cpp	\
 	../src/generator/SimpleGenerator.cpp	\
 	../src/generator/MarcoGenerator.cpp	\

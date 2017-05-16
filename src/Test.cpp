@@ -1,13 +1,11 @@
-#include "experiment/BARExperiment.h"
+#include "experiment/TestExperiment.h"
 #include <cstdlib>
 #include <ctime>
 
 int main(int argc, char *argv[])
 {
 	srand(time(NULL));
-	BARExperiment barexp = BARExperiment();
-	barexp.run();
-	barexp.output();
-	
+	TestExperiment texp = TestExperiment();
+	texp.run();
 	return 1;
 }

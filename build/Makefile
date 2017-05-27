@@ -24,13 +24,14 @@ SOURCE = \
 	../src/experiment/BARExperiment.cpp	\
 	../src/experiment/BARModExperiment.cpp	\
 	../src/experiment/TestExperiment.cpp	\
+	../src/experiment/JHAhnExperiment.cpp \
 	../src/generator/Generator.cpp	\
 	../src/generator/SimpleGenerator.cpp	\
 	../src/generator/MarcoGenerator.cpp	\
 	../src/generator/UniFastGenerator.cpp	\
 	../src/generator/NormalGenerator.cpp	\
 	../src/generator/VarianceGenerator.cpp	\
-	../src/generator/JHAhnExperiment.cpp	\
+	../src/generator/JHAhnGenerator.cpp	\
 	../src/ops/TaskUtil.cpp	\
 	../src/ops/TaskSetUtil.cpp	\
 	../src/ops/TaskParallelizer.cpp	\

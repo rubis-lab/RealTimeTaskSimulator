@@ -41,6 +41,7 @@ SOURCE = \
 	../src/test/BCL.cpp \
 	../src/test/BAR.cpp	\
 	../src/test/BARMod.cpp	\
+	../src/test/GEDF.cpp	\
 	../tools/CRand.cpp	\
 	../tools/PMath.cpp	\
 	../tools/FileIO.cpp	

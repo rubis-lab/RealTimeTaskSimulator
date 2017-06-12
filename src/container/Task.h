@@ -10,6 +10,7 @@ private:
 	double deadline;
 	//int priority;
 	double offset;
+  bool isProcessing;
 public:	
 	Task();
 	Task(double e, double d, double p);
@@ -20,11 +21,13 @@ public:
 	double getExecTime();
 	double getDeadline();
 	double getPeriod();
+  bool getIsProcessing();
 
 	int setID(int id);
 	int setExecTime(double e);
 	int setDeadline(double d);
 	int setPeriod(double p);
+  void setIsProcessing(bool p);
 };
 
 #endif

@@ -6,6 +6,7 @@
 #include "../ops/TaskSetUtil.h"
 #include "../ops/TaskUtil.h"
 #include "../container/Param.h"
+#include <algorithm>
 
 struct PeriodCounter {
 
@@ -16,6 +17,15 @@ struct PeriodCounter {
     int period;
 };
 
+struct Processor {
+
+  public:
+    Processor();
+
+    int capacity;
+    double current_capacity;
+};
+
 
 class GEDF
 {
@@ -23,9 +33,11 @@ class GEDF
     Param *pr;
 
     int coreCount;
+    int paralCount;
+    double paralOverhead;
 
-    Task* trySpawnTask(PeriodCounter& periodCounter, std::vector<Task>& tasks);
-    void processTask(Task* task, bool coreAllocated);
+    std::vector<Task*> trySpawnTask(PeriodCounter& periodCounter, std::vector<Task>& tasks);
+    void processTask(Task* task, Processor* p);
     void printPeriodCounters(std::vector<PeriodCounter>& counters);
     void printProcessingTasks(std::vector<Task*>& processingTasks);
 

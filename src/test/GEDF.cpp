@@ -7,7 +7,8 @@ GEDF::GEDF()
 
 GEDF::GEDF(Param *paramExt)
 {
-  coreCount = 2;
+  coreCount = 4;
+  paralCount = 2;
   pr = paramExt;
 }
 
@@ -32,19 +33,31 @@ bool GEDF::isSchedulable(TaskSet ts)
   std::cout << "hyperPeriod : " << hyperPeriod << std::endl;
   printPeriodCounters(periodCounters);
 
+  std::vector<Processor> processors;
+  for(int i = 0; i < coreCount; i++) {
+    Processor newp;
+    processors.push_back(newp);
+  }
+
   std::vector<Task*> processingTasks;
 
   for(int i = 0; i < hyperPeriod; i++)
   {
     printPeriodCounters(periodCounters);
 
+    //if exectime exceeds deadline, fails
     for(auto it = processingTasks.begin(); it != processingTasks.end(); it++) {
       if ((*it)->getDeadline() < (*it)->getExecTime()) {
         std::cout << "ExecTime exceeds Deadline for Task: " << (*it)->getID() << std::endl;
         return false;
       }
     }
-    
+
+    //refuels processor 
+    for(auto it = processors.begin(); it != processors.end(); it++) {
+      it->current_capacity = it->capacity;
+    }
+
     //add new tasks
     for(auto it = periodCounters.begin();  it != periodCounters.end(); it++) {
 
@@ -52,8 +65,6 @@ bool GEDF::isSchedulable(TaskSet ts)
         continue;
       }
 
-      std::vector<Task> tasks = ts.getVector();
-      Task* newTask = trySpawnTask(*it, tasks);
 
       //if there's any task not finished till it's period arrives, test fails
       auto finder = [it](Task* t) {
@@ -66,7 +77,12 @@ bool GEDF::isSchedulable(TaskSet ts)
         return false;
       }
 
-      processingTasks.push_back(newTask);
+      std::vector<Task> tasks = ts.getVector();
+      std::vector<Task*> newTask = trySpawnTask(*it, tasks);
+
+      for(auto t = newTask.begin(); t != newTask.end(); t++) {
+        processingTasks.push_back(*t);
+      }
 
       it->period = tasks.at(it->index).getPeriod();
     }
@@ -84,13 +100,29 @@ bool GEDF::isSchedulable(TaskSet ts)
     printProcessingTasks(processingTasks);
 
     //process tasks
-    int capacity = coreCount;
-    std::cout << "capacity : " << capacity << std::endl;
-    for(auto it = processingTasks.begin(); it != processingTasks.end(); it++) {
-      processTask(*it, capacity > 0);
-      capacity--;
+    unsigned int taskIndex = 0;
+    bool processedAll = false;
+    auto finder = [](Processor p) { return p.current_capacity > 0; };
+    auto idleProcessor = std::find_if(processors.begin(), processors.end(), finder);
+    while(idleProcessor != processors.end() && !processedAll) {
+      for(auto it = processors.begin(); it != processors.end(); it++) {
+        if (taskIndex == processingTasks.size()) {
+          processedAll = true;
+          break;
+        }
+
+        if (it->current_capacity > 0) {
+          processTask(processingTasks.at(taskIndex), &*it);
+          taskIndex++;
+        }
+
+      }
+      idleProcessor = std::find_if(processors.begin(), processors.end(), finder);
     }
 
+    for(auto it = processingTasks.begin(); it != processingTasks.end(); it++) {
+      (*it)->setDeadline((*it)->getDeadline() - 1);
+    }
 
     std::cout << "==========processed===========" << std::endl;
     printProcessingTasks(processingTasks);
@@ -124,29 +156,34 @@ bool GEDF::isSchedulable(TaskSet ts)
 }
 
 
-Task* GEDF::trySpawnTask(PeriodCounter& periodCounter, std::vector<Task>& tasks)  {
-  Task *newTask = NULL;
+std::vector<Task*> GEDF::trySpawnTask(PeriodCounter& periodCounter, std::vector<Task>& tasks)  {
+  std::vector<Task*> newTasks;
   if (periodCounter.period == 0) {
     Task copyFrom = tasks.at(periodCounter.index);
 
-    newTask = new Task(
-        periodCounter.index,
-        copyFrom.getExecTime(),
-        copyFrom.getDeadline(),
-        copyFrom.getPeriod()
-        );
+    for(int i = 0; i < paralCount; i++) {
+      Task* newTask = new Task(
+          periodCounter.index,
+          (copyFrom.getExecTime() / paralCount) + paralOverhead,
+          copyFrom.getDeadline(),
+          copyFrom.getPeriod()
+          );
+
+      newTasks.push_back(newTask);
+
+    }
+
 
     periodCounter.period = copyFrom.getPeriod();
   }
 
-  return newTask;
+  return newTasks;
 }
 
-void GEDF::processTask(Task* task, bool coreAllocated) {
-  if (coreAllocated) {
-    task->setExecTime(task->getExecTime() - 1);
-  }
-  task->setDeadline(task->getDeadline() - 1);
+void GEDF::processTask(Task* task, Processor* p) {
+  double processingUnit = std::min(task->getExecTime(), p->current_capacity);
+  p->current_capacity -= processingUnit;
+  task->setExecTime(task->getExecTime() - processingUnit);
 }
 
 
@@ -154,6 +191,12 @@ PeriodCounter::PeriodCounter(int index) {
   this->period = 0;
   this->index = index;
 }
+
+Processor::Processor() {
+  this->capacity = 1;
+  this->current_capacity = 0;
+}
+
 
 void GEDF::printPeriodCounters(std::vector<PeriodCounter>& counters) 
 {

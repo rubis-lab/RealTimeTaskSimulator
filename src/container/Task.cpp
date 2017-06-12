@@ -67,3 +67,13 @@ int Task::setPeriod(double p)
 	period = p;
 	return 1;
 }
+
+bool Task::getIsProcessing()
+{
+  return isProcessing;
+}
+
+void Task::setIsProcessing(bool p)
+{
+  isProcessing = p;
+}

@@ -9,6 +9,7 @@ class JHAhnGenerator : public Generator
 {
   private:
     int init(int number);
+    int init(std::ifstream &file);
 
   public:
     JHAhnGenerator();

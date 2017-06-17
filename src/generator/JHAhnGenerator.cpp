@@ -3,14 +3,39 @@
 
 JHAhnGenerator::JHAhnGenerator() : Generator()
 {
-  init(5);
+  std::ifstream file;
+  file.open("cfg/jhahn/gen.cfg");
+  init(file);
+  file.close();
 }
 
 JHAhnGenerator::JHAhnGenerator(Param *paramExt, CRand *crExt) : Generator(paramExt, crExt)
 {
-  init(5);
+  std::ifstream file;
+  file.open("cfg/jhahn/gen.cfg");
+  init(file);
+  file.close();
 }
 
+int JHAhnGenerator::init(std::ifstream &file) {
+  FileIO::goToLine(file, 4);
+
+  std::string buf;
+  file >> buf;
+  file >> numTask;
+  file >> buf;
+  file >> minPeriod;
+  file >> buf;
+  file >> maxPeriod;
+  file >> buf;
+  file >> minExecTime;
+  file >> buf;
+  file >> maxExecTime;
+
+  std::cout << numTask << " minPeriod: " << minPeriod << " maxPeriod: " << maxPeriod << " minExec: " << minExecTime << " maxExec: " << maxExecTime << std::endl;
+
+  return 1;
+}
 
 int JHAhnGenerator::init(int taskSetSize)
 {

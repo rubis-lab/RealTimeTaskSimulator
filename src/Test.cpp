@@ -8,6 +8,5 @@ int main(int argc, char *argv[])
 	JHAhnExperiment texp = JHAhnExperiment();
   texp.set();
 	texp.run();
-  texp.output();
 	return 1;
 }

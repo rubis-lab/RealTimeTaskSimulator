@@ -36,7 +36,7 @@ class GEDF
     int paralCount;
     double paralOverhead;
 
-    std::vector<Task*> trySpawnTask(PeriodCounter& periodCounter, std::vector<Task>& tasks);
+    std::vector<Task*> trySpawnTask(PeriodCounter& periodCounter, std::vector<Task>& tasks, std::vector<int>& paralVector);
     void processTask(Task* task, Processor* p);
     void printPeriodCounters(std::vector<PeriodCounter>& counters);
     void printProcessingTasks(std::vector<Task*>& processingTasks);
@@ -44,7 +44,8 @@ class GEDF
   public:
     GEDF();
     GEDF(Param *paramExt);
-    bool isSchedulable(TaskSet ts);
+    bool isSchedulable(TaskSet ts, std::vector<int>& paralVector);
+    void printResult(TaskSet ts);
 };
 
 

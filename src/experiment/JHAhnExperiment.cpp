@@ -2,10 +2,30 @@
 
 JHAhnExperiment::JHAhnExperiment() : Experiment()
 {
+  std::ifstream file;
+  file.open("cfg/jhahn/exp.cfg");
+  init(file);
+  file.close();
 }
 
 JHAhnExperiment::~JHAhnExperiment()
 {
+}
+
+void JHAhnExperiment::init(std::ifstream &file)
+{
+  loadEnvironment(file);
+  set();
+}
+
+int JHAhnExperiment::loadEnvironment(std::ifstream &file) {
+  FileIO::goToLine(file, 4);
+
+  std::string buf;
+  file >> buf;
+  file >> expName;
+
+  return 1;
 }
 
 int JHAhnExperiment::set()
@@ -20,8 +40,8 @@ int JHAhnExperiment::run()
 {
   TaskSet ts = gen.generateTaskSet();
 
-  schedulable = gedf.isSchedulable(ts);
-	
+  gedf.printResult(ts);
+
 	return 1;
 }
 

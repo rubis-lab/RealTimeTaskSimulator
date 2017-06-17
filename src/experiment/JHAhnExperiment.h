@@ -14,11 +14,13 @@ private:
   JHAhnGenerator gen;
   GEDF gedf;
   bool schedulable;
+  void init(std::ifstream &file);
 public:
 	JHAhnExperiment();
 	~JHAhnExperiment();
 	int run();
   int set();
   int output();
+  int loadEnvironment(std::ifstream &file);
 };
 #endif

@@ -1,0 +1,32 @@
+diff a/Multicore/src/data/Task.java b/Multicore/src/data/Task.java	(rejected hunks)
+@@ -99,6 +99,30 @@
+ 		this.kmax = kmax;		
+ 	}
+ 	
++	
++	
++	
++	
++	
++	public double getDesityAt(int[] selectedOptions, double[] selectedDeadlines, double t)
++	{
++		double[] densities; // �� segment����...
++		
++		for(int i=0; i< this.nSegments ; i++)
++		{
++			for(int j = 0; j<Param.NumProcessors ; j++)
++			selectOption(i, j);
++		}
++		
++		return 0.0;
++	}
++	
++	
++	
++	
++	
++	
++	
+ 	public String toString()
+ 	{
+ 		String buffer;

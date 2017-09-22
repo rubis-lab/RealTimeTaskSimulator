@@ -4,6 +4,7 @@ import period_harmonizer.PeriodModifier;
 import multicore_exp.Param;
 import multicore_exp.Util;
 import data.Task;
+import data.TaskSet;
 
 public class TaskGenerator2 extends TaskGenerator {
 	private PeriodModifier periodModifier;
@@ -13,6 +14,47 @@ public class TaskGenerator2 extends TaskGenerator {
 		super();
 		this.periodModifier = periodModifier;
 	}
+	
+	protected TaskSet GenerateTaskSet(double alpha, double beta, double gamma, int taskNum, int taskSetID, int seed)
+	{
+		Util util = new Util(seed);
+		TaskSet taskSet = new TaskSet(taskSetID, alpha, beta, gamma);
+		int baseSeed = util.randomInt(0, Integer.MAX_VALUE / 2);
+		
+		if(taskNum < 0)
+			taskNum = util.randomInt(taskNum_from, taskNum_to);
+		
+//		System.out.printf("%d ", taskNum);
+		
+		// draw beta using unifast
+		double[] betas = util.unifastProportional(beta, taskNum);
+		
+		
+		double alpha_, beta_, gamma_;
+		for (int i = 0; i < taskNum; i++)
+		{
+			if (alpha < 0) 
+				alpha_ = util.randomDouble(alpha_from, alpha_to);
+			else 
+				alpha_ = alpha;
+			
+			// beta from unifast
+			beta_ = betas[i];
+			
+			if (gamma < 0)
+				gamma_ = util.randomDouble(gamma_from, gamma_to);
+			else
+				gamma_ = gamma;
+			
+			int taskID = i + 1;
+			
+			taskSet.add(GenerateTask(alpha_, beta_, gamma_, taskID, baseSeed + i));
+			//taskSet.add(GenerateTaskWithInteger(alpha_, beta_, gamma_, taskID, baseSeed + i));	
+		}	
+		
+		return taskSet;
+	}
+
 	public Task GenerateTask(double alpha, double beta, double gamma, int taskID, int seed)
 	{
 		boolean allOptionsSameIntermediateDeadline = true;

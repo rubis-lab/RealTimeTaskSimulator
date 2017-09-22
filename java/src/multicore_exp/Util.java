@@ -90,4 +90,50 @@ public class Util {
 		}
 		return result;
 	}
+	
+    /*
+
+     */
+    public double[] unifast(double tot, int pcs) {
+        if(tot > 1.0) {
+            throw new RuntimeException("unifast: Use unifastProportional or randfixedsum for total sum over 1.0.");
+        }
+        if(tot < 0.0) {
+            throw new RuntimeException("unifast: tot less than 0.0.");
+        }
+        if(pcs <= 0) {
+            throw new RuntimeException("unifast: pcs should be positive number.");
+        }
+
+        double[] retList = new double[pcs];
+        //Random rnd = new Random();
+        double sum = tot;
+        for(int i = 0; i < pcs - 1; i++) {
+            double tmp = sum * Math.pow(random.nextDouble(), (1.0 / (pcs - i)));
+            retList[i] = sum - tmp;
+            sum = tmp;
+        }
+        retList[pcs - 1] = sum;
+
+        return retList;
+    }
+    /*
+        Divide tot into pcs, each pcs may be over 1.0.
+     */
+
+    public double[] unifastProportional(double tot, int pcs) {
+        if(tot < 0.0) {
+            throw new RuntimeException("unifastProportional: tot less than 0.0.");
+        }
+        if(pcs <= 0) {
+            throw new RuntimeException("unifastProportional: pcs should be positive number.");
+        }
+
+        double[] retList = unifast(1.0, pcs);
+
+        for(int i = 0; i < pcs; i++) {
+            retList[i] *= tot; 
+        }
+        return retList;
+    }
 }

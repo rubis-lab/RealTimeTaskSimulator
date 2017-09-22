@@ -9,7 +9,7 @@ import deadline_control.TaskInfo;
 public class IntervalSearchBackward {
 
 	
-	public void backwardInterval(ArrayList<TaskInfo> taskSet)
+	public boolean backwardInterval(ArrayList<TaskInfo> taskSet)
 	{
 		ArrayList<IntervalSet> intervalSets = new ArrayList<IntervalSet>();
 		for (int i = 0; i < taskSet.size(); i++)
@@ -17,6 +17,7 @@ public class IntervalSearchBackward {
 			TaskInfo task = taskSet.get(i);
 			int	minPeriod = task.task.getExecutionTimeOfThread(0, 0, 0);
 			int maxPeriod = task.task.getRealPeriod();
+			if (minPeriod > maxPeriod) return false;
 			Interval baseInterval = new Interval(minPeriod, maxPeriod);
 			IntervalSet initialIntervalSet = new IntervalSet(i, baseInterval);
 			intervalSets.add(initialIntervalSet);
@@ -85,9 +86,10 @@ public class IntervalSearchBackward {
 //			System.out.print(taskSet.get(i).getPeriod() + "\t");
 //		}
 //		System.out.println();
+		return true;
 	}
 	// this method only works with single segment tasks
-	public void backwardInterval(TaskSet taskSet, TaskSet.ParallelizedOption option)
+	public boolean backwardInterval(TaskSet taskSet, TaskSet.ParallelizedOption option)
 	{
 		ArrayList<IntervalSet> intervalSets = new ArrayList<IntervalSet>();
 		for (int i = 0; i < taskSet.size(); i++)
@@ -124,6 +126,7 @@ public class IntervalSearchBackward {
 //			int minPeriod = task.getMaxExecutionTimeOfSegment(0, nOption - 1);
 //			int minPeriod = task.getDeadline();
 			int maxPeriod = task.getPeriod();
+			if (minPeriod > maxPeriod) return false;
 			Interval baseInterval = new Interval(minPeriod, maxPeriod);
 			IntervalSet initialIntervalSet = new IntervalSet(i, baseInterval);
 			intervalSets.add(initialIntervalSet);
@@ -191,6 +194,7 @@ public class IntervalSearchBackward {
 //			System.out.print(taskSet.get(i).getPeriod() + "\t");
 //		}
 //		System.out.println();
+		return true;
 	}
 	public void backwardInterval_old(TaskSet taskSet)
 	{

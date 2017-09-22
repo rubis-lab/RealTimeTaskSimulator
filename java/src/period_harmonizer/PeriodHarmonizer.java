@@ -55,7 +55,9 @@ public class PeriodHarmonizer {
 	public boolean intervalSearch(ArrayList<TaskInfo> taskSet)
 	{
 		IntervalSearchBackward intervalBackward = new IntervalSearchBackward();
-		intervalBackward.backwardInterval(taskSet);
+		boolean ret;		
+		ret = intervalBackward.backwardInterval(taskSet);
+		if (!ret) return false;
 		for (int i = 0; i < taskSet.size(); i++)
 		{
 			if (taskSet.get(i).getHarmonizedPeriod() == 0) return false;
@@ -66,7 +68,9 @@ public class PeriodHarmonizer {
 	public boolean harmonize(TaskSet taskSet, TaskSet.ParallelizedOption option)
 	{
 		IntervalSearchBackward intervalBackward = new IntervalSearchBackward();
-		intervalBackward.backwardInterval(taskSet, option);
+		boolean ret;
+		ret = intervalBackward.backwardInterval(taskSet, option);
+		if (!ret) return false;
 		for (int i = 0; i < taskSet.size(); i++)
 		{
 			if (taskSet.get(i).getPeriod() == 0) return false;

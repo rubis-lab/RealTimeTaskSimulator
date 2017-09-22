@@ -48,10 +48,11 @@ public class PhaseShiftTest {
 	
 	public ExperimentResult runScheduler(TaskGenerator generator, int seed, EnumSet<Option> options)
 	{
+		
 		TaskSet taskSet0 = generator.GenerateTaskSet(seed, seed);
 		TaskSet taskSet = generator.GenerateTaskSet(seed, seed);
 		TaskSet taskSetH = generator.GenerateTaskSet(seed, seed);
-		
+
 //		int[] basePeriod = new int[]{2,3,5,7,11,13,17,19,23,29,31,37,41,43};
 //		PeriodModifier periodModifier = new PeriodModifier(basePeriod);
 
@@ -1431,6 +1432,7 @@ public class PhaseShiftTest {
 		System.out.printf("Target false = %d\n", targetFalse);
 			
 	}
+
 	public void exp160427_density()
 	{
 		ArrayList<EnumSet<Option>> optionSet = new ArrayList<EnumSet<Option>>(); 
@@ -1716,6 +1718,8 @@ public class PhaseShiftTest {
 		System.out.printf("Target false = %d\n", targetFalse);
 	}
 	public void exp160501_distribution()
+	
+
 	{
 		ArrayList<EnumSet<Option>> optionSet = new ArrayList<EnumSet<Option>>(); 
 		optionSet.add(EnumSet.noneOf(Option.class));
@@ -2153,6 +2157,193 @@ public class PhaseShiftTest {
 
 	}
 	
+	
+	// alpha graph
+	public void exp170919_unifast()
+	{
+		ArrayList<EnumSet<Option>> optionSet = new ArrayList<EnumSet<Option>>(); 
+		optionSet.add(EnumSet.noneOf(Option.class));
+//			optionSet.add(EnumSet.of(Option.MINDEN));
+		optionSet.add(EnumSet.of(Option.MAXPAL));
+		optionSet.add(EnumSet.of(Option.DC_SP));
+//			optionSet.add(EnumSet.of(Option.PS, Option.PH, Option.DC_SP));
+//			optionSet.add(EnumSet.of(Option.PH, Option.DC_H1));
+//			optionSet.add(EnumSet.of(Option.PH, Option.DC_H2));
+//			optionSet.add(EnumSet.of(Option.PH, Option.DC_H3));
+		optionSet.add(EnumSet.of(Option.DC_H4));
+		
+		int expType = 0;
+		
+		/*********************/
+		Param.NumProcessors = 8;
+		Param.NumThreads_MAX = 8;
+		
+		int iter = 1000;
+		/*********************/
+		Param.scmin = 10;
+		Param.scmax = 50;
+		Param.Period_MIN = 200;
+		Param.Period_MAX = 1000;
+		Param.NumSegments_MIN = 1;
+		Param.NumSegments_MAX = 1;
+
+		PeriodModifier periodModifier = new PeriodModifier(10);
+		TaskGenerator2 generator = new TaskGenerator2(periodModifier);
+
+		//generator.setFixedBeta(beta);
+		/***********************************/
+		//generator.setRandomGamma(0.1, 1);
+		/***********************************/
+		generator.setRandomAlpha(0, 0.1);/**/
+		generator.setRandomTaskNum(3,15);
+		
+		Plot plotter = new Plot();
+
+		String resultForGraph = "";
+		String resultForGraphPeakDensity = "";
+		String resultForGraphReason ="";
+		String resultForGraphReason2 ="";
+		String resultForGraphReason3 ="";
+		int[][] reason2 = new int[iter][optionSet.size()];
+		int targetFalse = 0;
+
+		int nTasks = 0;
+		int minTasks = -1;
+		int minTaskSeed = 0;
+		boolean resultOther = false;
+		boolean resultTarget = false;
+		DEBUG = !false;
+		DEBUG_TASK = false;
+		DEBUG_PLOT = false;
+		DEBUG_DC = false;
+		//TODO:
+		generator.setRandomGamma(0.1, 1.0);
+		for (double utilsum = 0.2; utilsum <= Param.NumProcessors; utilsum += 0.2)
+//			double gamma = 1.0;
+//			for (double gamma = 0.2; gamma <= 0.3f; gamma += 0.1)
+		{
+			// init results
+			generator.setFixedBeta(utilsum);
+			ArrayList<Result> results = new ArrayList<Result>();
+			for (int i = 0; i < optionSet.size(); i++)
+			{
+				results.add(new Result(optionSet.get(i)));
+			}
+			
+			for (int seed = 0; seed < iter; seed++)
+			{		
+
+				for (int i = 0; i < optionSet.size(); i++)
+				{
+					
+					ExperimentResult result;
+					result = runScheduler(generator, seed, optionSet.get(i));
+					results.get(i).add(result);
+
+					if (result.schedulable)	reason2[seed][i] = 1;
+					else if (result.notSchedulableSingleThread) reason2[seed][i] = 2;
+					else if (result.notSchedulableMultiThread) reason2[seed][i] = 3;
+					else if (result.notSchedulableInvalid) reason2[seed][i] = 4;
+					else if (result.notSchedulableHarmonization) reason2[seed][i] = 5;
+					else System.out.printf("Warning : result has no reason %d %d\n", seed, i);
+
+					
+				}
+				
+			}
+			
+
+			System.out.printf("\n--------------RESULT utilsum = %f-------------\n", utilsum);
+
+			resultForGraph += String.format("%3.2f \t", utilsum);
+			resultForGraphPeakDensity += String.format("g:%3.2f \t", utilsum);
+			resultForGraphReason += String.format("%.3f\t", utilsum);
+			System.out.println(results.get(0).toStringHeader());
+			for (int i = 0; i < results.size(); i++)
+			{
+				Result result = results.get(i);
+				double resultSize = result.numResult;
+				
+				System.out.println(result);
+				resultForGraph += String.format("%5.3f\t", result.schedulability()); 
+				resultForGraphPeakDensity += String.format("%5.3f\t", result.peakDensity());
+				resultForGraphReason += String.format("%5.3f\t%5.3f\t%5.3f\t%5.3f\t%5.3f\t\t",
+						result.schedulability(), 
+						result.notSchedulableSingleThread / resultSize,
+						result.notSchedulableMultiThread / resultSize,
+						result.notSchedulableInvalid / resultSize,
+						result.notSchedulableHarmonization / resultSize);
+			}
+			resultForGraph += "\n";
+			resultForGraphPeakDensity += "\n";
+			resultForGraphReason += "\n";
+			
+			resultForGraphReason2 += String.format("%.1f\t", utilsum);
+			resultForGraphReason3 += String.format("%.1f\t", utilsum);
+			int[][] reason = new int[optionSet.size()][5];
+//				int[][] unschedulable = new int[optionSet.size()][2];
+			int[] unschedulable = new int[optionSet.size()];
+			for (int i = 0; i < iter; i++)
+			{
+				for (int j = 0; j < optionSet.size() - 1; j++)
+				{
+//						if (reason2[i][j] != 1)
+//							unschedulable[j][1] ++;
+					if (reason2[i][optionSet.size() - 1] == 1 &&
+							reason2[i][j] != 1)
+					{
+						reason[j][reason2[i][j] - 1] ++;
+						unschedulable[j] ++;
+					}
+				}
+			}
+			for (int i = 0; i < optionSet.size() - 1; i++)
+			{
+				resultForGraphReason2 += String.format("\t%d\t", unschedulable[i]);
+				for (int j = 0; j < 5; j++)
+					resultForGraphReason2 += 
+						String.format("%.3f\t", reason[i][j] / (double)unschedulable[i]);
+				for (int j = 0; j < 5; j++)
+					resultForGraphReason2 += 
+						String.format("%d\t", reason[i][j]);
+			}
+			resultForGraphReason2 += String.format("\n");
+			reason = new int[optionSet.size()][5];
+			unschedulable = new int[optionSet.size()];
+			for (int i = 0; i < iter; i++)
+			{
+				for (int j = 0; j < optionSet.size(); j++)
+				{
+					reason[j][reason2[i][j] - 1] ++;
+					unschedulable[j] ++;
+				}
+			}
+			for (int i = 0; i < optionSet.size(); i++)
+			{
+				resultForGraphReason3 += String.format("\t%d\t", unschedulable[i]);
+				for (int j = 0; j < 5; j++)
+					resultForGraphReason3 += 
+						String.format("%.3f\t", reason[i][j] / (double)unschedulable[i]);
+				for (int j = 0; j < 5; j++)
+					resultForGraphReason3 += 
+						String.format("%d\t", reason[i][j]);
+			}
+			resultForGraphReason3 += String.format("\n");
+
+		}
+		System.out.printf("-------------\n");
+		System.out.printf("%s\n", resultForGraph);
+		System.out.printf("-------------\n");
+		System.out.printf("%s\n", resultForGraphPeakDensity);
+		System.out.printf("-------------\n");
+		System.out.printf("%s\n", resultForGraphReason);
+		System.out.printf("-------------\n");
+		System.out.printf("%s\n", resultForGraphReason2);
+		System.out.printf("-------------\n");
+		System.out.printf("%s\n", resultForGraphReason3);
+		System.out.printf("Target false = %d\n", targetFalse);
+			
+	}
 	public static void main(String[] args)
 	{
 		PhaseShiftTest test = new PhaseShiftTest();
@@ -2170,7 +2361,8 @@ public class PhaseShiftTest {
 //		test.exp160427_density();
 //		test.exp160501_distribution();
 		
-		test.starlab16();
+//		test.starlab16();
+		test.exp170919_unifast();
 
 /*
 		if (args.length == 0)

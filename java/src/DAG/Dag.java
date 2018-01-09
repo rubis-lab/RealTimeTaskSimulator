@@ -605,15 +605,38 @@ public class Dag{
 
 	public static void DrawNodeGroup(NodeGroup node)
 	{
+		int count = 0;
 		while(node!=null)
 		{
+			
 			System.out.print("(" + node.getId() + ") - ");
 			for(int i=0; i<node.getNodes().size(); ++i)
 				System.out.print(node.getNodes().get(i).getId() + " ");
 			System.out.println();
+			count ++;
 			node = node.getNext();
 		}
+		System.out.println(count);
 	}
+	public static int MinNumSegments(ArrayList<NodeGroup> seq)
+	{
+		int MinCount = 10000;
+		for (int i=0; i<seq.size(); ++i) {
+			int count = 0;
+			NodeGroup node = seq.get(i);
+			while(node!=null)
+			{
+				count ++;
+				node = node.getNext();
+			}
+			if (count < MinCount) {
+				MinCount = count;
+			}
+			
+		}
+		return MinCount;
+	}
+
 	//}}}
 }
 

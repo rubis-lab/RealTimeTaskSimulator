@@ -13,7 +13,7 @@ public class ExperimentResult
 	public EnumSet<Option> options;
 	public TaskSet refTaskSet;
 
-	public long LCM;
+//	public long LCM;
 	public int numTasks;
 	public double peakDensity;
 	public boolean schedulable;
@@ -52,7 +52,7 @@ public class ExperimentResult
 		this.options = options;
 		try
 		{
-			LCM = Util.getTaskSetLCM(taskSet);
+//			LCM = Util.getTaskSetLCM(taskSet);
 			invalid = false;
 		}
 		catch (Exception e)
@@ -73,7 +73,7 @@ public class ExperimentResult
 			PhasedTask task = taskSet.get(i);
 			utilization += task.getExecutionOverPeriod();
 			taskSetDensity += task.getExecutionOverDeadline();
-			densitySum_LCM += (LCM / task.getPeriod()) * task.getExecutionTime();
+			//densitySum_LCM += (LCM / task.getPeriod()) * task.getExecutionTime();
 		}
 		//utilization /= taskSet.size();
 
@@ -83,8 +83,8 @@ public class ExperimentResult
 		this.peakDensity = peakDensity;
 		schedulable = this.peakDensity <= Param.NumProcessors;
 
-		densityRoom_LCM = (LCM * peakDensity) - densitySum_LCM;
-		densityRoom = densityRoom_LCM / (double)LCM;	// peakDensity - utilization?
+//		densityRoom_LCM = (LCM * peakDensity) - densitySum_LCM;
+//		densityRoom = densityRoom_LCM / (double)LCM;	// peakDensity - utilization?
 	}
 
 

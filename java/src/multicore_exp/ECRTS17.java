@@ -411,6 +411,9 @@ public class ECRTS17 {
 		System.out.printf("-------------\n");
 		System.out.printf("%s\n", resultForGraphReason3);
 		System.out.printf("Target false = %d\n", targetFalse);
+		
+		for (int i = 0; i < results.size(); i++)
+			System.out.printf("%f\n", results.get(i).peakDensity);
 
 	}
 	public void taskCreationTest()
@@ -442,8 +445,8 @@ public class ECRTS17 {
 			for (int i = 0; i < numTasks; i++)
 			{
 				int numSegment = s.nextInt();
-				int deadline = s.nextInt() / 1000;
-				int period = s.nextInt() / 1000;
+				int deadline = s.nextInt();
+				int period = s.nextInt();
 				Task task = new Task(numSegment);
 				for (int j = 0; j < numSegment; j++)
 				{
@@ -454,7 +457,7 @@ public class ECRTS17 {
 						s.nextInt();	// dummy (optionGPU)
 						for (int x = 0; x < k + 1; x ++)
 						{
-							task.setExecutionTime(j, k, x, s.nextInt() / 1000);
+							task.setExecutionTime(j, k, x, s.nextInt() + (int)Math.ceil(20000.0 / (k + 1)));
 						}
 					}
 				}

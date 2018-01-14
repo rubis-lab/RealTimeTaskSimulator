@@ -1,20 +1,15 @@
 package generator;
 
+import multicore_exp.*;
 import period_harmonizer.PeriodModifier;
-import multicore_exp.Param;
-import multicore_exp.Util;
-import data.Task;
-import data.TaskSet;
+import data.*;
 
-public class TaskGenerator2 extends TaskGenerator {
-	protected PeriodModifier periodModifier;
-	
-	public TaskGenerator2(PeriodModifier periodModifier)
-	{
-		super();
-		this.periodModifier = periodModifier;
+public class TaskGenerator3 extends TaskGenerator2{
+
+	public TaskGenerator3(PeriodModifier periodModifier) {
+		super(periodModifier);
+		// TODO Auto-generated constructor stub
 	}
-	
 
 	public Task GenerateTask(double alpha, double beta, double gamma, int taskID, int seed)
 	{
@@ -28,15 +23,13 @@ public class TaskGenerator2 extends TaskGenerator {
 		int period = util.randomInt((int)Param.Period_MIN, (int)Param.Period_MAX);
 		period = periodModifier.modifyPeriod(period);
 		
-//		gamma = util.randomDoubleNormalDistribution(gamma, 0.1);
-		if (gamma > 1) gamma = 1;
-		if (gamma <= 0) gamma = 0.1;
-		int deadline = (int) (period * gamma);
-		
-//		beta = util.randomDoubleNormalDistribution(beta, 0.1);
 		if (beta <= 0) beta = 0.1;
 		if (beta > Param.NumProcessors) beta = Param.NumProcessors;
 		int totalExecutionTime = (int) (period * beta);
+		
+		if (gamma <= 0) gamma = 0.1;
+		int deadline = (int) (totalExecutionTime * gamma);
+		if (deadline > period) deadline = period;
 		
 		task.setDeadline(deadline);
 		task.setRealDeadline(deadline);
@@ -84,4 +77,5 @@ public class TaskGenerator2 extends TaskGenerator {
 		return task;
 		
 	}
+
 }

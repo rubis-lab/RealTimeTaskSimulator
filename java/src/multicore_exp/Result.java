@@ -10,7 +10,7 @@ public class Result
 {
 	public EnumSet<Option> options;
 
-	public long LCM;
+//	public long LCM;
 	public int numTasks;
 	public double peakDensity;
 	public double peakDensitySchedulable;
@@ -69,7 +69,7 @@ public class Result
 			}
 			return;
 		}
-		LCM += result.LCM;
+//		LCM += result.LCM;
 		numTasks += result.numTasks;
 		peakDensity += result.peakDensity;
 
@@ -90,7 +90,14 @@ public class Result
 				minUtilizationSchedulable = result.utilization;
 			
 			double parallelismUtilization = result.utilization / Param.NumProcessors;
-			histogram[(int)(parallelismUtilization / 0.05)] ++; 
+/*
+			if (parallelismUtilization / 0.05 >= 20)
+			{
+				System.out.printf("%f %f\n", parallelismUtilization, result.peakDensity);
+				System.out.println(result.refTaskSet);
+			}
+*/
+//			histogram[(int)(parallelismUtilization / 0.05)] ++; 
 		}
 		else
 		{
@@ -196,7 +203,7 @@ public class Result
 		ret += String.format("%15s\t", options);
 		ret += String.format("%10d\t", numResult);
 		ret += String.format("%10d\t", invalid);
-		ret += String.format("%10.3f (%5d) %4.3f %4.3f\t", utilizationSchedulable(), schedulable, minUtilizationSchedulable, maxUtilizationSchedulable);
+		ret += String.format("%8.3f (%5d) %5.3f %5.3f\t", utilizationSchedulable(), schedulable, minUtilizationSchedulable, maxUtilizationSchedulable);
 		ret += String.format("%20.3f\t", minUtilizationUnSchedulable);
 		ret += String.format("%10d\t", notSchedulableSingleThread);
 		ret += String.format("%10d\t", notSchedulableMultiThread);

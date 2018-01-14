@@ -7,6 +7,6 @@ set xtics 0,1,1
 set ytics 0,1,1
 set arrow from 1,0 to 1,1 nohead
 set arrow from 0,1 to 1,1 nohead
-set output 'plot/distribution/dist_.eps'
-plot 'plot/distribution/dist_.txt' u 3:4 w p not
+set output 'plot/distribution/dist_SINGLE.eps'
+plot 'plot/distribution/dist_SINGLE.txt' u 3:4 w p not
 

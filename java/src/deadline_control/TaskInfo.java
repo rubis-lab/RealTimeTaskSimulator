@@ -159,6 +159,10 @@ public class TaskInfo {
 				break;
 			}
 		}
+		//todo:
+		if (defaultOption == 0)
+			defaultOption = 1;
+		
 		defaultDensity = task.getTotalExecutionTimeOfSegment(0, defaultOption - 1) / dMax;
 	}
 	protected double calculateOverheadFactor(Task task)

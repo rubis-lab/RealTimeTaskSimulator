@@ -40,6 +40,7 @@ public class PhaseShiftTest {
 		DC_H4,		// horizontal packing using RTSS method. iterative PH
 		MINDEN,		// possible minimum density
 		MAXPAL,		// possible minimum density
+		SINGLE,		// without parallelization
 		GA,			// Genetic Algorithm
 		
 	};

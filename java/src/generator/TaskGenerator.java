@@ -16,24 +16,39 @@ public class TaskGenerator {
 
 	public static final String DirectoryName = "task_set_data/";
 	
+	protected enum Type
+	{
+		FIXED,
+		UNIFORM,
+		NORMAL,
+		UUNIFAST_FIXED,
+		UUNIFAST_UNIFORM,
+	};
 	protected double alpha;
 	protected double alpha_from;
 	protected double alpha_to;
 	protected double alpha_interval ;
+	protected double alpha_deviation;
+	protected Type alpha_type;
 	
 	protected double beta;
 	protected double beta_from;
 	protected double beta_to;
 	protected double beta_interval;
+	protected double beta_deviation;
+	protected Type beta_type;
 	
 	protected double gamma;
 	protected double gamma_from;
 	protected double gamma_to;
 	protected double gamma_interval;
+	protected double gamma_deviation;
+	protected Type gamma_type;
 	
 	protected int taskNum;
 	protected int taskNum_from;
 	protected int taskNum_to;
+	protected Type taskNum_type;
 	
 	protected int scmin	= Param.scmin;
 	protected int scmax	= Param.scmax; 				
@@ -60,32 +75,62 @@ public class TaskGenerator {
 	public void setFixedAlpha(double alpha)
 	{
 		this.alpha = alpha;
+		alpha_type = Type.FIXED;
 	}
 	public void setRandomAlpha(double alpha_from, double alpha_to)
 	{
 		this.alpha = -1.0;
 		this.alpha_from = alpha_from;
 		this.alpha_to = alpha_to;
+		alpha_type = Type.UNIFORM;
 	}
 	public void setFixedBeta(double beta)
 	{
 		this.beta = beta;
+		beta_type = Type.FIXED;
 	}
 	public void setRandomBeta(double beta_from, double beta_to)
 	{
 		this.beta = -1.0;
 		this.beta_from = beta_from;
 		this.beta_to = beta_to;
+		beta_type = Type.UNIFORM;
+	}
+	public void setFixedBetaSum(double betasum)
+	{
+		this.beta = betasum;
+		beta_type = Type.UUNIFAST_FIXED;
+	}
+	public void setRandomBetaSum(double beta_from, double beta_to)
+	{
+		this.beta = -1.0;
+		this.beta_from = beta_from;
+		this.beta_to = beta_to;
+		beta_type = Type.UUNIFAST_UNIFORM;
+	}
+	public void setNormalDistributionBeta(double beta, double deviation)
+	{
+		this.beta = beta;
+		this.beta_deviation = deviation;
+		beta_type = Type.NORMAL;
 	}
 	public void setFixedGamma(double gamma)
 	{
 		this.gamma = gamma;
+		gamma_type = Type.FIXED;
 	}
 	public void setRandomGamma(double gamma_from, double gamma_to)
 	{
 		this.gamma = -1.0;
 		this.gamma_from = gamma_from;
 		this.gamma_to = gamma_to;
+		gamma_type = Type.UNIFORM;
+	}
+	public void setNormalDistributionGamma(double gamma, double deviation)
+	{
+		this.gamma = gamma;
+		this.gamma_deviation = deviation;
+		gamma_type = Type.NORMAL;
 	}
 	public void setFixedTaskNum(int taskNum)
 	{
@@ -206,23 +251,49 @@ public class TaskGenerator {
 		
 //		System.out.printf("%d ", taskNum);
 		
-		double alpha_, beta_, gamma_;
+		double alpha_ = 0, beta_ = 0, gamma_ = 0;
+
+		double[] betas = new double[taskNum];
+		
+		if (beta_type == Type.UUNIFAST_FIXED || beta_type == Type.UUNIFAST_UNIFORM)
+		{
+			if (beta_type == Type.UUNIFAST_UNIFORM)
+				beta = util.randomDouble(beta_from, beta_to);
+			
+			betas = util.unifastProportional(beta, taskNum);
+		}
+
 		for (int i = 0; i < taskNum; i++)
 		{
-			if (alpha < 0) 
-				alpha_ = util.randomDouble(alpha_from, alpha_to);
-			else 
-				alpha_ = alpha;
+			switch (alpha_type)
+			{
+			case FIXED:		alpha_ = alpha;	break;
+			case UNIFORM:	alpha_ = util.randomDouble(alpha_from, alpha_to);	break;
+			case NORMAL:	alpha_ = util.randomDoubleNormalDistribution(alpha, alpha_deviation);	break;
+			default:		System.out.println("undefined alpha_type");
+			}
+				
 			
-			if (beta < 0)
-				beta_ = util.randomDouble(beta_from, beta_to);
-			else
-				beta_ = beta;
+			switch (beta_type)
+			{
+			case FIXED: 	beta_ = beta;	break;
+			case UNIFORM:	beta_ = util.randomDouble(beta_from, beta_to);	break;
+			case NORMAL:	beta_ = util.randomDoubleNormalDistribution(beta, beta_deviation);	break;
+			case UUNIFAST_FIXED:
+			case UUNIFAST_UNIFORM:
+				beta_ = betas[i];
+				break;
+			default: 		System.out.println("undefined beta_type\n");
+			}
 			
-			if (gamma < 0)
-				gamma_ = util.randomDouble(gamma_from, gamma_to);
-			else
-				gamma_ = gamma;
+			switch (gamma_type)
+			{
+			case FIXED:		gamma_ = gamma;	break;
+			case UNIFORM:	gamma_ = util.randomDouble(gamma_from, gamma_to);	break;
+			case NORMAL:	gamma_ = util.randomDoubleNormalDistribution(gamma, gamma_deviation);	break;
+			default:		System.out.println("undefined gamma_type");
+			}
+			
 			
 			int taskID = i + 1;
 			

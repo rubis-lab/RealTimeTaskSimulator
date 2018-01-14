@@ -89,7 +89,7 @@ public class TimeDensityDistribution {
 	
 	protected void setTaskOption(TaskSet taskset)
 	{
-		if (options.size() == 0)
+		if (options.size() == 0 || options.contains(Option.SINGLE))
 		{
 			for (int i = 0; i < taskset.size(); i++)
 				taskset.get(i).selectOption(0, 0);

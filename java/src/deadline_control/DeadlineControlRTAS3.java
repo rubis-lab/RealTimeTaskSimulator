@@ -94,6 +94,7 @@ public class DeadlineControlRTAS3 extends DeadlineControl{
 			groupHeader.useDefault();
 			DensityGroupWrapperSnippets densityGroup = 
 					new DensityGroupWrapperSnippets(groupHeader.period, 1);
+			boolean ret = densityGroup.insertTask(groupHeader);
 			densityGroups.add(densityGroup);
 		}
 	}
